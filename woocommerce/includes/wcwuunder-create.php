@@ -70,20 +70,11 @@ if( !class_exists('WC_Wuunder_Create') ) {
 						$phone = get_option('wc_wuunder_company_phone');
 
 						$post_data = stripslashes_deep($_POST['data']);
-						
-						$imagepath = $post_data['picture'];
-						$imagetype = pathinfo($imagepath, PATHINFO_EXTENSION);
-						$imagedata = file_get_contents($imagepath);
-						$b64image = base64_encode($imagedata);
-						
-						//echo $base64;
-						//$b64image = base64_encode($post_data['picture']);
-						//$b64image = $this->getImageDataFromUrl($post_data['picture']);
-						//echo urlencode($b64image);
+						$b64image = base64_encode($post_data['picture']);
 						$shippingArray = array(
 							"description" => $post_data['description'],
 							"personal_message" => $post_data['personal_message'],
-							"picture" => $b64image,//null,
+							"picture" => null,//$b64image,
 							"value" => $post_data['value'],
 							"kind" => $post_data['kind'],
 							"length" => $post_data['length'],
@@ -118,12 +109,10 @@ if( !class_exists('WC_Wuunder_Create') ) {
 							)
 						);
 						
-						//$feedback = $this->api_request($shippingArray);
-						$feedback =  $this->api_request_new($shippingArray, 'https://api-staging.wuunder.co/api/shipments', 'POST');
+						$feedback = $this->api_request($shippingArray);
 						//echo '<pre>';
 						//print_r($feedback);
 						//echo '</pre>';
-						//exit('testing');
 						if( !empty($feedback->id) || !empty($feedback->track_and_trace_url) || !empty($feedback->label_url) ){
 							update_post_meta( $post_data['chamber_of_commerce_number'], '_wuunder_label_id', $feedback->id );
 							update_post_meta( $post_data['chamber_of_commerce_number'], '_wuunder_track_and_trace_url', $feedback->track_and_trace_url );
@@ -239,41 +228,11 @@ if( !class_exists('WC_Wuunder_Create') ) {
 			$json = json_encode($data);
 			$access_key = get_option('wc_wuunder_api');
 			$curl = curl_init( 'https://api-staging.wuunder.co/api/shipments' );
-			//curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_key, 'Content-type: application/json' ) );
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_key, 'Content-type: application/json' ) );
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
 		    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		    curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-		    $result = curl_exec( $curl );
-			curl_close($curl);
-			$result = json_decode($result);
-
-			return $result;
-		}
-		public function api_request_new( $data, $url, $method )
-		{
-			$json_data = json_encode($data);
-			$access_key = get_option('wc_wuunder_api');
-			$curl = curl_init( $url );
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_key, 'Content-type: application/json' ) );
-			
-			switch ($method)
-			{
-				case "POST":
-					curl_setopt($curl, CURLOPT_POST, 1);
-		
-					if ($json_data)
-						curl_setopt($curl, CURLOPT_POSTFIELDS, $json_data);
-					break;
-				case "PUT":
-					curl_setopt($curl, CURLOPT_PUT, 1);
-					break;
-				default:
-					if ($json_data)
-						$url = sprintf("%s?%s", $url, http_build_query($json_data));
-			}
-			
-		    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		    $result = curl_exec( $curl );
 			curl_close($curl);
 			$result = json_decode($result);

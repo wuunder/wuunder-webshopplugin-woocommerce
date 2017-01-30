@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Wuunder
  * Plugin URI: http://www.wuunder.co
  * Description: Wuunder shipping method
- * Version: 0.1
+ * Version: 0.2
  * Author: MONSTER Internet & Marketing Solutions | Jeroen Branje
  * Author URI: http://mims.nl
  *

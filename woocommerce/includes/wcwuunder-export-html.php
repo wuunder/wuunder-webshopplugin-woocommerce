@@ -110,7 +110,7 @@
 						<option value="pallet"<?php if($total_weight > 23000){echo ' selected'; }?>>Pallet</option>
 					</select>
 				</div>
-				<? $size = explode(' x ', $product['dimensions']); ?>
+				<?php $size = explode(' x ', $product['dimensions']); ?>
 				<div>
 					<label style="width:200px; display:inline-block;">Pakket afmeting (LxBxH in CM)*</label>
 					<input style="width:75px;" type="text" name="data[length]" placeholder="100" value="<?php echo $size[0] ?>" required> x 
@@ -121,32 +121,7 @@
 					<label style="width:200px; display:inline-block;">Gewicht (gram)*</label>
 					<input type="text" name="data[weight]" value="<?php echo $total_weight; ?>" required>
 				</div>
-				<?php /*
 				<div>
-					<label style="width:200px; display:inline-block;">Aantal dozen</label>
-					<select name="data[colli_amount]" class="colli-amount" data-orderid="<?php echo $row['orderid']; ?>">
-						<option value="1" selected>1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-					</select>
-				</div>
-				*/ ?>
-				<div>
-					<?php /*
-					<?php 
-						if (!isset($this->settings['kenmerk'])) $this->settings['kenmerk'] = '';
-						$kenmerk = str_replace('[ORDER_NR]', $row['ordernr'], $this->settings['kenmerk']);
-					?>
-					<label style="width:200px; display:inline-block;">Kenmerk (inhoud pakket)*</label>
-					<input type="text" name="data[description]" value="<?php echo $kenmerk; ?>" required>
-					*/ ?>
 					<label style="width:200px; display:inline-block;">Kenmerk (inhoud pakket)*</label>
 					<input type="text" name="data[description]" value="<?php foreach ($row['bestelling'] as $product) { echo $product['name'].$product['variation']; if (next($row['bestelling'])) { echo ', '; }} ?>" required>
 				</div>
@@ -158,8 +133,8 @@
 				<div class="submit-wuunder">
 					<input type="submit" value="Vraag verzendlabel aan" class="button-wuunder button save_order button-primary tips">
 				</div>
-			<? } ?>
-		<? endforeach; ?>
+			<?php } ?>
+		<?php endforeach; ?>
 	</form>
 </body>
 </html>
