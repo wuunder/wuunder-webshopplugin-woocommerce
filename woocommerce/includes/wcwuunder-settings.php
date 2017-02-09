@@ -27,6 +27,7 @@ if( !class_exists('WC_Wuunder_Settings') ) {
 	    }
 	    
 	    public static function get_settings() {
+	    	echo 'TEST';
 	        $settings = array(
 	            'section_title' => array(
 	                'name'     => __( 'Wuunder instellingen', 'woocommerce-wuunder' ),
@@ -39,6 +40,16 @@ if( !class_exists('WC_Wuunder_Settings') ) {
 	                'type' => 'text',
 					//'desc' => __( '', 'woocommerce-wuunder' ),
 	                'id'   => 'wc_wuunder_api'
+	            ),
+	            'api_status' => array(
+	                'name' => __( 'API status', 'woocommerce-wuunder' ),
+	                'type' => 'select',
+	                'desc' => __( 'Staging/Productie', 'woocommerce-retailer' ),
+	                'options' => array(
+	                	'staging' => __( 'Staging', 'woocommerce-wuunder' ),
+	                	'productie' => __( 'Productie', 'woocommerce-wuunder' )
+	                ),
+	                'id'   => 'wc_wuunder_api_status'
 	            ),
 	            'company' => array(
 	                'name' => __( 'Bedrijfsnaam', 'woocommerce-wuunder' ),
