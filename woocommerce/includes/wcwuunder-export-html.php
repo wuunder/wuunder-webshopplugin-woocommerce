@@ -3,25 +3,16 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<?php
-	error_reporting(1);
-		//require_once(ABSPATH . 'wp-admin/admin.php');
+/*
 		wp_register_style( 'wcwuunder-admin-styles', dirname(plugin_dir_url(__FILE__)) .  '/assets/css/wcwuunder-admin-styles.css', array(), '', 'all' );
 		wp_enqueue_style( 'wcwuunder-admin-styles' );		
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
 		wp_enqueue_script( 'jquery' );
-		//do_action('admin_print_styles');
-		//do_action('admin_print_scripts');
+*/
 	?>
 	<style>
 	.button-primary {
-	    /*background: #0085ba;
-	    border-color: #0073aa #006799 #006799;
-	    -webkit-box-shadow: 0 1px 0 #006799;
-	    box-shadow: 0 1px 0 #006799;
-	    color: #fff;
-	    text-decoration: none;
-	    text-shadow: 0 -1px 1px #006799,1px 0 1px #006799,0 1px 1px #006799,-1px 0 1px #006799;*/
 	    background: #8dcc00 !important;
 	    border-color: #8dcc00 !important;
 	    -webkit-box-shadow: 0 1px 0 #8dcc00 !important;
@@ -29,13 +20,22 @@
 	    color: #fff;
 	    text-decoration: none;
 	    text-shadow: 0 -1px 1px #8dcc00,1px 0 1px #8dcc00,0 1px 1px #8dcc00,-1px 0 1px #8dcc00 !important;
-	    
 	}
 	.submit-wuunder{margin-top: 30px;}
 	p{
 		font-size: 11px;
 	}
 	</style>
+	<script>
+	    jQuery(document).ready(function () {
+
+	        jQuery(".button-wuunder").click(function () {
+		       jQuery(".button-wuunder").attr("disabled", true);
+		       jQuery('.page-form').submit();
+		    });
+
+	    });
+	</script>
 </head>
 <body>
 	<form method="post" class="page-form">
