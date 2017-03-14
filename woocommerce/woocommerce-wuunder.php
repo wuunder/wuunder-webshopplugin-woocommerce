@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Wuunder
  * Plugin URI: http://www.wuunder.co
  * Description: Wuunder shipping method
- * Version: 0.5
+ * Version: 0.6
  * Author: MONSTER Internet & Marketing Solutions | Jeroen Branje
  * Author URI: http://mims.nl
  *
@@ -32,7 +32,7 @@ if( !class_exists('Woocommerce_Wuunder') ) {
 		public static $plugin_path;
 		public static $plugin_basename;
 
-		const VERSION = '0.1';
+		const VERSION = '0.6';
 
 		public function __construct() {
 

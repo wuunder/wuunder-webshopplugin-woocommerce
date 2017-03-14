@@ -69,6 +69,15 @@ if( !class_exists('WC_Wuunder_Create') ) {
 						$full_country = new WC_Countries;
 						$bestelling = $this->get_order_items( $order_ids );
 
+						// Multiple address possible
+						$available_addresses = array(0 => get_option('wc_wuunder_company_street').' '.get_option('wc_wuunder_company_housenumber').' ('.get_option('wc_wuunder_company_name').')' );
+						if( get_option('wc_wuunder_company_street_1') && get_option('wc_wuunder_company_name_1') ){
+							$available_addresses[1] = get_option('wc_wuunder_company_street_1').' '.get_option('wc_wuunder_company_housenumber_1').' ('.get_option('wc_wuunder_company_name_1').')';
+						}
+						if( get_option('wc_wuunder_company_street_2') && get_option('wc_wuunder_company_name_2') ){
+							$available_addresses[2] = get_option('wc_wuunder_company_street_2').' '.get_option('wc_wuunder_company_housenumber_2').' ('.get_option('wc_wuunder_company_name_2').')';
+						}
+
 						$data[] = array(
 							'firstname'				=> $order_meta['_shipping_first_name'][0],
 							'lastname'				=> $order_meta['_shipping_last_name'][0],
@@ -105,7 +114,8 @@ if( !class_exists('WC_Wuunder_Create') ) {
 						$b64image 	= $this->get_base64_image($post_data['picture']);
 
 						// Get WooCommerce Wuunder Address from options page
-						$company 	= $this->get_company_address($post_data['customer_reference']);
+						$company 	= $this->get_company_address($post_data['customer_reference'], $post_data['pickup_address']);
+
 						$customer 	= $this->get_customer_address($post_data['customer_reference']);
 						
 						$shippingArray = array(
@@ -122,7 +132,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 							"delivery_address" 		=> $customer,
 							"pickup_address" 		=> $company,
 						);
-						
+
 						$feedback =  $this->api_request_new($shippingArray, 'POST');
 
 						if( !empty($feedback['errors']) ){
@@ -156,7 +166,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 						$b64image 	= $this->get_base64_image($post_data['picture']);
 
 						// Get WooCommerce Wuunder Address from options page
-						$company 	= $this->get_company_address($post_data['customer_reference']);
+						$company 	= $this->get_company_address($post_data['customer_reference'], $post_data['pickup_address']);
 						$customer 	= $this->get_customer_address($post_data['customer_reference']);
 						
 						$shippingArray = array(
@@ -210,14 +220,15 @@ if( !class_exists('WC_Wuunder_Create') ) {
 		public function api_request_new( $data, $method ){
 
 			$json_data = json_encode($data);
-			$access_key = get_option('wc_wuunder_api');
 			$status = get_option('wc_wuunder_api_status');
 
 			// Check Woocommerce Wuunder Setting
 			if($status == 'productie'){
+				$access_key = get_option('wc_wuunder_api');
 				// Productie api url
 				$curl = curl_init( 'https://api.wuunder.co/api/shipments' );
 			}else{
+				$access_key = get_option('wc_wuunder_test_api');
 				// Staging api url
 				$curl = curl_init( 'https://api-staging.wuunder.co/api/shipments' );
 			}
@@ -249,22 +260,39 @@ if( !class_exists('WC_Wuunder_Create') ) {
 
 		}
 
-		public function get_company_address($orderid){
+		public function get_company_address($orderid, $pickup_address){
 
-			// Get Woocommerce Wuunder Settings
-			$company_address = array(
-				"business" 						=> get_option('wc_wuunder_company_name'),
-				"chamber_of_commerce_number" 	=> $orderid,
-				"email_address" 				=> get_option('wc_wuunder_company_email'),
-				"family_name" 					=> get_option('wc_wuunder_company_lastname'),
-				"given_name" 					=> get_option('wc_wuunder_company_firstname'),
-				"locality" 						=> get_option('wc_wuunder_company_city'),
-				"phone_number" 					=> get_option('wc_wuunder_company_phone'),
-				"street_address" 				=> get_option('wc_wuunder_company_street'),
-				"house_number" 					=> get_option('wc_wuunder_company_housenumber'),
-				"zip_code" 						=> get_option('wc_wuunder_company_postode'),
-				"country" 						=> "NL",
-			);
+			if($pickup_address == 0){
+				// Get Woocommerce Wuunder Settings
+				$company_address = array(
+					"business" 						=> get_option('wc_wuunder_company_name'),
+					"chamber_of_commerce_number" 	=> $orderid,
+					"email_address" 				=> get_option('wc_wuunder_company_email'),
+					"family_name" 					=> get_option('wc_wuunder_company_lastname'),
+					"given_name" 					=> get_option('wc_wuunder_company_firstname'),
+					"locality" 						=> get_option('wc_wuunder_company_city'),
+					"phone_number" 					=> get_option('wc_wuunder_company_phone'),
+					"street_address" 				=> get_option('wc_wuunder_company_street'),
+					"house_number" 					=> get_option('wc_wuunder_company_housenumber'),
+					"zip_code" 						=> get_option('wc_wuunder_company_postode'),
+					"country" 						=> get_option('wc_wuunder_company_country'),
+				);
+			}else{
+				// Get Woocommerce Wuunder Settings
+				$company_address = array(
+					"business" 						=> get_option('wc_wuunder_company_name_'.$pickup_address),
+					"chamber_of_commerce_number" 	=> $orderid,
+					"email_address" 				=> get_option('wc_wuunder_company_email_'.$pickup_address),
+					"family_name" 					=> get_option('wc_wuunder_company_lastname_'.$pickup_address),
+					"given_name" 					=> get_option('wc_wuunder_company_firstname_'.$pickup_address),
+					"locality" 						=> get_option('wc_wuunder_company_city_'.$pickup_address),
+					"phone_number" 					=> get_option('wc_wuunder_company_phone_'.$pickup_address),
+					"street_address" 				=> get_option('wc_wuunder_company_street_'.$pickup_address),
+					"house_number" 					=> get_option('wc_wuunder_company_housenumber_'.$pickup_address),
+					"zip_code" 						=> get_option('wc_wuunder_company_postode_'.$pickup_address),
+					"country" 						=> get_option('wc_wuunder_company_country_'.$pickup_address),
+				);
+			}
 
 			return $company_address;
 
@@ -325,7 +353,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 					'retour'	=> array (
 						'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcwuunder&order_ids=' . $order->id.'&label=retour' ), 'wcwuunder' ),
 						'action'	=> 'thickbox',
-						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/retour-icon.png',
+						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/retour-create-icon.png',
 						'title'		=> __( 'Retour label aanvragen', 'woocommerce-wuunder' ),
 					)
 				);
@@ -334,8 +362,8 @@ if( !class_exists('WC_Wuunder_Create') ) {
 				foreach ($listing_actions as $action => $data) {
 					$target = ' target="_blank" ';
 					?>
-					<a<?= $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
-					<img src="<?php echo $data['img']; ?>" style="padding-top:2px;" alt="<?php echo $data['title']; ?>">
+					<a<?= $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
+					<img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['title']; ?>">
 					</a>
 					<?php
 				}
@@ -359,13 +387,13 @@ if( !class_exists('WC_Wuunder_Create') ) {
 					),
 					'track_trace'	=> array (
 						'url'		=> get_post_meta( $order->id, '_wuunder_retour_track_and_trace_url', true),
-						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/barcode-icon.png',
+						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/retour-in-transit.png',
 						'alt'		=> __( 'Track & Trace retour', 'woocommerce-wuunder' ),
 						'title'		=> __( 'Track & Trace retour', 'woocommerce-wuunder' ),
 					),
 					'retour_downloaden'	=> array (
 						'url'		=> get_post_meta( $order->id, '_wuunder_retour_label_url', true),
-						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/download-icon.png',
+						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/retour-download-icon.png',
 						'alt'		=> __( 'Retour label downloaden', 'woocommerce-wuunder' ),
 						'title'		=> __( 'Downloaden', 'woocommerce-wuunder' ),
 					)
@@ -375,9 +403,9 @@ if( !class_exists('WC_Wuunder_Create') ) {
 				foreach ($listing_actions as $action => $data) {
 					$target = ' target="_blank" ';
 					?>
-					<a<?= $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; color:#fff;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['alt']; ?>">
+					<a<?= $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em;  padding:3px; color:#fff;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['alt']; ?>">
 						<?php /*<?php echo $data['title']; ?>*/ ?>
-						<img src="<?php echo $data['img']; ?>" style="padding-top:2px;" alt="<?php echo $data['title']; ?>">
+						<img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['title']; ?>">
 					</a>
 					<?php
 				}
@@ -394,8 +422,8 @@ if( !class_exists('WC_Wuunder_Create') ) {
 
 				foreach ($listing_actions as $action => $data) {
 					?>
-					<a href="<?php echo $data['url']; ?>" class="thickbox button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em;" alt="<?php echo $data['alt']; ?>" data-tip="<?php echo $data['alt']; ?>">
-						<img src="<?php echo $data['img']; ?>" style="padding-top:2px;" alt="<?php echo $data['alt']; ?>">
+					<a href="<?php echo $data['url']; ?>" class="thickbox button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['alt']; ?>" data-tip="<?php echo $data['alt']; ?>">
+						<img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['alt']; ?>">
 					</a>
 					<?php
 				}

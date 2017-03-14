@@ -115,6 +115,20 @@
 						<span>Verzendlabel</span>
 					<?php } ?>
 				</h2>
+
+				<div>
+				<?php if($_GET['label'] == 'retour'){ ?>
+					<label style="width:200px; display:inline-block;">Retouradres</label>
+				<?php }else{ ?>
+					<label style="width:200px; display:inline-block;">Afhaaladres</label>
+				<?php } ?>
+					<select name="data[pickup_address]">
+					<?php foreach($available_addresses as $pickup_address => $straat){ ?>
+						<option value="<?php echo $pickup_address; ?>"><?php echo $straat; ?></option>
+					<?php } ?>
+					</select>
+				</div>
+
 				<div>
 					<label style="width:200px; display:inline-block;">Soort verpakking*</label>
 					<select name="data[kind]">
