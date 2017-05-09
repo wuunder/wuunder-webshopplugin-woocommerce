@@ -3,11 +3,9 @@
  * Plugin Name: WooCommerce Wuunder
  * Plugin URI: http://www.wuunder.co
  * Description: Wuunder shipping method
- * Version: 0.6
+ * Version: 0.7
  * Author: MONSTER Internet & Marketing Solutions | Jeroen Branje
  * Author URI: http://mims.nl
- *
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -32,7 +30,7 @@ if( !class_exists('Woocommerce_Wuunder') ) {
 		public static $plugin_path;
 		public static $plugin_basename;
 
-		const VERSION = '0.6';
+		const VERSION = '0.7';
 
 		public function __construct() {
 
@@ -43,9 +41,7 @@ if( !class_exists('Woocommerce_Wuunder') ) {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'add_admin_styles_scripts' ) );
 			
 			require_once(WW_PLUGIN_ADMIN_DIR.'/wcwuunder-admin.php');
-			require_once(WW_PLUGIN_ADMIN_DIR .'/wcwuunder-nlpostcode-fields.php');
-
-			//add_action('plugins_loaded', 'ww_load_textdomain');
+			require_once(WW_PLUGIN_ADMIN_DIR.'/wcwuunder-postcode-fields.php');
 
 		}
 
@@ -58,17 +54,10 @@ if( !class_exists('Woocommerce_Wuunder') ) {
 			if( $post_type == 'shop_order' ) {
 				wp_enqueue_script( 'thickbox' );
 				wp_enqueue_style( 'thickbox' );
-				wp_enqueue_script( 'wcwuunder-export', plugin_dir_url(__FILE__) . 'assets/js/wcwuunder-script.js', array( 'jquery', 'thickbox' ) );
 
-				if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
-					// Old versions
-					wp_register_style( 'wcwuunder-admin-styles', plugins_url( '/assets/css/wcwuunder-admin-styles.css', __FILE__ ), array(), '', 'all' );
-				} else {
-					// WC 2.1+, MP6 style with larger buttons
-					wp_register_style( 'wcwuunder-admin-styles', plugins_url( '/assets/css/wcwuunder-admin-styles-wc21.css', __FILE__ ), array(), '', 'all' );
-				}				
+				wp_register_style( 'bootstrap-admin-styles', plugins_url( '/assets/css/bootstrap-simplex.min.css', __FILE__ ), array(), '', 'all' );
+				wp_enqueue_style( 'bootstrap-admin-styles' );
 
-				wp_enqueue_style( 'wcwuunder-admin-styles' );  
 			}
 		}
 

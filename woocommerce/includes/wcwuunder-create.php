@@ -7,17 +7,12 @@ if( !class_exists('WC_Wuunder_Create') ) {
 		public $order_id;
 
 		public function __construct() {
+
 			add_action( 'load-edit.php', array( &$this, 'generate_shipping_label_action' ) );
-			//add_action( 'admin_init', array( &$this, 'generate_shipping_label_action' ) );
 			add_action( 'woocommerce_admin_order_actions_end', array( &$this, 'add_listing_actions' ) );
 			add_action( 'add_meta_boxes_shop_order', array(&$this, 'add_meta_boxes' ) );
-
-
 			add_action( 'admin_notices', array(&$this, 'sample_admin_notice__error') );
 
-			// AJAX function to create label and show errors
-			//add_action( 'wp_ajax_generate_shipping_label_action', array($this, 'generate_shipping_label_action') );
-            //add_action( 'wp_ajax_nopriv_generate_shipping_label_action', array($this, 'generate_shipping_label_action') );
 		}
 
 
@@ -26,8 +21,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 			if($_GET['notice'] == 'error'){
 
 				$class = 'notice notice-error';
-				$message = __( '<b>Het aanmaken van het label is mislukt</b>', 'woocommerce-wuunder' );
-				//$errors = json_decode($_GET['content']);
+				$message = __( '<b>Het aanmaken van het label voor #'.$_GET['id'].' is mislukt</b>', 'woocommerce-wuunder' );
 				$errors = $_GET['error_melding'];
 				$message .= '<ul style="margin:0 0 0 20px; padding:0; list-style:inherit;">';
 				foreach($errors as $error){
@@ -40,7 +34,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 			}else if($_GET['notice'] == 'success'){
 
 				$class = 'notice notice-success';
-				$message = __( 'Het verzendlabel is aangemaakt', 'woocommerce-wuunder' );
+				$message = __( 'Het verzendlabel voor #'.$_GET['id'].' is aangemaakt', 'woocommerce-wuunder' );
 				printf( '<div class="%1$s"><p>%2$s</p></div>', $class, $message ); 
 
 			}
@@ -68,6 +62,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 						$formatted_address = $order->get_formatted_shipping_address();
 						$full_country = new WC_Countries;
 						$bestelling = $this->get_order_items( $order_ids );
+						$check_company = $this->check_company_address();
 
 						// Multiple address possible
 						$available_addresses = array(0 => get_option('wc_wuunder_company_street').' '.get_option('wc_wuunder_company_housenumber').' ('.get_option('wc_wuunder_company_name').')' );
@@ -115,8 +110,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 
 						// Get WooCommerce Wuunder Address from options page
 						$company 	= $this->get_company_address($post_data['customer_reference'], $post_data['pickup_address']);
-
-						$customer 	= $this->get_customer_address($post_data['customer_reference']);
+						$customer 	= $this->get_customer_address($post_data['customer_reference'], $post_data['phone_number']);
 						
 						$shippingArray = array(
 							"description" 			=> $post_data['description'],
@@ -143,7 +137,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 								$errors .= '&error_melding['.$error_notice['field'].']='.$error_notice['field'].': '.$error_notice['messages'][0];
 								break;
 							}
-							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=error'.$errors) );
+							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=error'.$errors.'&id='.$post_data['customer_reference']) );
 
 						}else{
 							
@@ -153,7 +147,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 								update_post_meta( $post_data['customer_reference'], '_wuunder_label_url', $feedback['label_url'] );
 							}
 							
-							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=success') );
+							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=success&id='.$post_data['customer_reference']) );
 						}
 
 					exit;
@@ -167,7 +161,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 
 						// Get WooCommerce Wuunder Address from options page
 						$company 	= $this->get_company_address($post_data['customer_reference'], $post_data['pickup_address']);
-						$customer 	= $this->get_customer_address($post_data['customer_reference']);
+						$customer 	= $this->get_customer_address($post_data['customer_reference'], $post_data['phone_number']);
 						
 						$shippingArray = array(
 							"description" 			=> $post_data['description'],
@@ -185,7 +179,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 						);
 						
 						$feedback =  $this->api_request_new($shippingArray, 'POST');
-						
+
 						if( !empty($feedback['errors']) ){
 
 							$error_notices = $feedback['errors'];
@@ -194,7 +188,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 								$errors .= '&error_melding['.$error_notice['field'].']='.$error_notice['field'].': '.$error_notice['messages'][0];
 								break;
 							}
-							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=error'.$errors) );
+							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=error'.$errors.'&id='.$post_data['customer_reference']) );
 
 						}else{
 							if( !empty($feedback['id']) || !empty($feedback['track_and_trace_url']) || !empty($feedback['label_url']) ){
@@ -206,7 +200,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 								echo get_post_meta( $post_data['customer_reference'], '_wuunder_retour_label_id', true );
 							}
 							
-							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=success') );
+							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=success&id='.$post_data['customer_reference']) );
 						}
 						
 					exit;
@@ -260,6 +254,18 @@ if( !class_exists('WC_Wuunder_Create') ) {
 
 		}
 
+		public function check_company_address(){
+
+			if(get_option('wc_wuunder_company_name') && get_option('wc_wuunder_company_firstname') && get_option('wc_wuunder_company_lastname') && get_option('wc_wuunder_company_street') && get_option('wc_wuunder_company_housenumber') && get_option('wc_wuunder_company_postode') && get_option('wc_wuunder_company_city') && get_option('wc_wuunder_company_country') && get_option('wc_wuunder_company_email') &&get_option('wc_wuunder_company_phone') ){
+				$check = true;
+			}else{
+				$check = false;
+			}
+
+			return $check;
+
+		}
+
 		public function get_company_address($orderid, $pickup_address){
 
 			if($pickup_address == 0){
@@ -298,7 +304,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 
 		}
 
-		public function get_customer_address($orderid){
+		public function get_customer_address($orderid, $phone){
 
 			// Get customer address from order
 			$order_meta = get_post_meta($orderid);
@@ -309,11 +315,11 @@ if( !class_exists('WC_Wuunder_Create') ) {
 				"family_name" 					=> $order_meta['_shipping_last_name'][0],
 				"given_name" 					=> $order_meta['_shipping_first_name'][0],
 				"locality" 						=> $order_meta['_shipping_city'][0],
-				"phone_number" 					=> $order_meta['_billing_phone'][0],
+				"phone_number" 					=> "$phone",
 				"street_address" 				=> isset($order_meta['_shipping_street_name'][0])?$order_meta['_shipping_street_name'][0]:'',
-				"house_number" 					=> isset($order_meta['_shipping_house_number'][0])?$order_meta['_shipping_house_number'][0]:'', //isset($order_meta['_shipping_house_number_suffix'][0])?$order_meta['_shipping_house_number_suffix'][0]:'',
+				"house_number" 					=> isset($order_meta['_shipping_house_number'][0])?$order_meta['_shipping_house_number'][0]:'',
 				"zip_code" 						=> str_replace(' ', '', $order_meta['_shipping_postcode'][0]),
-				"country" 						=> $order_meta['_shipping_country'][0],//$full_country->countries[$order_meta['_shipping_country'][0]],
+				"country" 						=> $order_meta['_shipping_country'][0],
 			);
 
 			return $customer_address;
@@ -351,7 +357,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 						'title'		=> __( 'Track & Trace', 'woocommerce-wuunder' ),
 					),
 					'retour'	=> array (
-						'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcwuunder&order_ids=' . $order->id.'&label=retour' ), 'wcwuunder' ),
+						'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcwuunder&order_ids=' . $order->id.'&label=retour&width=900&height=700' ), 'wcwuunder' ),
 						'action'	=> 'thickbox',
 						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/retour-create-icon.png',
 						'title'		=> __( 'Retour label aanvragen', 'woocommerce-wuunder' ),
@@ -362,7 +368,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 				foreach ($listing_actions as $action => $data) {
 					$target = ' target="_blank" ';
 					?>
-					<a<?= $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
+					<a<?php echo $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
 					<img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['title']; ?>">
 					</a>
 					<?php
@@ -370,15 +376,6 @@ if( !class_exists('WC_Wuunder_Create') ) {
 				echo '</div>';
 			}elseif(!empty(get_post_meta( $order->id, '_wuunder_retour_label_id', true))){
 				$listing_actions = array(
-					/*
-					'retour_ontvangen'	=> array (
-						'url'		=> get_post_meta( $order->id, '_wuunder_retour_label_url', true),
-						'action'	=> 'thickbox',
-						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/retour-icon.png',
-						'alt'		=> __( 'Retour ontvangen', 'woocommerce-wuunder' ),
-						'title'		=> __( 'Ontvangen', 'woocommerce-wuunder' ),
-					),
-					*/
 					'shipping_label'=> array (
 						'url'		=> get_post_meta( $order->id, '_wuunder_label_url', true),
 						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/print-label.png',
@@ -403,8 +400,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 				foreach ($listing_actions as $action => $data) {
 					$target = ' target="_blank" ';
 					?>
-					<a<?= $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em;  padding:3px; color:#fff;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['alt']; ?>">
-						<?php /*<?php echo $data['title']; ?>*/ ?>
+					<a<?php echo $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em;  padding:3px; color:#fff;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['alt']; ?>">
 						<img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['title']; ?>">
 					</a>
 					<?php
@@ -414,7 +410,7 @@ if( !class_exists('WC_Wuunder_Create') ) {
 			}else{
 				$listing_actions = array(
 					'create_label'		=> array (
-						'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcwuunder&order_ids=' . $order->id ), 'wcwuunder' ),
+						'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcwuunder&order_ids=' . $order->id.'&width=900&height=700' ), 'wcwuunder' ),
 						'img'		=> Woocommerce_Wuunder::$plugin_url. 'assets/images/create-label.png',
 						'alt'		=> __( 'Verzendlabel aanmaken', 'woocommerce-wuunder' ),
 					),

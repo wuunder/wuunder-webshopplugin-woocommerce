@@ -11,7 +11,6 @@ if( !class_exists('WC_Wuunder_Admin') ) {
 		public function __construct() {
 
 			add_action( 'admin_init', array( &$this, 'init_admin' ) );
-			//add_action( 'admin_notices',  array( &$this, 'display_admin_notices' ) );
 
 		}
 
@@ -21,17 +20,8 @@ if( !class_exists('WC_Wuunder_Admin') ) {
 				return;
 			}
 
-			//self::$ajax_nonce = wp_create_nonce( 'ww_ajax_nonce' );
-/*
-			//add capability to administrator
-			$role = get_role( 'administrator' );
-			$role->add_cap( Woocommerce_Retailer_Mass_Order::CAPABILITY );
-*/			
-			//require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-nlpostcode-fields.php' );
 			require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-settings.php' );
 			require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-create.php' );
-			//
-			//include_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-nlpostcode-fields.php' );
 
 		}
 		

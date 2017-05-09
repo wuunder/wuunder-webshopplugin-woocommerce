@@ -1,6 +1,6 @@
 <?php
-if ( !class_exists( 'WC_Wuunder_NLPostcode_Fields' ) ) {
-	class WC_Wuunder_NLPostcode_Fields {
+if ( !class_exists( 'WC_Wuunder_Postcode_Fields' ) ) {
+	class WC_Wuunder_Postcode_Fields {
 
 		public function __construct() {
 			// Load styles & scripts
@@ -9,12 +9,12 @@ if ( !class_exists( 'WC_Wuunder_NLPostcode_Fields' ) ) {
 			// Add street name & house number checkout fields.
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.0' ) >= 0 ) {
 				// WC 2.0 or newer is used, the filter got a $coutry parameter, yay!
-				add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ), 10, 2 );
-				add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ), 10, 2 );
+				add_filter( 'woocommerce_billing_fields', array( &$this, 'billing_fields' ), 10, 2 );
+				add_filter( 'woocommerce_shipping_fields', array( &$this, 'shipping_fields' ), 10, 2 );
 			} else {
 				// Backwards compatibility
-				add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ) );
-				add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ) );
+				add_filter( 'woocommerce_billing_fields', array( &$this, 'billing_fields' ) );
+				add_filter( 'woocommerce_shipping_fields', array( &$this, 'shipping_fields' ) );
 			}
 		
 
@@ -22,9 +22,7 @@ if ( !class_exists( 'WC_Wuunder_NLPostcode_Fields' ) ) {
 			add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
 
 			// Localize checkout fields (limit custom checkout fields to NL)
-			add_filter( 'woocommerce_country_locale_field_selectors', array( &$this, 'country_locale_field_selectors' ) );
 			add_filter( 'woocommerce_default_address_fields', array( &$this, 'default_address_fields' ) );
-			add_filter( 'woocommerce_get_country_locale', array( &$this, 'woocommerce_locale_nl' ), 1, 1);
 
 			// Load custom order data.
 			add_filter( 'woocommerce_load_order_data', array( &$this, 'load_order_data' ) );
@@ -72,107 +70,75 @@ if ( !class_exists( 'WC_Wuunder_NLPostcode_Fields' ) ) {
 	   		if ( is_checkout() || is_account_page() ) {
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 					// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
-					wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/assets/js/nl-checkout.js'), array( 'wc-checkout' ) );
-					wp_enqueue_script( 'nl-checkout' );
+					wp_register_script( 'wuunder-checkout', (dirname(plugin_dir_url(__FILE__)) . '/assets/js/nwuunder-checkout.js'), array( 'wc-checkout' ) );
+					wp_enqueue_script( 'wuunder-checkout' );
 				}
 
-				wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/assets/js/nl-checkout-wuunder.js'), array( 'wc-checkout' ) );
-				wp_enqueue_script( 'nl-checkout' );
+				wp_register_script( 'wuunder-checkout', (dirname(plugin_dir_url(__FILE__)) . '/assets/js/wuunder-checkout-wuunder.js'), array( 'wc-checkout' ) );
+				wp_enqueue_script( 'wuunder-checkout' );
 
 				if ( is_account_page() ) {
 					// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
-					wp_register_script( 'nl-account-page', (dirname(plugin_dir_url(__FILE__)) . '/assets/js/nl-account-page.js'), array( 'jquery' ) );
-					wp_enqueue_script( 'nl-account-page' );
+					wp_register_script( 'wuunder-account-page', (dirname(plugin_dir_url(__FILE__)) . '/assets/js/wuunder-account-page.js'), array( 'jquery' ) );
+					wp_enqueue_script( 'wuunder-account-page' );
 				}
 
-				//wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/assets/css/intlTelInput.css') );
-				wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/assets/css/nl-checkout.css') );
+				wp_enqueue_style( 'wuunder-checkout', (dirname(plugin_dir_url(__FILE__)) . '/assets/css/wuunder-checkout.css') );
 			}
 
 		}
 
-		/**
-		 * Hide default Dutch address fields
-		 * @param  array $locale woocommerce country locale field settings
-		 * @return array $locale
-		 */
-		public function woocommerce_locale_nl( $locale ) {
-			$locale['NL']['address_1'] = array(
-				'required'  => false,
-				'hidden'	=> true,
-			);
-
-			$locale['NL']['address_2'] = array(
-				'hidden'	=> true,
-			);
-			
-			$locale['NL']['state'] = array(
-				'hidden'	=> true,
-				'required'	=> false,
-			);
-
-			$locale['NL']['street_name'] = array(
-				'required'  => true,
-				'hidden'	=> false,
-			);
-
-			$locale['NL']['house_number'] = array(
-				'required'  => true,
-				'hidden'	=> false,
-			);
-
-			$locale['NL']['house_number_suffix'] = array(
-				'required'  => false,
-				'hidden'	=> false,
-			);
-
-			return $locale;
+		public function billing_fields( $fields, $country = '' ) {
+			return $this->checkout_fields( $fields, $country, 'billing');
 		}
 
-		public function nl_billing_fields( $fields, $country = '' ) {
-			return $this->nl_checkout_fields( $fields, $country, 'billing');
+		public function shipping_fields( $fields, $country = '' ) {
+			return $this->checkout_fields( $fields, $country, 'shipping');
 		}
 
-		public function nl_shipping_fields( $fields, $country = '' ) {
-			return $this->nl_checkout_fields( $fields, $country, 'shipping');
-		}
-
-		/**
-		 * New checkout billing/shipping fields
-		 * @param  array $fields Default fields.
-		 * @return array $fields New fields.
-		 */
-		public function nl_checkout_fields( $fields, $country, $form ) {
+		public function checkout_fields( $fields, $country, $form ) {
 			if (isset($fields['_country'])) {
 				// some weird bug on the my account page
 				$form = '';
 			}
 
-			// Set required to true if country is NL
-			$required = ($country == 'NL')?true:false;
+			$fields[$form.'_address_1'] = array(
+				'required'  => false,
+				'hidden'	=> true,
+			);
+
+			$fields[$form.'_address_2'] = array(
+				'hidden'	=> true,
+			);
+			
+			$fields[$form.'_state'] = array(
+				'hidden'	=> true,
+				'required'	=> false,
+			);
 
 			// Add Street name
 			$fields[$form.'_street_name'] = array(
 				'label'			=> __( 'Street name', 'woocommerce-wuunder' ),
 				'placeholder'	=> __( 'Street name', 'woocommerce-wuunder' ),
 				'class'			=> array( 'form-row-first' ),
-				'required'		=> $required, // Only required for NL
+				'required'		=> true,
+				'hidden'		=> false,
 			);
 
 			// Add house number
 			$fields[$form.'_house_number'] = array(
 				'label'			=> __( 'Nr.', 'woocommerce-wuunder' ),
-				// 'placeholder'	=> __( 'Nr.', 'wcflespakket' ),
 				'class'			=> array( 'form-row-quart-first' ),
-				'required'		=> $required, // Only required for NL
+				'required'		=> true,
+				'hidden'		=> false,
 			);
 
 			// Add house number Suffix
 			$fields[$form.'_house_number_suffix'] = array(
 				'label'			=> __( 'Suffix', 'woocommerce-wuunder' ),
-				// 'placeholder'	=> __( 'Suffix', 'wcflespakket' ),
 				'class'			=> array( 'form-row-quart' ),
 				'required'		=> false,
+				'hidden'		=> false,
 			);
 
 			// Create new ordering for checkout fields
@@ -272,16 +238,32 @@ if ( !class_exists( 'WC_Wuunder_NLPostcode_Fields' ) ) {
 		 */
 		public function default_address_fields( $fields ) {
 			$custom_fields = array(
-				'street_name' => array(
+				'address_1' => array(
 					'hidden'	=> true,
 					'required'	=> false,
 				),
-				'house_number' => array(
+				'address_2' => array(
+					'hidden'	=> true,
+					'required'	=> false,
+				),
+				'state' => array(
 					'hidden'	=> true,
 					'required'	=> false,
 				),
 				'house_number_suffix' => array(
-					'hidden'	=> true,
+					'hidden'	=> false,
+					'required'	=> false,
+				),
+				'street_name' => array(
+					'hidden'	=> false,
+					'required'	=> false,
+				),
+				'house_number' => array(
+					'hidden'	=> false,
+					'required'	=> false,
+				),
+				'house_number_suffix' => array(
+					'hidden'	=> false,
 					'required'	=> false,
 				),
 
@@ -660,4 +642,4 @@ if ( !class_exists( 'WC_Wuunder_NLPostcode_Fields' ) ) {
 	}
 }
 
-new WC_Wuunder_NLPostcode_Fields();
+new WC_Wuunder_Postcode_Fields();

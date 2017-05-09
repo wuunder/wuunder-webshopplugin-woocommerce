@@ -11,9 +11,6 @@ if( !class_exists('WC_Wuunder_Settings') ) {
         	add_action( 'woocommerce_settings_tabs_wuunder', array(&$this, 'settings_tab' ) );
         	add_action( 'woocommerce_update_options_wuunder', array(&$this, 'update_settings' ) );
 
-        	//add_action( 'admin_menu', array( &$this, 'menu' ) ); // Add menu.
-			//add_action( 'admin_init', array( &$this, 'init_settings' ) ); // Registers settings
-			
 		}
 
 		public static function add_settings_tab( $settings_tabs ) {
@@ -88,13 +85,11 @@ if( !class_exists('WC_Wuunder_Settings') ) {
 	            'api' => array(
 	                'name' => __( 'Live / productie API Key', 'woocommerce-wuunder' ),
 	                'type' => 'text',
-					//'desc' => __( '', 'woocommerce-wuunder' ),
 	                'id'   => 'wc_wuunder_api'
 	            ),
 	            'test_api' => array(
 	                'name' => __( 'Test / staging API Key', 'woocommerce-wuunder' ),
 	                'type' => 'text',
-					//'desc' => __( '', 'woocommerce-wuunder' ),
 	                'id'   => 'wc_wuunder_test_api'
 	            ),
 	            'api_status' => array(
@@ -107,34 +102,6 @@ if( !class_exists('WC_Wuunder_Settings') ) {
 	                ),
 	                'id'   => 'wc_wuunder_api_status'
 	            ),
-	            /*
-	            'company' => array(
-	                'name' => __( 'Bedrijfsnaam', 'woocommerce-wuunder' ),
-	                'type' => 'text',
-	                'id'   => 'wc_wuunder_company_name'
-	            ),
-	            'firstname' => array(
-	                'name' => __( 'Voornaam', 'woocommerce-wuunder' ),
-	                'type' => 'text',
-	                'id'   => 'wc_wuunder_company_firstname'
-	            ),
-	            'lastname' => array(
-	                'name' => __( 'Achternaam', 'woocommerce-wuunder' ),
-	                'type' => 'text',
-	                'id'   => 'wc_wuunder_company_lastname'
-	            ),
-	            'email' => array(
-	                'name' => __( 'Email', 'woocommerce-wuunder' ),
-	                'type' => 'email',
-	                'id'   => 'wc_wuunder_company_email'
-	            ),
-	            'phone' => array(
-	                'name' => __( 'Telefoonnummer', 'woocommerce-wuunder' ),
-	                'type' => 'text',
-	                'desc' => __( '+31612345678', 'woocommerce-wuunder' ),
-	                'id'   => 'wc_wuunder_company_phone'
-	            ),
-	            */
 	            'section_end' => array(
                  	'type' => 'sectionend',
                 	'id' => 'wc_wuunder_section_end'
