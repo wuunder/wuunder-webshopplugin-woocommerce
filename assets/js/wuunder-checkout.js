@@ -25,7 +25,6 @@ jQuery(document).ready(function($) {
 		$('#shipping_house_number_field').hide();
 		$('#shipping_house_number_suffix_field').hide();
 	}
-	
 	jQuery('#billing_phone').keyup(function () { 
 		var phoneno = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
 		var voorbeeld = /[^0-9\+\-\.]/g;
