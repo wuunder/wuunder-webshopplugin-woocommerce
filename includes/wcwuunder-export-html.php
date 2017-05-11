@@ -259,7 +259,7 @@ if (empty($check_company)) { ?>
                             <?php
                         }
                         if ($total_weight === 0) {
-                            $total_weight = 5000;
+                            $total_weight = 19000;
                         }
                         ?>
                         </tbody>
@@ -292,7 +292,7 @@ if (empty($check_company)) { ?>
                     </div>
                     <?php
                     if (strcmp($product['dimensions'], "Niet beschikbaar") === 0) {
-                        $size = array(40, 30, 25);
+                        $size = array(80, 50, 35);
                     } else {
                         $size = explode(' x ', $product['dimensions']);
                     }
