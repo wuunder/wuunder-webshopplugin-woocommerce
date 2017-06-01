@@ -1,0 +1,7 @@
+#TB_ajaxContent {
+    max-height: calc(100vh - 20px) !important;
+}
+
+#alertBox {
+    display: none;
+}

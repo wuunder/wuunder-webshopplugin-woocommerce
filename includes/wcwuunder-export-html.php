@@ -60,9 +60,28 @@
 
         jQuery(".button-wuunder").click(function () {
             jQuery(".button-wuunder").attr("disabled", true);
-            jQuery('.page-form').submit();
+//            jQuery('.page-form').submit();
+            jQuery.post(window.location.href, jQuery('.page-form').serialize(), function (data) {
+                console.log(JSON.parse(data));
+                var postData = JSON.parse(data);
+                if (postData.errors.length) {
+                    var html = "<ul>";
+                    for (var error in postData.errors) {
+                        html += "<li>" + postData.errors[error].field + ": " + postData.errors[error].messages.join(", ") + "</li>";
+                    }
+                    jQuery("#alertBox .alert").html(html + "</ul>");
+                    jQuery("#alertBox").show();
+                    jQuery(".button-wuunder").attr("disabled", false);
+                } else if (postData.success) {
+                    window.location.replace(postData.redirect_url);
+                }
+            });
         });
-
+        TB_HEIGHT = Math.round(jQuery(window).height() - 20);
+        jQuery(window).resize(function () {
+            TB_HEIGHT = Math.round(jQuery(window).height() - 20);
+            console.log(jQuery(window).height())
+        });
     });
 </script>
 
@@ -95,9 +114,19 @@ if (empty($check_company)) { ?>
     foreach ($data as $row) : ?>
         <fieldset>
             <input type="hidden" name="data[customer_reference]" value="<?php echo $row['orderid']; ?>">
-            <input type="hidden" name="data[value]" value="<?php echo $row['waarde']; ?>">
+            <input type="hidden" name="data[value]" value="<?php if ($row['waarde'] === 0 || empty($row['waarde'])) {
+                echo 25;
+            } else {
+                echo $row['waarde'];
+            } ?>">
             <input type="hidden" name="data[picture]" value="<?php echo $row['picture']; ?>">
+            <div id="alertBox" class="row">
+                <div class="col-xs-12">
+                    <div class="alert alert-danger">
 
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="panel panel-default">
@@ -229,7 +258,9 @@ if (empty($check_company)) { ?>
                         <label class="control-label" for="wuunderPhonenumber">Mobiele nummer <span class="text-primary">*</span>
                             (Gebruik de opmaak: +31612345678)</label>
                         <input type="text" class="form-control input-sm" name="data[phone_number]"
-                               id="wuunderPhonenumber" value="<?php echo ((empty($row['telefoon']) || strcmp($row['telefoon'], "+31") === 0) ? "+31628307244" : $row['telefoon']); ?>" required="">
+                               id="wuunderPhonenumber"
+                               value="<?php echo((empty($row['telefoon']) || strcmp($row['telefoon'], "+31") === 0) ? "+31628307244" : $row['telefoon']); ?>"
+                               required="">
                     </div>
                 </div>
             </div>
@@ -291,7 +322,7 @@ if (empty($check_company)) { ?>
                         </select>
                     </div>
                     <?php
-                    if (strcmp($product['dimensions'], "Niet beschikbaar") === 0) {
+                    if (strcmp($product['dimensions'], "Niet beschikbaar") === 0 || empty($product['dimensions'])) {
                         $size = array(40, 30, 25);
                     } else {
                         $size = explode(' x ', $product['dimensions']);
