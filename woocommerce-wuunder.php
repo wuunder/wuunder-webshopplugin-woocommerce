@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: WooCommerce Wuunder
- * Plugin URI: http://www.wuunder.co
- * Description: Wuunder shipping method
- * Version: 0.7
- * Author: MONSTER Internet & Marketing Solutions | Jeroen Branje
- * Author URI: http://mims.nl
+ * Plugin URI: http://wearewuunder.com
+ * Description: Wuunder shipping plugin
+ * Version: 0.9.1
+ * Author: Wuunder
+ * Author URI: http://wearewuunder.com
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -30,16 +30,16 @@ if( !class_exists('Woocommerce_Wuunder') ) {
 		public static $plugin_path;
 		public static $plugin_basename;
 
-		const VERSION = '0.7';
+		const VERSION = '0.9.1';
 
 		public function __construct() {
 
 			self::$plugin_basename = plugin_basename(__FILE__);
 			self::$plugin_url = plugin_dir_url(self::$plugin_basename);
 			self::$plugin_path = trailingslashit(dirname(__FILE__));
-			
+
 			add_action( 'admin_enqueue_scripts', array( &$this, 'add_admin_styles_scripts' ) );
-			
+
 			require_once(WW_PLUGIN_ADMIN_DIR.'/wcwuunder-admin.php');
 			require_once(WW_PLUGIN_ADMIN_DIR.'/wcwuunder-postcode-fields.php');
 
@@ -55,8 +55,8 @@ if( !class_exists('Woocommerce_Wuunder') ) {
 				wp_enqueue_script( 'thickbox' );
 				wp_enqueue_style( 'thickbox' );
 
-				wp_register_style( 'bootstrap-admin-styles', plugins_url( '/assets/css/bootstrap-simplex.min.css', __FILE__ ), array(), '', 'all' );
-				wp_enqueue_style( 'bootstrap-admin-styles' );
+				// wp_register_style( 'bootstrap-admin-styles', plugins_url( '/assets/css/bootstrap-simplex.min.css', __FILE__ ), array(), '', 'all' );
+				// wp_enqueue_style( 'bootstrap-admin-styles' );
 
 			}
 		}
