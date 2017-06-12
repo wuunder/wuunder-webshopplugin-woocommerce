@@ -55,8 +55,8 @@ if( !class_exists('Woocommerce_Wuunder') ) {
 				wp_enqueue_script( 'thickbox' );
 				wp_enqueue_style( 'thickbox' );
 
-				// wp_register_style( 'bootstrap-admin-styles', plugins_url( '/assets/css/bootstrap-simplex.min.css', __FILE__ ), array(), '', 'all' );
-				// wp_enqueue_style( 'bootstrap-admin-styles' );
+				 wp_register_style( 'bootstrap-admin-styles', plugins_url( '/assets/css/bootstrap-simplex.min.css', __FILE__ ), array(), '', 'all' );
+				 wp_enqueue_style( 'bootstrap-admin-styles' );
 
 			}
 		}
