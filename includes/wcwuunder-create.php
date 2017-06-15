@@ -10,14 +10,14 @@ if (!class_exists('WC_Wuunder_Create')) {
         public function __construct()
         {
 
-            add_action('load-edit.php', array(&$this, 'generate_shipping_label_action'));
+            add_action('load-edit.php', array(&$this, 'generateBookingUrl'));
+            add_action('load-edit.php', array(&$this, 'test'));
+            add_action('load-edit.php', array(&$this, 'webhook'));
             add_action('woocommerce_admin_order_actions_end', array(&$this, 'add_listing_actions'));
             add_action('add_meta_boxes_shop_order', array(&$this, 'add_meta_boxes'));
             add_action('admin_notices', array(&$this, 'sample_admin_notice__error'));
             wp_enqueue_style('wuunder-admin', (dirname(plugin_dir_url(__FILE__)) . '/assets/css/wuunder-admin.css'));
-
         }
-
 
         public function sample_admin_notice__error()
         {
@@ -45,222 +45,142 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         }
 
-        /**
-         * Export selected orders
-         *
-         * @access public
-         * @return void
-         */
-        public function generate_shipping_label_action()
+        private function buildWuunderData($orderId)
         {
+            $orderItems = $this->get_order_items($orderId);
+            $orderMeta = get_post_meta($orderId);
+            $order = new WC_Order($orderId);
+            $orderPicture = $this->get_base64_image($orderItems['images'][0]);;
 
-            if (isset($_REQUEST['action'])) {
-                $action = $_REQUEST['action'];
+            $defLength = 80;
+            $defWidth = 50;
+            $defHeight = 35;
+            $defWeight = 5000;
+            $defValue = 25 * 100;
 
-                switch ($action) {
-                    case 'wcwuunder':
+            // Get WooCommerce Wuunder Address from options page
+            $company = $this->get_company_address($orderId, 0);
+            $customer = $this->get_customer_address($orderId, $orderMeta['_billing_phone'][0]);
 
-                        $order_ids = $_GET['order_ids'];
-                        $order_meta = get_post_meta($order_ids);
-                        $order = new WC_Order($order_ids);
-                        $order_number = $order->get_order_number();
-                        $formatted_address = $order->get_formatted_shipping_address();
-                        $full_country = new WC_Countries;
-                        $bestelling = $this->get_order_items($order_ids);
-                        $check_company = $this->check_company_address();
+            $totalWeight = 0;
+            $dimensions = null;
+            $description = null;
 
-                        // Multiple address possible
-                        $available_addresses = array(0 => get_option('wc_wuunder_company_street') . ' ' . get_option('wc_wuunder_company_housenumber') . ' (' . get_option('wc_wuunder_company_name') . ')');
-                        if (get_option('wc_wuunder_company_street_1') && get_option('wc_wuunder_company_name_1')) {
-                            $available_addresses[1] = get_option('wc_wuunder_company_street_1') . ' ' . get_option('wc_wuunder_company_housenumber_1') . ' (' . get_option('wc_wuunder_company_name_1') . ')';
-                        }
-                        if (get_option('wc_wuunder_company_street_2') && get_option('wc_wuunder_company_name_2')) {
-                            $available_addresses[2] = get_option('wc_wuunder_company_street_2') . ' ' . get_option('wc_wuunder_company_housenumber_2') . ' (' . get_option('wc_wuunder_company_name_2') . ')';
-                        }
-
-                        $data[] = array(
-                            'firstname' => $order_meta['_shipping_first_name'][0],
-                            'lastname' => $order_meta['_shipping_last_name'][0],
-                            'bedrijfsnaam' => $order_meta['_shipping_company'][0],
-                            'postcode' => str_replace(' ', '', $order_meta['_shipping_postcode'][0]),
-                            'adres1' => isset($order_meta['_shipping_address_1'][0]) ? $order_meta['_shipping_address_1'][0] : '',
-                            'adres2' => isset($order_meta['_shipping_address_2'][0]) ? $order_meta['_shipping_address_2'][0] : '',
-                            'huisnummertoevoeging' => isset($order_meta['_shipping_house_number_suffix'][0]) ? $order_meta['_shipping_house_number_suffix'][0] : '',
-                            'woonplaats' => $order_meta['_shipping_city'][0],
-                            'land' => $full_country->countries[$order_meta['_shipping_country'][0]],
-                            'email' => $order_meta['_billing_email'][0],
-                            'telefoon' => $order_meta['_billing_phone'][0],
-                            'huisnummer' => isset($order_meta['_shipping_house_number'][0]) ? $order_meta['_shipping_house_number'][0] : '',
-                            'straat' => isset($order_meta['_shipping_street_name'][0]) ? $order_meta['_shipping_street_name'][0] : '',
-                            'landcode' => $order_meta['_shipping_country'][0],
-                            'orderid' => $order_ids,
-                            'ordernr' => $order_number,
-                            'picture' => $bestelling['images'][0],
-                            'bestelling' => $bestelling['products'],
-                            'formatted_address' => $formatted_address,
-                            'waarde' => $order->get_subtotal()
-                        );
-
-                        include('wcwuunder-export-html.php');
-                        die();
-
-                        break;
-
-                    case 'wcwuunder-export':
-
-                        $post_data = stripslashes_deep($_POST['data']);
-
-                        // Get image as base64_image
-                        $b64image = $this->get_base64_image($post_data['picture']);
-
-                        // Get WooCommerce Wuunder Address from options page
-                        $company = $this->get_company_address($post_data['customer_reference'], $post_data['pickup_address']);
-                        $customer = $this->get_customer_address($post_data['customer_reference'], $post_data['phone_number']);
-
-                        $shippingArray = array(
-                            "description" => $post_data['description'],
-                            "personal_message" => $post_data['personal_message'],
-                            "customer_reference" => $post_data['customer_reference'],
-                            "picture" => $b64image,
-                            "value" => $post_data['value'],
-                            "kind" => $post_data['kind'],
-                            "length" => $post_data['length'],
-                            "width" => $post_data['width'],
-                            "height" => $post_data['height'],
-                            "weight" => $post_data['weight'],
-                            "delivery_address" => $customer,
-                            "pickup_address" => $company,
-                        );
-
-                        $feedback = $this->api_request_new($shippingArray, 'POST');
-
-                        if (!empty($feedback['errors'])) {
-
-                            $error_notices = $feedback['errors'];
-                            $errors = '';
-                            foreach ($error_notices as $error_notice) {
-                                $errors .= '&error_melding[' . $error_notice['field'] . ']=' . $error_notice['field'] . ': ' . $error_notice['messages'][0];
-                                break;
-                            }
-                            echo json_encode(array("errors" => $error_notices));
-//							header( "refresh:0;url=".admin_url('edit.php?post_type=shop_order&notice=error'.$errors.'&id='.$post_data['customer_reference']) );
-
-                        } else {
-
-                            if (!empty($feedback['id']) || !empty($feedback['track_and_trace_url']) || !empty($feedback['label_url'])) {
-                                update_post_meta($post_data['customer_reference'], '_wuunder_label_id', $feedback['id']);
-                                update_post_meta($post_data['customer_reference'], '_wuunder_track_and_trace_url', $feedback['track_and_trace_url']);
-                                update_post_meta($post_data['customer_reference'], '_wuunder_label_url', $feedback['label_url']);
-                            }
-                            echo json_encode(array("errors" => array(), "success" => true, "redirect_url" => admin_url('edit.php?post_type=shop_order&notice=success&id=' . $post_data['customer_reference'])));
-//                            header("refresh:0;url=" . admin_url('edit.php?post_type=shop_order&notice=success&id=' . $post_data['customer_reference']));
-                        }
-
-                        exit;
-
-                    case 'wcwuunder-retour':
-
-                        $post_data = stripslashes_deep($_POST['data']);
-
-                        // Get image as base64_image
-                        $b64image = $this->get_base64_image($post_data['picture']);
-
-                        // Get WooCommerce Wuunder Address from options page
-                        $company = $this->get_company_address($post_data['customer_reference'], $post_data['pickup_address']);
-                        $customer = $this->get_customer_address($post_data['customer_reference'], $post_data['phone_number']);
-
-                        $shippingArray = array(
-                            "description" => $post_data['description'],
-                            "personal_message" => $post_data['personal_message'],
-                            "customer_reference" => $post_data['customer_reference'],
-                            "picture" => $b64image,
-                            "value" => $post_data['value'],
-                            "kind" => $post_data['kind'],
-                            "length" => $post_data['length'],
-                            "width" => $post_data['width'],
-                            "height" => $post_data['height'],
-                            "weight" => $post_data['weight'],
-                            "delivery_address" => $company,
-                            "pickup_address" => $customer,
-                        );
-
-                        $feedback = $this->api_request_new($shippingArray, 'POST');
-
-                        if (!empty($feedback['errors'])) {
-
-                            $error_notices = $feedback['errors'];
-                            $errors = '';
-                            foreach ($error_notices as $error_notice) {
-                                $errors .= '&error_melding[' . $error_notice['field'] . ']=' . $error_notice['field'] . ': ' . $error_notice['messages'][0];
-                                break;
-                            }
-                            header("refresh:0;url=" . admin_url('edit.php?post_type=shop_order&notice=error' . $errors . '&id=' . $post_data['customer_reference']));
-
-                        } else {
-                            if (!empty($feedback['id']) || !empty($feedback['track_and_trace_url']) || !empty($feedback['label_url'])) {
-
-                                update_post_meta($post_data['customer_reference'], '_wuunder_retour_label_id', $feedback['id']);
-                                update_post_meta($post_data['customer_reference'], '_wuunder_retour_track_and_trace_url', $feedback['track_and_trace_url']);
-                                update_post_meta($post_data['customer_reference'], '_wuunder_retour_label_url', $feedback['label_url']);
-
-                                echo get_post_meta($post_data['customer_reference'], '_wuunder_retour_label_id', true);
-                            }
-
-                            header("refresh:0;url=" . admin_url('edit.php?post_type=shop_order&notice=success&id=' . $post_data['customer_reference']));
-                        }
-
-                        exit;
-                    default:
-                        return;
+            foreach ($orderItems['products'] as $item) {
+                $totalWeight += $item['total_weight'];
+                if ($dimensions === null) {
+                    $dimensions = explode(' x ', $item['dimensions']);
                 }
-
+                if ($description === null) {
+                    $description = $item['name'];
+                }
             }
 
+            if ($totalWeight === 0) {
+                $totalWeight = $defWeight;
+            }
+            if (count($dimensions) !== 3) {
+                $dimensions = array($defLength, $defWidth, $defHeight);
+            }
+
+            $value = intval($order->get_subtotal() * 100);
+
+            return array(
+                "description" => $description,
+                "personal_message" => "",
+                "customer_reference" => $orderId,
+                "picture" => $orderPicture,
+                "value" => ($value ? $value : $defValue),
+                "kind" => ($totalWeight > 23000 ? "pallet" : "package"),
+                "length" => $dimensions[0],
+                "width" => $dimensions[1],
+                "height" => $dimensions[2],
+                "weight" => ($totalWeight ? $totalWeight : $defWeight),
+                "delivery_address" => $customer,
+                "pickup_address" => $company,
+            );
         }
 
-        public function api_request_new($data, $method)
+        public function generateBookingUrl()
         {
-            if (empty($data['picture'])) {
-                $data['picture'] = null;
-            }
-            $json_data = json_encode($data);
-            $status = get_option('wc_wuunder_api_status');
+            if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
+                $order_id = $_REQUEST['order'];
+//                $this->load->model('extension/module/wuunder');
+//                if (!$this->model_extension_module_wuunder->checkLabelExists($order_id)) {
+                if (true) {
+                    $postData = stripslashes_deep($_POST['data']);
+                    $bookingToken = uniqid();
+//                    $this->model_extension_module_wuunder->insertBookingToken($order_id, $booking_token);
+                    update_post_meta($order_id, '_wuunder_label_booking_token', $bookingToken);
 
-            // Check Woocommerce Wuunder Setting
-            if ($status == 'productie') {
-                $access_key = get_option('wc_wuunder_api');
-                // Productie api url
-                $curl = curl_init('https://api.wuunder.co/api/shipments');
+                    $redirectUrl = urlencode(get_site_url(null, "/wp-admin/edit.php?post_type=shop_order"));
+                    $webhookUrl = urlencode(get_site_url(null, "/wuunder/webhook?order=" . $order_id . '&token=' . $bookingToken));
+
+                    $status = get_option('wc_wuunder_api_status');
+                    if ($status == 'productie') {
+                        $apiUrl = 'https://api.wuunder.co/api/bookings?redirect_url=' . $redirectUrl . '&webhook_url=' . $webhookUrl;
+                        $apiKey = get_option('wc_wuunder_api');
+                    } else {
+                        $apiUrl = 'https://api-staging.wuunder.co/api/bookings?redirect_url=' . $redirectUrl . '&webhook_url=' . $webhookUrl;
+                        $apiKey = get_option('wc_wuunder_test_api');
+                    }
+
+                    $wuunderData = $this->buildWuunderData($order_id, $postData);
+
+                    // Encode variables
+                    $json = json_encode($wuunderData);
+
+                    // Setup API connection
+                    $cc = curl_init($apiUrl);
+
+                    curl_setopt($cc, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $apiKey, 'Content-type: application/json'));
+                    curl_setopt($cc, CURLOPT_POST, 1);
+                    curl_setopt($cc, CURLOPT_POSTFIELDS, $json);
+                    curl_setopt($cc, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($cc, CURLOPT_VERBOSE, 1);
+                    curl_setopt($cc, CURLOPT_HEADER, 1);
+
+                    // Don't log base64 image string
+                    $wuunderData['picture'] = 'base64 string removed';
+
+                    // Execute the cURL, fetch the XML
+                    $result = curl_exec($cc);
+                    $header_size = curl_getinfo($cc, CURLINFO_HEADER_SIZE);
+                    $header = substr($result, 0, $header_size);
+                    preg_match("!\r\n(?:Location|URI): *(.*?) *\r\n!i", $header, $matches);
+                    $url = $matches[1];
+
+                    var_dump($result);
+                    // Close connection
+                    curl_close($cc);
+
+                    update_post_meta($order_id, '_wuunder_label_booking_url', $url);
+                    echo $url;
+                    if (!(substr($url, 0, 5) === "http:" || substr($url, 0, 6) === "https:")) {
+                        if ($status == 'productie') {
+                            $url = 'https://api.wuunder.co' . $url;
+                        } else {
+                            $url = 'https://api-staging.wuunder.co' . $url;
+                        }
+                    }
+                    wp_redirect($url);
+                    exit;
+                } else {
+//                    wp_redirect(get_site_url(null, " / wp - admin / edit . php ? post_type = shop_order"));
+//                    exit;
+                }
             } else {
-                $access_key = get_option('wc_wuunder_test_api');
-                // Staging api url
-                $curl = curl_init('https://api-staging.wuunder.co/api/shipments');
+//                wp_redirect(get_site_url(null, " / wp - admin / edit . php ? post_type = shop_order"));
+//                exit;
             }
+        }
 
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_key, 'Content-type: application/json'));
-
-            switch ($method) {
-                case "POST":
-                    curl_setopt($curl, CURLOPT_POST, 1);
-
-                    if ($json_data)
-                        curl_setopt($curl, CURLOPT_POSTFIELDS, $json_data);
-                    break;
-                case "PUT":
-                    curl_setopt($curl, CURLOPT_PUT, 1);
-                    break;
-                default:
-                    if ($json_data)
-                        $url = sprintf("%s?%s", $url, http_build_query($json_data));
-            }
-
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($curl);
-            curl_close($curl);
-            $result = json_decode($result, true);
-
-            return $result;
-
+        public function test()
+        {
+//            $order_meta = get_post_meta(55);
+//            echo " <pre>";
+//            var_dump($order_meta);
+//            echo " </pre > ";
         }
 
         public function check_company_address()
@@ -289,7 +209,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     "given_name" => get_option('wc_wuunder_company_firstname'),
                     "locality" => get_option('wc_wuunder_company_city'),
                     "phone_number" => get_option('wc_wuunder_company_phone'),
-                    "street_address" => get_option('wc_wuunder_company_street'),
+                    "street_name" => get_option('wc_wuunder_company_street'),
                     "house_number" => get_option('wc_wuunder_company_housenumber'),
                     "zip_code" => get_option('wc_wuunder_company_postode'),
                     "country" => get_option('wc_wuunder_company_country'),
@@ -304,7 +224,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     "given_name" => get_option('wc_wuunder_company_firstname_' . $pickup_address),
                     "locality" => get_option('wc_wuunder_company_city_' . $pickup_address),
                     "phone_number" => get_option('wc_wuunder_company_phone_' . $pickup_address),
-                    "street_address" => get_option('wc_wuunder_company_street_' . $pickup_address),
+                    "street_name" => get_option('wc_wuunder_company_street_' . $pickup_address),
                     "house_number" => get_option('wc_wuunder_company_housenumber_' . $pickup_address),
                     "zip_code" => get_option('wc_wuunder_company_postode_' . $pickup_address),
                     "country" => get_option('wc_wuunder_company_country_' . $pickup_address),
@@ -320,18 +240,23 @@ if (!class_exists('WC_Wuunder_Create')) {
 
             // Get customer address from order
             $order_meta = get_post_meta($orderid);
+            if (array_key_exists("_shipping_street_name", $order_meta)) {
+                $prefix = "_shipping";
+            } else {
+                $prefix = "_billing";
+            }
             $customer_address = array(
                 "business" => $order_meta['_shipping_company'][0],
                 "chamber_of_commerce_number" => $orderid,
                 "email_address" => $order_meta['_billing_email'][0],
-                "family_name" => $order_meta['_shipping_last_name'][0],
-                "given_name" => $order_meta['_shipping_first_name'][0],
-                "locality" => $order_meta['_shipping_city'][0],
+                "family_name" => $order_meta[$prefix.'_last_name'][0],
+                "given_name" => $order_meta[$prefix.'_first_name'][0],
+                "locality" => $order_meta[$prefix.'_city'][0],
                 "phone_number" => "$phone",
-                "street_address" => isset($order_meta['_shipping_street_name'][0]) ? $order_meta['_shipping_street_name'][0] : '',
-                "house_number" => isset($order_meta['_shipping_house_number'][0]) ? $order_meta['_shipping_house_number'][0] : '',
-                "zip_code" => str_replace(' ', '', $order_meta['_shipping_postcode'][0]),
-                "country" => $order_meta['_shipping_country'][0],
+                "street_name" => isset($order_meta[$prefix.'_street_name'][0]) ? $order_meta[$prefix.'_street_name'][0] : '',
+                "house_number" => isset($order_meta[$prefix.'_house_number'][0]) ? $order_meta[$prefix.'_house_number'][0] : '',
+                "zip_code" => str_replace(' ', '', $order_meta[$prefix.'_postcode'][0]),
+                "country" => $order_meta[$prefix.'_country'][0],
             );
 
             return $customer_address;
@@ -358,7 +283,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 return;
             }
 
-            if (!empty(get_post_meta($order->id, '_wuunder_label_id', true)) && empty(get_post_meta($order->id, '_wuunder_retour_label_id', true))) {
+            if (!empty(get_post_meta($order->id, '_wuunder_label_id', true))) {
                 $listing_actions = array(
                     'shipping_label' => array(
                         'url' => get_post_meta($order->id, '_wuunder_label_url', true),
@@ -369,12 +294,6 @@ if (!class_exists('WC_Wuunder_Create')) {
                         'url' => get_post_meta($order->id, '_wuunder_track_and_trace_url', true),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/in-transit.png',
                         'title' => __('Track & Trace', 'woocommerce-wuunder'),
-                    ),
-                    'retour' => array(
-                        'url' => wp_nonce_url(admin_url('edit.php?&action=wcwuunder&order_ids=' . $order->id . '&label=retour&width=900&height=700'), 'wcwuunder'),
-                        'action' => 'thickbox',
-                        'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/retour-create-icon.png',
-                        'title' => __('Retour label aanvragen', 'woocommerce-wuunder'),
                     )
                 );
 
@@ -382,49 +301,16 @@ if (!class_exists('WC_Wuunder_Create')) {
                 foreach ($listing_actions as $action => $data) {
                     $target = ' target="_blank" ';
                     ?>
-                    <a<?php echo $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
+                    <a<?php echo $target; ?>href=" <?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
                     <img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['title']; ?>">
                     </a>
                     <?php
                 }
                 echo '</div>';
-            } elseif (!empty(get_post_meta($order->id, '_wuunder_retour_label_id', true))) {
-                $listing_actions = array(
-                    'shipping_label' => array(
-                        'url' => get_post_meta($order->id, '_wuunder_label_url', true),
-                        'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/print-label.png',
-                        'alt' => __('Verzendlabel', 'woocommerce-wuunder'),
-                        'title' => __('Download label', 'woocommerce-wuunder'),
-                    ),
-                    'track_trace' => array(
-                        'url' => get_post_meta($order->id, '_wuunder_retour_track_and_trace_url', true),
-                        'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/retour-in-transit.png',
-                        'alt' => __('Track & Trace retour', 'woocommerce-wuunder'),
-                        'title' => __('Track & Trace retour', 'woocommerce-wuunder'),
-                    ),
-                    'retour_downloaden' => array(
-                        'url' => get_post_meta($order->id, '_wuunder_retour_label_url', true),
-                        'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/retour-download-icon.png',
-                        'alt' => __('Retour label downloaden', 'woocommerce-wuunder'),
-                        'title' => __('Downloaden', 'woocommerce-wuunder'),
-                    )
-                );
-
-                echo '<div style="clear:both;">';
-                foreach ($listing_actions as $action => $data) {
-                    $target = ' target="_blank" ';
-                    ?>
-                    <a<?php echo $target; ?>href="<?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em;  padding:3px; color:#fff;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['alt']; ?>">
-                    <img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['title']; ?>">
-                    </a>
-                    <?php
-                }
-                echo '</div>';
-
             } else {
                 $listing_actions = array(
                     'create_label' => array(
-                        'url' => wp_nonce_url(admin_url('edit.php?&action=wcwuunder&order_ids=' . $order->id . '&width=900&height=700'), 'wcwuunder'),
+                        'url' => (get_post_meta($order->id, '_wuunder_label_booking_url', true) ? get_post_meta($order->id, '_wuunder_label_booking_url', true) : wp_nonce_url(admin_url('edit.php?&action=bookorder&order=' . $order->id), 'wcwuunder')),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/create-label.png',
                         'alt' => __('Verzendlabel aanmaken', 'woocommerce-wuunder'),
                     ),
@@ -432,7 +318,7 @@ if (!class_exists('WC_Wuunder_Create')) {
 
                 foreach ($listing_actions as $action => $data) {
                     ?>
-                    <a href="<?php echo $data['url']; ?>" class="thickbox button tips <?php echo $action; ?>"
+                    <a href="<?php echo $data['url']; ?>" class="button tips <?php echo $action; ?>"
                        style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['alt']; ?>"
                        data-tip="<?php echo $data['alt']; ?>">
                         <img src="<?php echo $data['img']; ?>" style="width:16px;" alt="<?php echo $data['alt']; ?>">
