@@ -350,28 +350,9 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         public function sidebar_box_content($post)
         {
-
             global $post_id;
-
-            $meta_actions = array(
-                'shipping_label' => array(
-                    'url' => wp_nonce_url(admin_url('edit.php?&action=wcwuunder&order_ids=' . $post_id), 'wcwuunder'),
-                    'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/shipping-icon.png',
-                    'alt' => __('Shipping label', 'woocommerce-wuunder'),
-                    'title' => __('Shipping label', 'wpo_wcpdf'),
-                ),
-            );
-
-            ?>
-            <ul class="ww-actions">
-                <?php
-                foreach ($meta_actions as $action => $data) {
-                    printf('<li><a href="%1$s" class="thickbox button" alt="%2$s">%3$s</a></li>', $data['url'], $data['alt'], $data['title']);
-                }
-                ?>
-            </ul>
-            <?php
-
+            $order = new WC_Order($post_id);
+            $this->add_listing_actions($order);
         }
 
         public function get_order_items($order_id)

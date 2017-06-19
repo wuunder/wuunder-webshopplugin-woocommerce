@@ -63,11 +63,11 @@ if (!class_exists('Woocommerce_Wuunder')) {
         {
             global $post_type;
             if ($post_type == 'shop_order') {
-                wp_enqueue_script('thickbox');
-                wp_enqueue_style('thickbox');
-
-                wp_register_style('bootstrap-admin-styles', plugins_url('/assets/css/bootstrap-simplex.min.css', __FILE__), array(), '', 'all');
-                wp_enqueue_style('bootstrap-admin-styles');
+//                wp_enqueue_script('thickbox');
+//                wp_enqueue_style('thickbox');
+//
+//                wp_register_style('bootstrap-admin-styles', plugins_url('/assets/css/bootstrap-simplex.min.css', __FILE__), array(), '', 'all');
+//                wp_enqueue_style('bootstrap-admin-styles');
             }
         }
 
@@ -82,12 +82,6 @@ if (!class_exists('Woocommerce_Wuunder')) {
                     update_post_meta($orderId, '_wuunder_label_id', $data['shipment']['id']);
                     update_post_meta($orderId, '_wuunder_track_and_trace_url', $data['shipment']['track_and_trace_url']);
                     update_post_meta($orderId, '_wuunder_label_url', $data['shipment']['label_url']);
-
-//                    $order = new WC_Order($orderId);
-//                    $orderItems = $order->get_items();
-//                    foreach ($orderItems as $item) {
-//                        wc_update_product_stock($item['product_id'], $item['quantity'], "decrease");
-//                    }
                 }
             } else {
                 wp_redirect("", 500);
