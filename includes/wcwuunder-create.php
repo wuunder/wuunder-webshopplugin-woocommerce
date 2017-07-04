@@ -1,5 +1,5 @@
 <?php
-error_reporting(1);
+//error_reporting(1);
 
 if (!class_exists('WC_Wuunder_Create')) {
 
@@ -9,7 +9,6 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         public function __construct()
         {
-
             add_action('load-edit.php', array(&$this, 'generateBookingUrl'));
             add_action('load-edit.php', array(&$this, 'test'));
             add_action('load-edit.php', array(&$this, 'webhook'));
@@ -105,12 +104,9 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
             if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
                 $order_id = $_REQUEST['order'];
-//                $this->load->model('extension/module/wuunder');
-//                if (!$this->model_extension_module_wuunder->checkLabelExists($order_id)) {
                 if (true) {
                     $postData = stripslashes_deep($_POST['data']);
                     $bookingToken = uniqid();
-//                    $this->model_extension_module_wuunder->insertBookingToken($order_id, $booking_token);
                     update_post_meta($order_id, '_wuunder_label_booking_token', $bookingToken);
 
                     $redirectUrl = urlencode(get_site_url(null, "/wp-admin/edit.php?post_type=shop_order"));
@@ -177,10 +173,11 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         public function test()
         {
-//            $order_meta = get_post_meta(55);
-//            echo " <pre>";
+//            $order_meta = get_post_meta(70);
+//            var_dump($this->get_customer_address_part($order_meta, '_first_name'));
+//            echo "<pre>";
 //            var_dump($order_meta);
-//            echo " </pre > ";
+//            echo " </pre>";
         }
 
         public function check_company_address()
@@ -235,28 +232,34 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         }
 
+        private function get_customer_address_part($order_meta, $suffix)
+        {
+            if (isset($order_meta['_shipping' . $suffix]) && !empty($order_meta['_shipping' . $suffix][0])) {
+                return $order_meta['_shipping' . $suffix][0];
+            } else if (isset($order_meta['_billing' . $suffix]) && !empty($order_meta['_billing' . $suffix][0])) {
+                return $order_meta['_billing' . $suffix][0];
+            } else {
+                return "-";
+            }
+        }
+
         public function get_customer_address($orderid, $phone)
         {
 
             // Get customer address from order
             $order_meta = get_post_meta($orderid);
-            if (array_key_exists("_shipping_street_name", $order_meta)) {
-                $prefix = "_shipping";
-            } else {
-                $prefix = "_billing";
-            }
             $customer_address = array(
-                "business" => $order_meta['_shipping_company'][0],
+                "business" => $this->get_customer_address_part($order_meta, '_shipping_company'),
                 "chamber_of_commerce_number" => $orderid,
-                "email_address" => $order_meta['_billing_email'][0],
-                "family_name" => $order_meta[$prefix.'_last_name'][0],
-                "given_name" => $order_meta[$prefix.'_first_name'][0],
-                "locality" => $order_meta[$prefix.'_city'][0],
+                "email_address" => $this->get_customer_address_part($order_meta, '_billing_email'),
+                "family_name" => $this->get_customer_address_part($order_meta, '_last_name'),
+                "given_name" => $this->get_customer_address_part($order_meta, '_first_name'),
+                "locality" => $this->get_customer_address_part($order_meta, '_city'),
                 "phone_number" => "$phone",
-                "street_name" => isset($order_meta[$prefix.'_street_name'][0]) ? $order_meta[$prefix.'_street_name'][0] : '',
-                "house_number" => isset($order_meta[$prefix.'_house_number'][0]) ? $order_meta[$prefix.'_house_number'][0] : '',
-                "zip_code" => str_replace(' ', '', $order_meta[$prefix.'_postcode'][0]),
-                "country" => $order_meta[$prefix.'_country'][0],
+                "street_name" => $this->get_customer_address_part($order_meta, '_street_name'),
+                "house_number" => $this->get_customer_address_part($order_meta, '_house_number'),
+                "zip_code" => str_replace(' ', '', $this->get_customer_address_part($order_meta, '_postcode')),
+                "country" => $this->get_customer_address_part($order_meta, '_country'),
             );
 
             return $customer_address;
