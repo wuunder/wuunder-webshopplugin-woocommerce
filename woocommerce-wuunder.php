@@ -51,7 +51,7 @@ if (!class_exists('Woocommerce_Wuunder')) {
                     exit;
                 }
             });
-
+            add_action('load-edit.php', array(&$this, 'webhook'));
         }
 
         public function ww_load_textdomain()
@@ -73,6 +73,10 @@ if (!class_exists('Woocommerce_Wuunder')) {
 
         public function webhook()
         {
+            if (!isset($_REQUEST['order']) || !isset($_REQUEST['token'])) {
+                wp_redirect("", 500);
+                return;
+            }
             $orderId = $_REQUEST['order'];
             $bookingToken = $_REQUEST['token'];
             $data = json_decode(file_get_contents('php://input'), true);

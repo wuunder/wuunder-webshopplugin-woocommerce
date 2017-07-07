@@ -11,7 +11,6 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
             add_action('load-edit.php', array(&$this, 'generateBookingUrl'));
             add_action('load-edit.php', array(&$this, 'test'));
-            add_action('load-edit.php', array(&$this, 'webhook'));
             add_action('woocommerce_admin_order_actions_end', array(&$this, 'add_listing_actions'));
             add_action('add_meta_boxes_shop_order', array(&$this, 'add_meta_boxes'));
             add_action('admin_notices', array(&$this, 'sample_admin_notice__error'));
@@ -21,7 +20,7 @@ if (!class_exists('WC_Wuunder_Create')) {
         public function sample_admin_notice__error()
         {
 
-            if ($_GET['notice'] == 'error') {
+            if (isset($_GET['notice']) && $_GET['notice'] == 'error') {
 
                 $class = 'notice notice-error';
                 $message = __('<b>Het aanmaken van het label voor #' . $_GET['id'] . ' is mislukt</b>', 'woocommerce-wuunder');
@@ -34,7 +33,7 @@ if (!class_exists('WC_Wuunder_Create')) {
 
                 printf('<div class="%1$s"><p>%2$s</p></div>', $class, $message);
 
-            } else if ($_GET['notice'] == 'success') {
+            } else if (isset($_GET['notice']) && $_GET['notice'] == 'success') {
 
                 $class = 'notice notice-success';
                 $message = __('Het verzendlabel voor #' . $_GET['id'] . ' is aangemaakt', 'woocommerce-wuunder');
@@ -146,7 +145,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     preg_match("!\r\n(?:Location|URI): *(.*?) *\r\n!i", $header, $matches);
                     $url = $matches[1];
 
-                    var_dump($result);
+//                    var_dump($wuunderData);
                     // Close connection
                     curl_close($cc);
 
@@ -173,8 +172,8 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         public function test()
         {
-//            $order_meta = get_post_meta(70);
-//            var_dump($this->get_customer_address_part($order_meta, '_first_name'));
+//            $order_meta = get_post_meta(72);
+////            var_dump($this->get_customer_address_part($order_meta, '_first_name'));
 //            echo "<pre>";
 //            var_dump($order_meta);
 //            echo " </pre>";
@@ -232,6 +231,21 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         }
 
+        private function separateAddressLine($addressLine)
+        {
+            if (preg_match('/^([^\d]*[^\d\s]) *(\d.*)$/', $addressLine, $result)) {
+                if (count($result) >= 2) {
+                    $streetName = $result[1];
+                    $streetNumber = $result[2];
+                } else {
+                    return array($addressLine, "");
+                }
+
+                return array($streetName, $streetNumber);
+            }
+            return array($addressLine, "");
+        }
+
         private function get_customer_address_part($order_meta, $suffix)
         {
             if (isset($order_meta['_shipping' . $suffix]) && !empty($order_meta['_shipping' . $suffix][0])) {
@@ -239,15 +253,32 @@ if (!class_exists('WC_Wuunder_Create')) {
             } else if (isset($order_meta['_billing' . $suffix]) && !empty($order_meta['_billing' . $suffix][0])) {
                 return $order_meta['_billing' . $suffix][0];
             } else {
-                return "-";
+                return "";
+            }
+        }
+
+        private function get_customer_address_from_address_line($order_meta) {
+            if (isset($order_meta['_shipping_address_1']) && !empty($order_meta['_shipping_address_1'])) {
+                return $this->separateAddressLine($order_meta['_shipping_address_1'][0]);
+            } else if (isset($order_meta['_billing_address_1']) && !empty($order_meta['_billing_address_1'])) {
+                return $this->separateAddressLine($order_meta['_billing_address_1'][0]);
+            } else {
+                return "";
             }
         }
 
         public function get_customer_address($orderid, $phone)
         {
-
             // Get customer address from order
             $order_meta = get_post_meta($orderid);
+            $street_name = $this->get_customer_address_part($order_meta, '_street_name');
+            if (empty($street_name)) {
+                $street_name = $this->get_customer_address_from_address_line($order_meta)[0];
+            }
+            $house_number = $this->get_customer_address_part($order_meta, '_house_number').$this->get_customer_address_part($order_meta, '_house_number_suffix');
+            if (empty($house_number)) {
+                $house_number = $this->get_customer_address_from_address_line($order_meta)[1];
+            }
             $customer_address = array(
                 "business" => $this->get_customer_address_part($order_meta, '_shipping_company'),
                 "chamber_of_commerce_number" => $orderid,
@@ -256,8 +287,8 @@ if (!class_exists('WC_Wuunder_Create')) {
                 "given_name" => $this->get_customer_address_part($order_meta, '_first_name'),
                 "locality" => $this->get_customer_address_part($order_meta, '_city'),
                 "phone_number" => "$phone",
-                "street_name" => $this->get_customer_address_part($order_meta, '_street_name'),
-                "house_number" => $this->get_customer_address_part($order_meta, '_house_number'),
+                "street_name" => $street_name,
+                "house_number" => $house_number,
                 "zip_code" => str_replace(' ', '', $this->get_customer_address_part($order_meta, '_postcode')),
                 "country" => $this->get_customer_address_part($order_meta, '_country'),
             );
