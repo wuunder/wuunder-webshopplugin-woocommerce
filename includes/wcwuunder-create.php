@@ -172,7 +172,7 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         public function test()
         {
-//            $order_meta = get_post_meta(72);
+//            $order_meta = get_post_meta(73);
 ////            var_dump($this->get_customer_address_part($order_meta, '_first_name'));
 //            echo "<pre>";
 //            var_dump($order_meta);
@@ -280,9 +280,9 @@ if (!class_exists('WC_Wuunder_Create')) {
                 $house_number = $this->get_customer_address_from_address_line($order_meta)[1];
             }
             $customer_address = array(
-                "business" => $this->get_customer_address_part($order_meta, '_shipping_company'),
+                "business" => $this->get_customer_address_part($order_meta, '_company'),
                 "chamber_of_commerce_number" => $orderid,
-                "email_address" => $this->get_customer_address_part($order_meta, '_billing_email'),
+                "email_address" => $this->get_customer_address_part($order_meta, '_email'),
                 "family_name" => $this->get_customer_address_part($order_meta, '_last_name'),
                 "given_name" => $this->get_customer_address_part($order_meta, '_first_name'),
                 "locality" => $this->get_customer_address_part($order_meta, '_city'),
