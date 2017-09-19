@@ -6,6 +6,7 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
+        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.0.5", "plugin" => "2.0"));
 
         public function __construct()
         {
@@ -96,6 +97,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 "weight" => ($totalWeight ? $totalWeight : $defWeight),
                 "delivery_address" => $customer,
                 "pickup_address" => $company,
+                "source" => $this->version_obj
             );
         }
 

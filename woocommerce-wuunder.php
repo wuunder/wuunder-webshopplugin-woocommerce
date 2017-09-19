@@ -31,7 +31,7 @@ if (!class_exists('Woocommerce_Wuunder')) {
         public static $plugin_path;
         public static $plugin_basename;
 
-        const VERSION = '2.0.4';
+        const VERSION = '2.0.5';
 
         public function __construct()
         {
