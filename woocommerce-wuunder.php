@@ -22,6 +22,11 @@ if (!defined('WW_PLUGIN_ADMIN_DIR'))
 if (!defined('WW_PLUGIN_TEMPLATE_DIR'))
     define('WW_PLUGIN_TEMPLATE_DIR', dirname(__FILE__) . '/template');
 
+if (!defined('WOOCOMMERCE_VERSION')) {
+    global $woocommerce;
+    define('WOOCOMMERCE_VERSION', $woocommerce->version);
+}
+
 if (!class_exists('Woocommerce_Wuunder')) {
 
     class Woocommerce_Wuunder

@@ -49,7 +49,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $orderItems = $this->get_order_items($orderId);
             $orderMeta = get_post_meta($orderId);
             $order = new WC_Order($orderId);
-            $orderPicture = $this->get_base64_image($orderItems['images'][0]);;
+            $orderPicture = $this->get_base64_image($orderItems['images'][0]);
 
             $defLength = 80;
             $defWidth = 50;
@@ -97,6 +97,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 "weight" => ($totalWeight ? $totalWeight : $defWeight),
                 "delivery_address" => $customer,
                 "pickup_address" => $company,
+                "preferred_service_level" => $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()),
                 "source" => $this->version_obj
             );
         }
@@ -181,6 +182,24 @@ if (!class_exists('WC_Wuunder_Create')) {
 //            echo " </pre>";
         }
 
+        private function get_filter_from_shippingmethod($shipping_method)
+        {
+            if (strpos($shipping_method, ':') !== false) {
+                $shipping_method = explode(':', $shipping_method)[0];
+            }
+            if (get_option("wc_wuunder_mapping_method_1") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_1");
+            } else if (get_option("wc_wuunder_mapping_method_2") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_2");
+            } else if (get_option("wc_wuunder_mapping_method_3") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_3");
+            } else if (get_option("wc_wuunder_mapping_method_4") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_4");
+            } else {
+                return "";
+            }
+        }
+
         public function check_company_address()
         {
 
@@ -259,7 +278,8 @@ if (!class_exists('WC_Wuunder_Create')) {
             }
         }
 
-        private function get_customer_address_from_address_line($order_meta) {
+        private function get_customer_address_from_address_line($order_meta)
+        {
             if (isset($order_meta['_shipping_address_1']) && !empty($order_meta['_shipping_address_1'])) {
                 return $this->separateAddressLine($order_meta['_shipping_address_1'][0]);
             } else if (isset($order_meta['_billing_address_1']) && !empty($order_meta['_billing_address_1'])) {
@@ -277,7 +297,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             if (empty($street_name)) {
                 $street_name = $this->get_customer_address_from_address_line($order_meta)[0];
             }
-            $house_number = $this->get_customer_address_part($order_meta, '_house_number').$this->get_customer_address_part($order_meta, '_house_number_suffix');
+            $house_number = $this->get_customer_address_part($order_meta, '_house_number') . $this->get_customer_address_part($order_meta, '_house_number_suffix');
             if (empty($house_number)) {
                 $house_number = $this->get_customer_address_from_address_line($order_meta)[1];
             }
