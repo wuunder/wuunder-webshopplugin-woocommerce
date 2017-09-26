@@ -23,8 +23,21 @@ if (!defined('WW_PLUGIN_TEMPLATE_DIR'))
     define('WW_PLUGIN_TEMPLATE_DIR', dirname(__FILE__) . '/template');
 
 if (!defined('WOOCOMMERCE_VERSION')) {
-    global $woocommerce;
-    define('WOOCOMMERCE_VERSION', $woocommerce->version);
+    if (!function_exists('get_plugins'))
+        require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+
+    // Create the plugins folder and file variables
+    $plugin_folder = get_plugins('/' . 'woocommerce');
+    $plugin_file = 'woocommerce.php';
+
+    // If the plugin version number is set, return it
+    if (isset($plugin_folder[$plugin_file]['Version'])) {
+        define('WOOCOMMERCE_VERSION', $plugin_folder[$plugin_file]['Version']);
+    } else {
+        // Otherwise return null
+        define('WOOCOMMERCE_VERSION', NULL);
+    }
+
 }
 
 if (!class_exists('Woocommerce_Wuunder')) {
