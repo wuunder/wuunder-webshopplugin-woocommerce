@@ -97,7 +97,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 "weight" => ($totalWeight ? $totalWeight : $defWeight),
                 "delivery_address" => $customer,
                 "pickup_address" => $company,
-                "preferred_service_level" => $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()),
+                "preferred_service_level" => (count($order->get_items('shipping')) > 0) ? $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : "",
                 "source" => $this->version_obj
             );
         }
@@ -335,19 +335,19 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
 
             // do not show buttons for trashed orders
-            if ($order->status == 'trash') {
+            if ($order->get_status() == 'trash') {
                 return;
             }
 
-            if (!empty(get_post_meta($order->id, '_wuunder_label_id', true))) {
+            if (!empty(get_post_meta($order->get_id(), '_wuunder_label_id', true))) {
                 $listing_actions = array(
                     'shipping_label' => array(
-                        'url' => get_post_meta($order->id, '_wuunder_label_url', true),
+                        'url' => get_post_meta($order->get_id(), '_wuunder_label_url', true),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/print-label.png',
                         'title' => __('Download label', 'woocommerce-wuunder'),
                     ),
                     'track_trace' => array(
-                        'url' => get_post_meta($order->id, '_wuunder_track_and_trace_url', true),
+                        'url' => get_post_meta($order->get_id(), '_wuunder_track_and_trace_url', true),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/in-transit.png',
                         'title' => __('Track & Trace', 'woocommerce-wuunder'),
                     )
@@ -366,7 +366,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             } else {
                 $listing_actions = array(
                     'create_label' => array(
-                        'url' => (get_post_meta($order->id, '_wuunder_label_booking_url', true) ? get_post_meta($order->id, '_wuunder_label_booking_url', true) : wp_nonce_url(admin_url('edit.php?&action=bookorder&order=' . $order->id), 'wcwuunder')),
+                        'url' => (get_post_meta($order->get_id(), '_wuunder_label_booking_url', true) ? get_post_meta($order->get_id(), '_wuunder_label_booking_url', true) : wp_nonce_url(admin_url('edit.php?&action=bookorder&order=' . $order->get_id()), 'wcwuunder')),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/create-label.png',
                         'alt' => __('Verzendlabel aanmaken', 'woocommerce-wuunder'),
                     ),
