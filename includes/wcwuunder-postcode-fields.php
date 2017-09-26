@@ -569,9 +569,9 @@ if (!class_exists('WC_Wuunder_Postcode_Fields')) {
          */
         public function order_formatted_shipping_address($address, $order)
         {
-            $address['street_name'] = $order->shipping_street_name;
-            $address['house_number'] = $order->shipping_house_number;
-            $address['house_number_suffix'] = !empty($order->shipping_house_number_suffix) ? '-' . $order->shipping_house_number_suffix : '';
+            $address['street_name'] = @$order->shipping_street_name;
+            $address['house_number'] = @$order->shipping_house_number;
+            $address['house_number_suffix'] = !empty(@$order->shipping_house_number_suffix) ? '-' . @$order->shipping_house_number_suffix : '';
 
             return $address;
         }
