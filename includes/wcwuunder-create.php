@@ -6,7 +6,7 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
-        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.0.7", "plugin" => "2.0"));
+        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.1.0", "plugin" => "2.0"));
 
         public function __construct()
         {
