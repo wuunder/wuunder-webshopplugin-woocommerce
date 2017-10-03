@@ -22,6 +22,24 @@ if (!defined('WW_PLUGIN_ADMIN_DIR'))
 if (!defined('WW_PLUGIN_TEMPLATE_DIR'))
     define('WW_PLUGIN_TEMPLATE_DIR', dirname(__FILE__) . '/template');
 
+if (!defined('WOOCOMMERCE_VERSION')) {
+    if (!function_exists('get_plugins'))
+        require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+
+    // Create the plugins folder and file variables
+    $plugin_folder = get_plugins('/' . 'woocommerce');
+    $plugin_file = 'woocommerce.php';
+
+    // If the plugin version number is set, return it
+    if (isset($plugin_folder[$plugin_file]['Version'])) {
+        define('WOOCOMMERCE_VERSION', $plugin_folder[$plugin_file]['Version']);
+    } else {
+        // Otherwise return null
+        define('WOOCOMMERCE_VERSION', NULL);
+    }
+
+}
+
 if (!class_exists('Woocommerce_Wuunder')) {
 
     class Woocommerce_Wuunder
@@ -86,6 +104,9 @@ if (!class_exists('Woocommerce_Wuunder')) {
                     update_post_meta($orderId, '_wuunder_label_id', $data['shipment']['id']);
                     update_post_meta($orderId, '_wuunder_track_and_trace_url', $data['shipment']['track_and_trace_url']);
                     update_post_meta($orderId, '_wuunder_label_url', $data['shipment']['label_url']);
+
+                    $order = new WC_Order($orderId);
+                    $order->update_status(get_option("wc_wuunder_post_booking_status"));
                 }
             } else {
                 wp_redirect("", 500);

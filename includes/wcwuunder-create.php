@@ -49,7 +49,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $orderItems = $this->get_order_items($orderId);
             $orderMeta = get_post_meta($orderId);
             $order = new WC_Order($orderId);
-            $orderPicture = $this->get_base64_image($orderItems['images'][0]);;
+            $orderPicture = $this->get_base64_image($orderItems['images'][0]);
 
             $defLength = 80;
             $defWidth = 50;
@@ -97,6 +97,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 "weight" => ($totalWeight ? $totalWeight : $defWeight),
                 "delivery_address" => $customer,
                 "pickup_address" => $company,
+                "preferred_service_level" => (count($order->get_items('shipping')) > 0) ? $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : "",
                 "source" => $this->version_obj
             );
         }
@@ -176,9 +177,28 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
 //            $order_meta = get_post_meta(73);
 ////            var_dump($this->get_customer_address_part($order_meta, '_first_name'));
+//            $statuses = wc_get_order_statuses();
 //            echo "<pre>";
-//            var_dump($order_meta);
+//            var_dump($statuses);
 //            echo " </pre>";
+        }
+
+        private function get_filter_from_shippingmethod($shipping_method)
+        {
+            if (strpos($shipping_method, ':') !== false) {
+                $shipping_method = explode(':', $shipping_method)[0];
+            }
+            if (get_option("wc_wuunder_mapping_method_1") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_1");
+            } else if (get_option("wc_wuunder_mapping_method_2") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_2");
+            } else if (get_option("wc_wuunder_mapping_method_3") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_3");
+            } else if (get_option("wc_wuunder_mapping_method_4") === $shipping_method) {
+                return get_option("wc_wuunder_mapping_filter_4");
+            } else {
+                return "";
+            }
         }
 
         public function check_company_address()
@@ -259,7 +279,8 @@ if (!class_exists('WC_Wuunder_Create')) {
             }
         }
 
-        private function get_customer_address_from_address_line($order_meta) {
+        private function get_customer_address_from_address_line($order_meta)
+        {
             if (isset($order_meta['_shipping_address_1']) && !empty($order_meta['_shipping_address_1'])) {
                 return $this->separateAddressLine($order_meta['_shipping_address_1'][0]);
             } else if (isset($order_meta['_billing_address_1']) && !empty($order_meta['_billing_address_1'])) {
@@ -277,7 +298,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             if (empty($street_name)) {
                 $street_name = $this->get_customer_address_from_address_line($order_meta)[0];
             }
-            $house_number = $this->get_customer_address_part($order_meta, '_house_number').$this->get_customer_address_part($order_meta, '_house_number_suffix');
+            $house_number = $this->get_customer_address_part($order_meta, '_house_number') . $this->get_customer_address_part($order_meta, '_house_number_suffix');
             if (empty($house_number)) {
                 $house_number = $this->get_customer_address_from_address_line($order_meta)[1];
             }
@@ -315,19 +336,19 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
 
             // do not show buttons for trashed orders
-            if ($order->status == 'trash') {
+            if ($order->get_status() == 'trash') {
                 return;
             }
 
-            if (!empty(get_post_meta($order->id, '_wuunder_label_id', true))) {
+            if (!empty(get_post_meta($order->get_id(), '_wuunder_label_id', true))) {
                 $listing_actions = array(
                     'shipping_label' => array(
-                        'url' => get_post_meta($order->id, '_wuunder_label_url', true),
+                        'url' => get_post_meta($order->get_id(), '_wuunder_label_url', true),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/print-label.png',
                         'title' => __('Download label', 'woocommerce-wuunder'),
                     ),
                     'track_trace' => array(
-                        'url' => get_post_meta($order->id, '_wuunder_track_and_trace_url', true),
+                        'url' => get_post_meta($order->get_id(), '_wuunder_track_and_trace_url', true),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/in-transit.png',
                         'title' => __('Track & Trace', 'woocommerce-wuunder'),
                     )
@@ -346,7 +367,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             } else {
                 $listing_actions = array(
                     'create_label' => array(
-                        'url' => (get_post_meta($order->id, '_wuunder_label_booking_url', true) ? get_post_meta($order->id, '_wuunder_label_booking_url', true) : wp_nonce_url(admin_url('edit.php?&action=bookorder&order=' . $order->id), 'wcwuunder')),
+                        'url' => (get_post_meta($order->get_id(), '_wuunder_label_booking_url', true) ? get_post_meta($order->get_id(), '_wuunder_label_booking_url', true) : wp_nonce_url(admin_url('edit.php?&action=bookorder&order=' . $order->get_id()), 'wcwuunder')),
                         'img' => Woocommerce_Wuunder::$plugin_url . 'assets/images/create-label.png',
                         'alt' => __('Verzendlabel aanmaken', 'woocommerce-wuunder'),
                     ),
