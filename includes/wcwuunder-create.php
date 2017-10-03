@@ -177,8 +177,9 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
 //            $order_meta = get_post_meta(73);
 ////            var_dump($this->get_customer_address_part($order_meta, '_first_name'));
+//            $statuses = wc_get_order_statuses();
 //            echo "<pre>";
-//            var_dump($order_meta);
+//            var_dump($statuses);
 //            echo " </pre>";
         }
 

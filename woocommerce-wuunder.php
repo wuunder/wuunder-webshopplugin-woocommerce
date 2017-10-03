@@ -104,6 +104,9 @@ if (!class_exists('Woocommerce_Wuunder')) {
                     update_post_meta($orderId, '_wuunder_label_id', $data['shipment']['id']);
                     update_post_meta($orderId, '_wuunder_track_and_trace_url', $data['shipment']['track_and_trace_url']);
                     update_post_meta($orderId, '_wuunder_label_url', $data['shipment']['label_url']);
+
+                    $order = new WC_Order($orderId);
+                    $order->update_status(get_option("wc_wuunder_post_booking_status"));
                 }
             } else {
                 wp_redirect("", 500);

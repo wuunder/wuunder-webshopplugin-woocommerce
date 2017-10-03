@@ -98,6 +98,11 @@ if (!class_exists('WC_Wuunder_Settings')) {
 
         public static function get_settings()
         {
+            $statuses = wc_get_order_statuses();
+            $mappedStatuses = array();
+            foreach ($statuses as $key => $value) {
+                $mappedStatuses[$key] = __($value, 'woocommerce-wuunder');
+            }
 	        $settings =
                 array(
                     'section_title' => array(
@@ -125,6 +130,13 @@ if (!class_exists('WC_Wuunder_Settings')) {
                             'productie' => __('Nee', 'woocommerce-wuunder')
                         ),
                         'id' => 'wc_wuunder_api_status'
+                    ),
+                    'post_booking_status' => array(
+                        'name' => __('Set order status after booking to:', 'woocommerce-wuunder'),
+                        'type' => 'select',
+                        'desc' => __('Ja = Test / staging, Nee = Live / productie', 'woocommerce-retailer'),
+                        'options' => $mappedStatuses,
+                        'id' => 'wc_wuunder_post_booking_status'
                     ),
                     'section_end' => array(
                         'type' => 'sectionend',
