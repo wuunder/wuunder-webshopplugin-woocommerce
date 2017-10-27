@@ -61,7 +61,6 @@ if (!class_exists('Woocommerce_Wuunder')) {
             add_action('admin_enqueue_scripts', array(&$this, 'add_admin_styles_scripts'));
 
             require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php');
-            require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-postcode-fields.php');
 
             add_action('wp_loaded', function () {
                 if (strpos($_SERVER['REQUEST_URI'], "/wuunder/webhook") === 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {
