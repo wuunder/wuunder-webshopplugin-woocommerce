@@ -51,6 +51,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $order = new WC_Order($orderId);
             $orderPicture = $this->get_base64_image($orderItems['images'][0]);
 
+
             $defLength = 80;
             $defWidth = 50;
             $defHeight = 35;
@@ -324,12 +325,17 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
 
             $imagepath = $picture;
-            $imagetype = pathinfo($imagepath, PATHINFO_EXTENSION);
-            $imagedata = file_get_contents($imagepath);
-            $image = base64_encode($imagedata);
-
-            return $image;
-
+            try {
+                if (filesize($imagepath) <= 2097152) { //smaller or equal to 2MB
+                    $imagedata = file_get_contents($imagepath);
+                    $image = base64_encode($imagedata);
+                } else {
+                    $image = "";
+                }
+                return $image;
+            }catch(Exception $e) {
+                return "";
+            }
         }
 
         public function add_listing_actions($order)
