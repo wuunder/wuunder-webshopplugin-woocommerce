@@ -87,6 +87,8 @@ if (!class_exists('WC_Wuunder_Create')) {
             }
             if (count($dimensions) !== 3) {
                 $dimensions = array($defLength, $defWidth, $defHeight);
+            } else {
+                $dimensions = array()
             }
 
             $value = intval($order->get_subtotal() * 100);
@@ -155,13 +157,10 @@ if (!class_exists('WC_Wuunder_Create')) {
                     preg_match("!\r\n(?:Location|URI): *(.*?) *\r\n!i", $header, $matches);
                     $url = $matches[1];
 
-//                    echo "<pre>";
-//                    var_dump($wuunderData);
                     // Close connection
                     curl_close($cc);
 
                     update_post_meta($order_id, '_wuunder_label_booking_url', $url);
-                    echo $url;
                     if (!(substr($url, 0, 5) === "http:" || substr($url, 0, 6) === "https:")) {
                         if ($status == 'productie') {
                             $url = 'https://api.wuunder.co' . $url;
