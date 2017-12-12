@@ -6,7 +6,7 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
-        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.1.1", "plugin" => "2.0"));
+        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.1.2", "plugin" => "2.0"));
 
         public function __construct()
         {
@@ -49,7 +49,14 @@ if (!class_exists('WC_Wuunder_Create')) {
             $orderItems = $this->get_order_items($orderId);
             $orderMeta = get_post_meta($orderId);
             $order = new WC_Order($orderId);
-            $orderPicture = $this->get_base64_image($orderItems['images'][0]);
+            $orderPicture = null;
+            foreach ($orderItems['images'] as $image) {
+                if (!is_null($image)) {
+                    $orderPicture = $this->get_base64_image($image);
+                    break;
+                }
+            }
+
 
             $defLength = 80;
             $defWidth = 50;
@@ -63,16 +70,16 @@ if (!class_exists('WC_Wuunder_Create')) {
 
             $totalWeight = 0;
             $dimensions = null;
-            $description = null;
+            $description = "";
 
             foreach ($orderItems['products'] as $item) {
                 $totalWeight += $item['total_weight'];
                 if ($dimensions === null) {
                     $dimensions = explode(' x ', $item['dimensions']);
                 }
-                if ($description === null) {
-                    $description = $item['name'];
-                }
+//                if ($description === null) {
+                    $description .= "- " . $item['name'] . "\r\n";
+//                }
             }
 
             if ($totalWeight === 0) {
@@ -150,7 +157,6 @@ if (!class_exists('WC_Wuunder_Create')) {
                     preg_match("!\r\n(?:Location|URI): *(.*?) *\r\n!i", $header, $matches);
                     $url = $matches[1];
 
-                    //var_dump($wuunderData);
                     // Close connection
                     curl_close($cc);
 
@@ -325,12 +331,17 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
 
             $imagepath = $picture;
-            $imagetype = pathinfo($imagepath, PATHINFO_EXTENSION);
-            $imagedata = file_get_contents($imagepath);
-            $image = base64_encode($imagedata);
-
-            return $image;
-
+            try {
+                if (filesize($imagepath) <= 2097152) { //smaller or equal to 2MB
+                    $imagedata = file_get_contents($imagepath);
+                    $image = base64_encode($imagedata);
+                } else {
+                    $image = "";
+                }
+                return $image;
+            }catch(Exception $e) {
+                return "";
+            }
         }
 
         public function add_listing_actions($order)
