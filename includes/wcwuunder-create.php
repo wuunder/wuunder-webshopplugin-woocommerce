@@ -49,7 +49,13 @@ if (!class_exists('WC_Wuunder_Create')) {
             $orderItems = $this->get_order_items($orderId);
             $orderMeta = get_post_meta($orderId);
             $order = new WC_Order($orderId);
-            $orderPicture = $this->get_base64_image($orderItems['images'][0]);
+            $orderPicture = null;
+            foreach ($orderItems['images'] as $image) {
+                if (!is_null($image)) {
+                    $orderPicture = $this->get_base64_image($image);
+                    break;
+                }
+            }
 
 
             $defLength = 80;
@@ -64,16 +70,16 @@ if (!class_exists('WC_Wuunder_Create')) {
 
             $totalWeight = 0;
             $dimensions = null;
-            $description = null;
+            $description = "";
 
             foreach ($orderItems['products'] as $item) {
                 $totalWeight += $item['total_weight'];
                 if ($dimensions === null) {
                     $dimensions = explode(' x ', $item['dimensions']);
                 }
-                if ($description === null) {
-                    $description = $item['name'];
-                }
+//                if ($description === null) {
+                    $description .= "- " . $item['name'] . "\r\n";
+//                }
             }
 
             if ($totalWeight === 0) {
@@ -149,6 +155,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     preg_match("!\r\n(?:Location|URI): *(.*?) *\r\n!i", $header, $matches);
                     $url = $matches[1];
 
+//                    echo "<pre>";
 //                    var_dump($wuunderData);
                     // Close connection
                     curl_close($cc);
