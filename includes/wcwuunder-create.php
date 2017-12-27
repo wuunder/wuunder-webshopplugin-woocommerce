@@ -6,7 +6,7 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
-        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.1.2", "plugin" => "2.0"));
+        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.2.0", "plugin" => "2.0"));
 
         public function __construct()
         {
@@ -77,9 +77,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 if ($dimensions === null) {
                     $dimensions = explode(' x ', $item['dimensions']);
                 }
-//                if ($description === null) {
-                    $description .= "- " . $item['name'] . "\r\n";
-//                }
+                $description .= "- " . $item['quantity'] . "x " . $item['name'] . "\r\n";
             }
 
             if ($totalWeight === 0) {
@@ -327,21 +325,35 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         }
 
-        public function get_base64_image($picture)
+        public function get_base64_image($imagepath)
         {
-
-            $imagepath = $picture;
             try {
-                if (filesize($imagepath) <= 2097152) { //smaller or equal to 2MB
+                $fileSize = (substr($imagepath, 0, 4) === "http") ? $this->remote_filesize($imagepath) : filesize($imagepath);
+                if ($fileSize <= 2097152) { //smaller or equal to 2MB
                     $imagedata = file_get_contents($imagepath);
                     $image = base64_encode($imagedata);
                 } else {
                     $image = "";
                 }
                 return $image;
-            }catch(Exception $e) {
+            } catch (Exception $e) {
                 return "";
             }
+        }
+
+        private function remote_filesize($url)
+        {
+            static $regex = '/^Content-Length: *+\K\d++$/im';
+            if (!$fp = @fopen($url, 'rb')) {
+                return false;
+            }
+            if (
+                isset($http_response_header) &&
+                preg_match($regex, implode("\n", $http_response_header), $matches)
+            ) {
+                return (int)$matches[0];
+            }
+            return strlen(stream_get_contents($fp));
         }
 
         public function add_listing_actions($order)
