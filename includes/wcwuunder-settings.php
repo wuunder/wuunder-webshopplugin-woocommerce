@@ -134,7 +134,6 @@ if (!class_exists('WC_Wuunder_Settings')) {
                     'post_booking_status' => array(
                         'name' => __('Set order status after booking to:', 'woocommerce-wuunder'),
                         'type' => 'select',
-                        'desc' => __('Ja = Test / staging, Nee = Live / productie', 'woocommerce-retailer'),
                         'options' => $mappedStatuses,
                         'id' => 'wc_wuunder_post_booking_status'
                     ),
