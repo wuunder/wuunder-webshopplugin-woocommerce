@@ -6,7 +6,7 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
-        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.2.1", "plugin" => "2.0"));
+        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.2.2", "plugin" => "2.0"));
 
         public function __construct()
         {
@@ -77,7 +77,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 if ($dimensions === null) {
                     $dimensions = explode(' x ', $item['dimensions']);
                 }
-                $description .= "- " . $item['quantity'] . "x " . $item['name'] . "\r\n";
+                $description .= "- " . $item['quantity'] . "x " . $item['name'] . " \r\n";
             }
 
             if ($totalWeight === 0) {
