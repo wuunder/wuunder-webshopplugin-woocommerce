@@ -112,12 +112,14 @@ if (!class_exists('Woocommerce_Wuunder')) {
               } else {
                   wp_redirect("", 500);
               }
-            } else {
+            } elseif ($data['action'] === "track_and_trace_updated") {
               // This is the 2nd webhook
               $order = wc_get_order($orderId);
-              $note = __("Je pakketje is overgeleverd aan: ". $data["carrier_name"] ."\n De track and trace code is: ".$data["track_and_trace_code"]);
+              $note = __("Het pakket is aangemeld bij: ". $data["carrier_name"] ."\n De track and trace code is: ".$data["track_and_trace_code"]);
               $order->add_order_note($note);
               $order->save();
+            } else {
+                wp_redirect("", 500);
             }
         }
 
