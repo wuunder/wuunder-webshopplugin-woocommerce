@@ -97,6 +97,7 @@ if (!class_exists('Woocommerce_Wuunder')) {
             $orderId = $_REQUEST['order'];
             $bookingToken = $_REQUEST['token'];
             $data = json_decode(file_get_contents('php://input'), true);
+            $errorRedirect = true;
 
             $orderBookingToken = get_post_meta($orderId, '_wuunder_label_booking_token')[0];
             if ($data['action'] === "shipment_booked") {
@@ -108,9 +109,8 @@ if (!class_exists('Woocommerce_Wuunder')) {
 
                       $order = new WC_Order($orderId);
                       $order->update_status(get_option("wc_wuunder_post_booking_status"));
+                      $errorRedirect = false;
                   }
-              } else {
-                  wp_redirect("", 500);
               }
             } elseif ($data['action'] === "track_and_trace_updated") {
               // This is the 2nd webhook
@@ -118,9 +118,10 @@ if (!class_exists('Woocommerce_Wuunder')) {
               $note = __("Het pakket is aangemeld bij: ". $data["carrier_name"] ."\n De track and trace code is: ".$data["track_and_trace_code"]);
               $order->add_order_note($note);
               $order->save();
-            } else {
-                wp_redirect("", 500);
+              $errorRedirect = false;
             }
+
+            if($errorRedirect){wp_redirect("", 500);}
         }
 
     }
