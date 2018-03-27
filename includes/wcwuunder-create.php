@@ -85,8 +85,6 @@ if (!class_exists('WC_Wuunder_Create')) {
             }
             if (count($dimensions) !== 3) {
                 $dimensions = array($defLength, $defWidth, $defHeight);
-            } else {
-                $dimensions = array();
             }
 
             $value = intval($order->get_subtotal() * 100);
@@ -114,7 +112,10 @@ if (!class_exists('WC_Wuunder_Create')) {
             if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
                 $order_id = $_REQUEST['order'];
                 if (true) {
-                    $postData = stripslashes_deep($_POST['data']);
+                    $postData = array();
+                    if (isset($_POST['data']))
+                        $postData = stripslashes_deep($_POST['data']);
+
                     $bookingToken = uniqid();
                     update_post_meta($order_id, '_wuunder_label_booking_token', $bookingToken);
 
@@ -498,7 +499,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     $data['total_weight'] = $data['quantity'] * $data['weight'];
 
                     // Set item dimensions
-                    $data['dimensions'] = $product->get_dimensions();
+                    $data['dimensions'] = wc_format_dimensions($product->get_dimensions(false));
 
                     $data_list['products'][] = $data;
                 }
