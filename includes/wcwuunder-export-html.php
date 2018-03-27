@@ -259,7 +259,7 @@ if (empty($check_company)) { ?>
                             (Gebruik de opmaak: +31612345678)</label>
                         <input type="text" class="form-control input-sm" name="data[phone_number]"
                                id="wuunderPhonenumber"
-                               value="<?php echo((empty($row['telefoon']) || strcmp($row['telefoon'], "+31") === 0) ? "+31628307244" : $row['telefoon']); ?>"
+                               value="<?php echo((empty($row['telefoon']) || strcmp($row['telefoon'], "+31") === 0) ? "" : $row['telefoon']); ?>"
                                required="">
                     </div>
                 </div>

@@ -97,19 +97,31 @@ if (!class_exists('Woocommerce_Wuunder')) {
             $orderId = $_REQUEST['order'];
             $bookingToken = $_REQUEST['token'];
             $data = json_decode(file_get_contents('php://input'), true);
-            $orderBookingToken = get_post_meta($orderId, '_wuunder_label_booking_token')[0];
-            if ($bookingToken === $orderBookingToken) {
-                if (!empty($data['shipment']['id']) || !empty($data['shipment']['track_and_trace_url']) || !empty($data['shipment']['label_url'])) {
-                    update_post_meta($orderId, '_wuunder_label_id', $data['shipment']['id']);
-                    update_post_meta($orderId, '_wuunder_track_and_trace_url', $data['shipment']['track_and_trace_url']);
-                    update_post_meta($orderId, '_wuunder_label_url', $data['shipment']['label_url']);
+            $errorRedirect = true;
 
-                    $order = new WC_Order($orderId);
-                    $order->update_status(get_option("wc_wuunder_post_booking_status"));
-                }
-            } else {
-                wp_redirect("", 500);
+            $orderBookingToken = get_post_meta($orderId, '_wuunder_label_booking_token')[0];
+            if ($data['action'] === "shipment_booked") {
+              if ($bookingToken === $orderBookingToken) {
+                  if (!empty($data['shipment']['id']) || !empty($data['shipment']['track_and_trace_url']) || !empty($data['shipment']['label_url'])) {
+                      update_post_meta($orderId, '_wuunder_label_id', $data['shipment']['id']);
+                      update_post_meta($orderId, '_wuunder_track_and_trace_url', $data['shipment']['track_and_trace_url']);
+                      update_post_meta($orderId, '_wuunder_label_url', $data['shipment']['label_url']);
+
+                      $order = new WC_Order($orderId);
+                      $order->update_status(get_option("wc_wuunder_post_booking_status"));
+                      $errorRedirect = false;
+                  }
+              }
+            } elseif ($data['action'] === "track_and_trace_updated") {
+              // This is the 2nd webhook
+              $order = wc_get_order($orderId);
+              $note = __("Het pakket is aangemeld bij: ". $data["carrier_name"] ."\n De track and trace code is: ".$data["track_and_trace_code"]);
+              $order->add_order_note($note);
+              $order->save();
+              $errorRedirect = false;
             }
+
+            if($errorRedirect){wp_redirect("", 500);}
         }
 
     }
