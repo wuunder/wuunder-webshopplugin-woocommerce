@@ -6,7 +6,7 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
-        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.2.2", "plugin" => "2.0"));
+        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.3.0", "plugin" => "2.0"));
 
         public function __construct()
         {
@@ -123,10 +123,10 @@ if (!class_exists('WC_Wuunder_Create')) {
 
                     $status = get_option('wc_wuunder_api_status');
                     if ($status == 'productie') {
-                        $apiUrl = 'https://api.wuunder.co/api/bookings?redirect_url=' . $redirectUrl . '&webhook_url=' . $webhookUrl;
+                        $apiUrl = 'https://api.wearewuunder.com/api/bookings?redirect_url=' . $redirectUrl . '&webhook_url=' . $webhookUrl;
                         $apiKey = get_option('wc_wuunder_api');
                     } else {
-                        $apiUrl = 'https://api-staging.wuunder.co/api/bookings?redirect_url=' . $redirectUrl . '&webhook_url=' . $webhookUrl;
+                        $apiUrl = 'https://api-staging.wearewuunder.com/api/bookings?redirect_url=' . $redirectUrl . '&webhook_url=' . $webhookUrl;
                         $apiKey = get_option('wc_wuunder_test_api');
                     }
 
@@ -161,9 +161,9 @@ if (!class_exists('WC_Wuunder_Create')) {
                     update_post_meta($order_id, '_wuunder_label_booking_url', $url);
                     if (!(substr($url, 0, 5) === "http:" || substr($url, 0, 6) === "https:")) {
                         if ($status == 'productie') {
-                            $url = 'https://api.wuunder.co' . $url;
+                            $url = 'https://api.wearewuunder.com' . $url;
                         } else {
-                            $url = 'https://api-staging.wuunder.co' . $url;
+                            $url = 'https://api-staging.wearewuunder.com' . $url;
                         }
                     }
                     wp_redirect($url);
