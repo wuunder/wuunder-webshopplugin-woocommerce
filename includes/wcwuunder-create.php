@@ -16,6 +16,15 @@ if (!class_exists('WC_Wuunder_Create')) {
             add_action('add_meta_boxes_shop_order', array(&$this, 'add_meta_boxes'));
             add_action('admin_notices', array(&$this, 'sample_admin_notice__error'));
             wp_enqueue_style('wuunder-admin', (dirname(plugin_dir_url(__FILE__)) . '/assets/css/wuunder-admin.css'));
+
+            add_action('woocommerce_before_checkout_form',
+              function(){
+                echo '<p>Hier komt de parcelshop locator</p>';
+                $file = "/var/www/html/log.txt";
+                $current = file_get_contents($file);
+                $current .= "checkout reached";
+                file_put_contents($file, $current);
+              });
         }
 
         public function sample_admin_notice__error()
