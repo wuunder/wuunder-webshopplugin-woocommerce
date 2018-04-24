@@ -1,0 +1,127 @@
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(255,255,255,.9); /* White w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #ffffff;
+    /* background-color: rgba(0,0,0,1); */
+    margin: 3% auto;
+    padding: 20px;
+    border: 2px solid #555;
+    width: 90%;
+    height: 90%;
+    border-radius: 25px;
+}
+
+/* The Close Button */
+.close {
+    /* position: absolute;
+    right: -10px;
+    top: -10px; */
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#bring-to-parcelshop {
+  float:left;
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+}
+
+#parcelShopsTitleLogoChatbox {
+    position: relative;
+    background: #94d600;
+    border-radius: .5em;
+    border-bottom-left-radius: 0;
+    float: left;
+    padding: 10px;
+    margin-top: 28px;
+    color: white;
+}
+
+#parcelShopsTitleLogoChatbox:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 14px 23px;
+    border-color: transparent transparent #94d600 transparent;
+    margin-left: -23px;
+}
+
+#parcelShopsSearchBar {
+    border: 1px solid #858585;
+    /* max-width: calc(100% - 100px); */
+    width: 50%;
+    float: left;
+}
+
+#parcelShopsSearchBarContainer {
+    width: 100%;
+    height: 50px;
+    display: inline-block;
+    line-height: 29px;
+    position: relative;
+    float: left;
+}
+
+#parcelShopsSearchBarContainer:before {
+    content: "";
+    width: 50px;
+    height: 40px;
+    border: 1px solid #858585;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-right: none;
+    display: block;
+    float: left;
+    background-image: url('../../assets/images/parcelshop/search.png');
+    background-size: auto 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#submitParcelShopsSearchBar {
+    width: 50px;
+    height: 40px;
+    border: 1px solid #858585;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: none;
+    display: block;
+    float: left;
+    background-color: #8fd600;
+    text-align: center;
+    line-height: 40px !important;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#parcelShopsSearchBarContainer input {
+    height: 40px;
+}
