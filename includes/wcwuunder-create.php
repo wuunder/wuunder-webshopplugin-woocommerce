@@ -57,7 +57,6 @@ if (!class_exists('WC_Wuunder_Create')) {
                 }
             }
 
-
             $defLength = 80;
             $defWidth = 50;
             $defHeight = 35;
@@ -109,25 +108,6 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         public function generateBookingUrl()
         {
-          $connector = new Wuunder\Connector("YVc7rKdM6e6Q_HQK81NCt7SM0LT0TtQB");
-
-
-          $parcelshopRequest = $connector->getParcelshopById();
-
-          $parcelshopConfig = new \Wuunder\Api\Config\ParcelshopConfig();
-          $parcelshopConfig->setId("6fa97a3b-fabe-47eb-8cda-13a53b2f83df");
-
-          if ($parcelshopConfig->validate()) {
-              $parcelshopRequest->setConfig($parcelshopConfig);
-
-              if ($parcelshopRequest->fire()) {
-                  var_dump($parcelshopRequest->getParcelshopResponse()->getParcelshopData());
-              } else {
-                  var_dump($parcelshopRequest->getParcelshopResponse()->getError());
-              }
-          } else {
-              print("ParcelshopConfig not complete");
-          } exit();
             if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
                 $order_id = $_REQUEST['order'];
                 if (true) {
@@ -138,8 +118,8 @@ if (!class_exists('WC_Wuunder_Create')) {
                     $bookingToken = uniqid();
                     update_post_meta($order_id, '_wuunder_label_booking_token', $bookingToken);
 
-                    $redirectUrl = urlencode(get_site_url(null, "/wp-admin/edit.php?post_type=shop_order"));
-                    $webhookUrl = urlencode(get_site_url(null, "/wuunder/webhook?order=" . $order_id . '&token=' . $bookingToken));
+                    $redirectUrl = get_site_url(null, "/wp-admin/edit.php?post_type=shop_order");
+                    $webhookUrl = get_site_url(null, "/wuunder/webhook?order=" . $order_id . '&token=' . $bookingToken);
 
                     $status = get_option('wc_wuunder_api_status');
                     if ($status == 'productie') {
@@ -150,33 +130,60 @@ if (!class_exists('WC_Wuunder_Create')) {
                         $apiKey = get_option('wc_wuunder_test_api');
                     }
 
-                    $wuunderData = $this->buildWuunderData($order_id, $postData);
+                    $connector = new Wuunder\Connector($apiKey);
 
-                    // Encode variables
-                    $json = json_encode($wuunderData);
+                    $booking = $connector->createBooking();
 
-                    // Setup API connection
-                    $cc = curl_init($apiUrl);
+                    $bookingConfig = new Wuunder\Api\Config\BookingConfig();
+                    $bookingConfig->setWebhookUrl($webhookUrl);
+                    $bookingConfig->setRedirectUrl($redirectUrl);
 
-                    curl_setopt($cc, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $apiKey, 'Content-type: application/json'));
-                    curl_setopt($cc, CURLOPT_POST, 1);
-                    curl_setopt($cc, CURLOPT_POSTFIELDS, $json);
-                    curl_setopt($cc, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($cc, CURLOPT_VERBOSE, 1);
-                    curl_setopt($cc, CURLOPT_HEADER, 1);
+                    $wuunderData = $this->buildWuunderData($order_id);
 
-                    // Don't log base64 image string
-                    $wuunderData['picture'] = 'base64 string removed';
+                    $bookingConfig->setDescription($wuunderData['description']);
+                    $bookingConfig->setKind($wuunderData['kind']);
+                    $bookingConfig->setValue($wuunderData['value']);
+                    $bookingConfig->setLength($wuunderData['length']);
+                    $bookingConfig->setWidth($wuunderData['width']);
+                    $bookingConfig->setHeight($wuunderData['height']);
+                    $bookingConfig->setWeight($wuunderData['weight']);
+                    $bookingConfig->setPreferredServiceLevel($wuunderData["preferred_service_level"]);
 
-                    // Execute the cURL, fetch the XML
-                    $result = curl_exec($cc);
-                    $header_size = curl_getinfo($cc, CURLINFO_HEADER_SIZE);
-                    $header = substr($result, 0, $header_size);
-                    preg_match("!\r\n(?:Location|URI): *(.*?) *\r\n!i", $header, $matches);
-                    $url = $matches[1];
+                    $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
+                    $deliveryAddress->setEmailAddress($wuunderData['delivery_address']['email_address']);
+                    $deliveryAddress->setFamilyName($wuunderData['delivery_address']['family_name']);
+                    $deliveryAddress->setGivenName($wuunderData['delivery_address']['given_name']);
+                    $deliveryAddress->setLocality($wuunderData['delivery_address']['locality']);
+                    $deliveryAddress->setStreetName($wuunderData['delivery_address']['street_name']);
+                    $deliveryAddress->setHouseNumber($wuunderData['delivery_address']['house_number']);
+                    $deliveryAddress->setZipCode($wuunderData['delivery_address']['zip_code']);
+                    $deliveryAddress->setPhoneNumber($wuunderData['delivery_address']['phone_number']);
+                    $deliveryAddress->setCountry($wuunderData['delivery_address']['country']);
+                    $bookingConfig->setDeliveryAddress($deliveryAddress);
 
-                    // Close connection
-                    curl_close($cc);
+                    $pickupAddress = new \Wuunder\Api\Config\AddressConfig();
+                    $pickupAddress->setEmailAddress($wuunderData['pickup_address']['email_address']);
+                    $pickupAddress->setFamilyName($wuunderData['pickup_address']['family_name']);
+                    $pickupAddress->setGivenName($wuunderData['pickup_address']['given_name']);
+                    $pickupAddress->setLocality($wuunderData['pickup_address']['locality']);
+                    $pickupAddress->setStreetName($wuunderData['pickup_address']['street_name']);
+                    $pickupAddress->setHouseNumber($wuunderData['pickup_address']['house_number']);
+                    $pickupAddress->setZipCode($wuunderData['pickup_address']['zip_code']);
+                    $pickupAddress->setPhoneNumber($wuunderData['pickup_address']['phone_number']);
+                    $pickupAddress->setCountry($wuunderData['pickup_address']['country']);
+                    $bookingConfig->setPickupAddress($pickupAddress);
+
+
+                    if ($bookingConfig->validate()) {
+                        $booking->setConfig($bookingConfig);
+                        if ($booking->fire()) {
+                            $url = $booking->getBookingResponse()->getBookingUrl();
+                        } else {
+                            var_dump($booking->getBookingResponse()->getError());
+                        }
+                    } else {
+                        print("Bookingconfig not complete");
+                    }
 
                     update_post_meta($order_id, '_wuunder_label_booking_url', $url);
                     if (!(substr($url, 0, 5) === "http:" || substr($url, 0, 6) === "https:")) {
