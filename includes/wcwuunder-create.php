@@ -44,7 +44,7 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         }
 
-        private function buildWuunderData($orderId)
+        private function buildWuunderData($orderId, $redirectUrl, $webhookUrl)
         {
             $orderItems = $this->get_order_items($orderId);
             $orderMeta = get_post_meta($orderId);
@@ -88,22 +88,23 @@ if (!class_exists('WC_Wuunder_Create')) {
 
             $value = intval($order->get_subtotal() * 100);
 
-            return array(
-                "description" => $description,
-                "personal_message" => "",
-                "customer_reference" => $orderId,
-                "picture" => $orderPicture,
-                "value" => ($value ? $value : $defValue),
-                "kind" => ($totalWeight > 23000 ? "pallet" : "package"),
-                "length" => round($dimensions[0]),
-                "width" => round($dimensions[1]),
-                "height" => round($dimensions[2]),
-                "weight" => ($totalWeight ? $totalWeight : $defWeight),
-                "delivery_address" => $customer,
-                "pickup_address" => $company,
-                "preferred_service_level" => (count($order->get_items('shipping')) > 0) ? $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : "",
-                "source" => $this->version_obj
-            );
+            $bookingConfig = new Wuunder\Api\Config\BookingConfig();
+            $bookingConfig->setWebhookUrl($webhookUrl);
+            $bookingConfig->setRedirectUrl($redirectUrl);
+
+            $bookingConfig->setDescription($description);
+            $bookingConfig->setKind($totalWeight > 23000 ? "pallet" : "package");
+            $bookingConfig->setValue($value ? $value : $defValue);
+            $bookingConfig->setLength(round($dimensions[0]));
+            $bookingConfig->setWidth(round($dimensions[1]));
+            $bookingConfig->setHeight(round($dimensions[2]));
+            $bookingConfig->setWeight($totalWeight ? $totalWeight : $defWeight);
+            $bookingConfig->setPreferredServiceLevel((count($order->get_items('shipping')) > 0) ? $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : "");
+
+            $bookingConfig->setDeliveryAddress($customer);
+            $bookingConfig->setPickupAddress($company);
+
+            return $bookingConfig;
         }
 
         public function generateBookingUrl()
@@ -131,48 +132,8 @@ if (!class_exists('WC_Wuunder_Create')) {
                     }
 
                     $connector = new Wuunder\Connector($apiKey);
-
                     $booking = $connector->createBooking();
-
-                    $bookingConfig = new Wuunder\Api\Config\BookingConfig();
-                    $bookingConfig->setWebhookUrl($webhookUrl);
-                    $bookingConfig->setRedirectUrl($redirectUrl);
-
-                    $wuunderData = $this->buildWuunderData($order_id);
-
-                    $bookingConfig->setDescription($wuunderData['description']);
-                    $bookingConfig->setKind($wuunderData['kind']);
-                    $bookingConfig->setValue($wuunderData['value']);
-                    $bookingConfig->setLength($wuunderData['length']);
-                    $bookingConfig->setWidth($wuunderData['width']);
-                    $bookingConfig->setHeight($wuunderData['height']);
-                    $bookingConfig->setWeight($wuunderData['weight']);
-                    $bookingConfig->setPreferredServiceLevel($wuunderData["preferred_service_level"]);
-
-                    $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
-                    $deliveryAddress->setEmailAddress($wuunderData['delivery_address']['email_address']);
-                    $deliveryAddress->setFamilyName($wuunderData['delivery_address']['family_name']);
-                    $deliveryAddress->setGivenName($wuunderData['delivery_address']['given_name']);
-                    $deliveryAddress->setLocality($wuunderData['delivery_address']['locality']);
-                    $deliveryAddress->setStreetName($wuunderData['delivery_address']['street_name']);
-                    $deliveryAddress->setHouseNumber($wuunderData['delivery_address']['house_number']);
-                    $deliveryAddress->setZipCode($wuunderData['delivery_address']['zip_code']);
-                    $deliveryAddress->setPhoneNumber($wuunderData['delivery_address']['phone_number']);
-                    $deliveryAddress->setCountry($wuunderData['delivery_address']['country']);
-                    $bookingConfig->setDeliveryAddress($deliveryAddress);
-
-                    $pickupAddress = new \Wuunder\Api\Config\AddressConfig();
-                    $pickupAddress->setEmailAddress($wuunderData['pickup_address']['email_address']);
-                    $pickupAddress->setFamilyName($wuunderData['pickup_address']['family_name']);
-                    $pickupAddress->setGivenName($wuunderData['pickup_address']['given_name']);
-                    $pickupAddress->setLocality($wuunderData['pickup_address']['locality']);
-                    $pickupAddress->setStreetName($wuunderData['pickup_address']['street_name']);
-                    $pickupAddress->setHouseNumber($wuunderData['pickup_address']['house_number']);
-                    $pickupAddress->setZipCode($wuunderData['pickup_address']['zip_code']);
-                    $pickupAddress->setPhoneNumber($wuunderData['pickup_address']['phone_number']);
-                    $pickupAddress->setCountry($wuunderData['pickup_address']['country']);
-                    $bookingConfig->setPickupAddress($pickupAddress);
-
+                    $bookingConfig = $this->buildWuunderData($order_id, $redirectUrl, $webhookUrl);
 
                     if ($bookingConfig->validate()) {
                         $booking->setConfig($bookingConfig);
@@ -248,41 +209,31 @@ if (!class_exists('WC_Wuunder_Create')) {
 
         public function get_company_address($orderid, $pickup_address)
         {
-
+          $pickupAddress = new \Wuunder\Api\Config\AddressConfig();
             if ($pickup_address == 0) {
                 // Get Woocommerce Wuunder Settings
-                $company_address = array(
-                    "business" => get_option('wc_wuunder_company_name'),
-                    "chamber_of_commerce_number" => $orderid,
-                    "email_address" => get_option('wc_wuunder_company_email'),
-                    "family_name" => get_option('wc_wuunder_company_lastname'),
-                    "given_name" => get_option('wc_wuunder_company_firstname'),
-                    "locality" => get_option('wc_wuunder_company_city'),
-                    "phone_number" => get_option('wc_wuunder_company_phone'),
-                    "street_name" => get_option('wc_wuunder_company_street'),
-                    "house_number" => get_option('wc_wuunder_company_housenumber'),
-                    "zip_code" => get_option('wc_wuunder_company_postode'),
-                    "country" => get_option('wc_wuunder_company_country'),
-                );
+                  $pickupAddress->setEmailAddress(get_option('wc_wuunder_company_email'));
+                  $pickupAddress->setFamilyName(get_option('wc_wuunder_company_lastname'));
+                  $pickupAddress->setGivenName(get_option('wc_wuunder_company_firstname'));
+                  $pickupAddress->setLocality(get_option('wc_wuunder_company_city'));
+                  $pickupAddress->setStreetName(get_option('wc_wuunder_company_street'));
+                  $pickupAddress->setHouseNumber(get_option('wc_wuunder_company_housenumber'));
+                  $pickupAddress->setZipCode(get_option('wc_wuunder_company_postode'));
+                  $pickupAddress->setPhoneNumber(get_option('wc_wuunder_company_phone'));
+                  $pickupAddress->setCountry(get_option('wc_wuunder_company_country'));
             } else {
                 // Get Woocommerce Wuunder Settings
-                $company_address = array(
-                    "business" => get_option('wc_wuunder_company_name_' . $pickup_address),
-                    "chamber_of_commerce_number" => $orderid,
-                    "email_address" => get_option('wc_wuunder_company_email_' . $pickup_address),
-                    "family_name" => get_option('wc_wuunder_company_lastname_' . $pickup_address),
-                    "given_name" => get_option('wc_wuunder_company_firstname_' . $pickup_address),
-                    "locality" => get_option('wc_wuunder_company_city_' . $pickup_address),
-                    "phone_number" => get_option('wc_wuunder_company_phone_' . $pickup_address),
-                    "street_name" => get_option('wc_wuunder_company_street_' . $pickup_address),
-                    "house_number" => get_option('wc_wuunder_company_housenumber_' . $pickup_address),
-                    "zip_code" => get_option('wc_wuunder_company_postode_' . $pickup_address),
-                    "country" => get_option('wc_wuunder_company_country_' . $pickup_address),
-                );
+                  $pickupAddress->setEmailAddress(get_option('wc_wuunder_company_email_' . $pickup_address));
+                  $pickupAddress->setFamilyName(get_option('wc_wuunder_company_lastname_' . $pickup_address));
+                  $pickupAddress->setGivenName(get_option('wc_wuunder_company_firstname_' . $pickup_address));
+                  $pickupAddress->setLocality(get_option('wc_wuunder_company_city_' . $pickup_address));
+                  $pickupAddress->setStreetName(get_option('wc_wuunder_company_street_' . $pickup_address));
+                  $pickupAddress->setHouseNumber(get_option('wc_wuunder_company_housenumber_' . $pickup_address));
+                  $pickupAddress->setZipCode(get_option('wc_wuunder_company_postode_' . $pickup_address));
+                  $pickupAddress->setPhoneNumber(get_option('wc_wuunder_company_phone_' . $pickup_address));
+                  $pickupAddress->setCountry(get_option('wc_wuunder_company_country_' . $pickup_address));
             }
-
-            return $company_address;
-
+            return $pickupAddress;
         }
 
         private function separateAddressLine($addressLine)
@@ -326,6 +277,7 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
             // Get customer address from order
             $order_meta = get_post_meta($orderid);
+            $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
             $street_name = $this->get_customer_address_part($order_meta, '_street_name');
             if (empty($street_name)) {
                 $street_name = $this->get_customer_address_from_address_line($order_meta)[0];
@@ -334,22 +286,17 @@ if (!class_exists('WC_Wuunder_Create')) {
             if (empty($house_number)) {
                 $house_number = $this->get_customer_address_from_address_line($order_meta)[1];
             }
-            $customer_address = array(
-                "business" => $this->get_customer_address_part($order_meta, '_company'),
-                "chamber_of_commerce_number" => $orderid,
-                "email_address" => $this->get_customer_address_part($order_meta, '_email'),
-                "family_name" => $this->get_customer_address_part($order_meta, '_last_name'),
-                "given_name" => $this->get_customer_address_part($order_meta, '_first_name'),
-                "locality" => $this->get_customer_address_part($order_meta, '_city'),
-                "phone_number" => "$phone",
-                "street_name" => $street_name,
-                "house_number" => $house_number,
-                "zip_code" => str_replace(' ', '', $this->get_customer_address_part($order_meta, '_postcode')),
-                "country" => $this->get_customer_address_part($order_meta, '_country'),
-            );
+            $deliveryAddress->setEmailAddress($this->get_customer_address_part($order_meta, '_email'));
+            $deliveryAddress->setFamilyName($this->get_customer_address_part($order_meta, '_last_name'));
+            $deliveryAddress->setGivenName($this->get_customer_address_part($order_meta, '_first_name'));
+            $deliveryAddress->setLocality($this->get_customer_address_part($order_meta, '_city'));
+            $deliveryAddress->setStreetName($street_name);
+            $deliveryAddress->setHouseNumber($house_number);
+            $deliveryAddress->setZipCode(str_replace(' ', '', $this->get_customer_address_part($order_meta, '_postcode')));
+            $deliveryAddress->setPhoneNumber("$phone");
+            $deliveryAddress->setCountry($this->get_customer_address_part($order_meta, '_country'));
 
-            return $customer_address;
-
+            return $deliveryAddress;
         }
 
         public function get_base64_image($imagepath)
