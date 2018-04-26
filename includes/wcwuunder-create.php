@@ -55,6 +55,10 @@ if (!class_exists('WC_Wuunder_Create')) {
         */
         private function setBookingConfig($orderId)
         {
+          $logger = wc_get_logger();
+          $context = array('source' => "wuunder_connector");
+          $logger->log('info', "Filling the booking config", $context);
+
             $orderItems = $this->get_order_items($orderId);
             $orderMeta = get_post_meta($orderId);
             $order = new WC_Order($orderId);
@@ -105,6 +109,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $bookingConfig->setHeight(round($dimensions[2]));
             $bookingConfig->setWeight($totalWeight ? $totalWeight : 0);
             $bookingConfig->setPreferredServiceLevel((count($order->get_items('shipping')) > 0) ? $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : "");
+            $bookingConfig->setSource($version_obj);
 
             $bookingConfig->setDeliveryAddress($customer);
             $bookingConfig->setPickupAddress($company);
@@ -118,6 +123,10 @@ if (!class_exists('WC_Wuunder_Create')) {
         */
         public function generateBookingUrl()
         {
+            $logger = wc_get_logger();
+            $context = array('source' => "wuunder_connector");
+            $logger->log('info', "Generating the booking url", $context);
+
             if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
                 $order_id = $_REQUEST['order'];
                 $postData = array();
@@ -135,15 +144,16 @@ if (!class_exists('WC_Wuunder_Create')) {
                     if ($booking->fire()) {
                         $url = $booking->getBookingResponse()->getBookingUrl();
                     } else {
-                        var_dump($booking->getBookingResponse()->getError());
+                        $logger->log('error', $booking->getBookingResponse()->getError(), $context);
                     }
                 } else {
-                    print("Bookingconfig not complete");
+                    $logger->log('error', "Bookingconfig not complete", $context);
                 }
 
                 wp_redirect($url);
                 exit;
             } else {
+                  $logger->log('error', "No order set", $context);
 //                wp_redirect(get_site_url(null, " / wp - admin / edit . php ? post_type = shop_order"));
 //                exit;
             }
@@ -184,6 +194,9 @@ if (!class_exists('WC_Wuunder_Create')) {
         */
         public function get_company_address()
         {
+          $logger = wc_get_logger();
+          $context = array('source' => "wuunder_connector");
+
           $pickupAddress = new \Wuunder\Api\Config\AddressConfig();
 
           $pickupAddress->setEmailAddress(get_option('wc_wuunder_company_email'));
@@ -199,7 +212,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             {
                 return $pickupAddress;
             } else {
-                print("Invalid pickup address");
+                $logger->log('error', "Invalid pickup address. There are mistakes or missing fields.", $context);
                 return $pickupAddress;
             }
         }
@@ -267,6 +280,9 @@ if (!class_exists('WC_Wuunder_Create')) {
         */
         public function get_customer_address($orderid)
         {
+            $logger = wc_get_logger();
+            $context = array('source' => "wuunder_connector");
+
             // Get customer address from order
             $order_meta = get_post_meta($orderid);
             $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
@@ -292,7 +308,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             {
                 return $deliveryAddress;
             } else {
-                print("Invalid delivery address");
+                $logger->log('error', "Invalid delivery address. There are mistakes or missing fields.", $context);
                 return $deliveryAddress;
             }
         }
@@ -305,6 +321,8 @@ if (!class_exists('WC_Wuunder_Create')) {
         */
         public function get_base64_image($imagepath)
         {
+            $logger = wc_get_logger();
+            $context = array('source' => "wuunder_connector");
             try {
                 $fileSize = (substr($imagepath, 0, 4) === "http") ? $this->remote_filesize($imagepath) : filesize($imagepath);
                 if ($fileSize <= 2097152) { //smaller or equal to 2MB
@@ -315,6 +333,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 }
                 return $image;
             } catch (Exception $e) {
+                $logger->log('error', $e, $context);
                 return "";
             }
         }
