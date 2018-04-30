@@ -64,6 +64,10 @@ if (!class_exists('Woocommerce_Wuunder')) {
 
             require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php');
             include_once('includes/checkout.php');
+            include_once('includes/parcelshop.php');
+
+            add_action('wp_ajax_parcelshoplocator', 'parcelShopLocator');
+            add_action('wp_ajax_nopriv_parcelshoplocator', 'parcelShopLocator');
 
             add_action('wp_loaded', function () {
                 if (strpos($_SERVER['REQUEST_URI'], "/wuunder/webhook") === 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {

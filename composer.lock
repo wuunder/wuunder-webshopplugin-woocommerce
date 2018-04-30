@@ -1,0 +1,77 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "34977d181e57965c91f781db48d48d74",
+    "packages": [
+        {
+            "name": "wuunder/connector-php",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wuunder/connector-php.git",
+                "reference": "caeda625fce8e47463afedfbc67ce07e46a4cf5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wuunder/connector-php/zipball/caeda625fce8e47463afedfbc67ce07e46a4cf5a",
+                "reference": "caeda625fce8e47463afedfbc67ce07e46a4cf5a",
+                "shasum": ""
+            },
+            "archive": {
+                "exclude": [
+                    "tests/",
+                    "build/",
+                    "/.travis.yml",
+                    "/build.xml",
+                    "phpunit.xml.dist",
+                    "libphonenumber-for-php.spec",
+                    "/.styleci.yml"
+                ]
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wuunder\\": "src/Wuunder"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Timo Janssen",
+                    "email": "timo.janssen@wearewuunder.com",
+                    "homepage": "https://wuunder.com"
+                }
+            ],
+            "description": "PHP connector for Wuunder API's",
+            "homepage": "https://github.com/wuunder/connector-php",
+            "keywords": [
+                "api",
+                "connector",
+                "parcelshop",
+                "php",
+                "wuunder"
+            ],
+            "support": {
+                "source": "https://github.com/wuunder/connector-php",
+                "issues": "https://github.com/wuunder/connector-php/issues"
+            },
+            "time": "2018-04-30T13:26:32+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
