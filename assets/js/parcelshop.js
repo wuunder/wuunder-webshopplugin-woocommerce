@@ -17,5 +17,19 @@ window.onclick = function(event) {
 }
 
 function showParcelshopPicker(){
+    // Show the popup window
     modal.style.display = "block";
+
+    // Make the request towards the backend
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          console.log("Request succesful");
+          console.log(xhttp.responseText);
+      } else {
+          console.log("Request unsuccesful");
+      }
+    }
+    xhttp.open("POST", '../wp-content/plugins/woocommerce-wuunder/includes/parcelshop', true);
+    xhttp.send(); // Hierin de factuurgegevens
 }
