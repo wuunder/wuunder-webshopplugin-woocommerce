@@ -4,29 +4,6 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
 add_action('woocommerce_before_order_notes', 'parcelshop_html');
 
-add_action('init', 'check_url');
-
-function check_confirm_url() {
-    return false !== strpos( $_SERVER[ 'REQUEST_URI' ], '/woocommerce-wuunder/includes/parcelshop' );
-}
-
-function check_url() {
-    if( check_confirm_url() ) {
-        add_filter( 'the_posts', 'confirm_page' );
-    }
-}
-
-function confirm_page( $posts ) {
-    //do all the stuff here
-    $posts = null;
-    $post = new stdClass();
-    $post->post_content = "Confirm Contensdasdasdt";
-    $post->post_title = "Conasdasdasdfirm";
-    $post->post_type = "page";
-    $post->comment_status = "closed";
-    $posts[] = $post;
-    return $posts;
-}
 
 function callback_for_setting_up_scripts() {
     $pluginPath = dirname(plugin_dir_url(__FILE__));
