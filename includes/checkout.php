@@ -21,8 +21,8 @@ function parcelshop_html(){
       <div class="modal-content">
 
         <div>
-          <img id=bring-to-parcelshop src="$pluginPathImg" alt="parcelshop">
-          <span id=parcelShopsTitleLogoChatbox>Kies een parcelshop</span>
+          <img id="bring-to-parcelshop" src="$pluginPathImg" alt="parcelshop">
+          <span id="parcelShopsTitleLogoChatbox">Kies een parcelshop</span>
           <span class="close">&times;</span>
         </div>
 
@@ -32,6 +32,12 @@ function parcelshop_html(){
           <span id="submitParcelShopsSearchBar">OK</span>
           </span>
         </td>
+
+          <div>
+            <img id="wuunderLoading" src="$pluginPath/assets/images/parcelshop/wuunder_logo.png">
+          </div>
+
+          <div id="parcelshopList"></div>
 
       </div>
     </div>

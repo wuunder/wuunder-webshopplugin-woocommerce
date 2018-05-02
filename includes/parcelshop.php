@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 function parcelShopLocator()
 {
@@ -15,15 +17,12 @@ function parcelShopLocator()
     if ($parcelshopsConfig->validate()) {
         $parcelshopsRequest->setConfig($parcelshopsConfig);
         if ($parcelshopsRequest->fire()) {
-            // $parcelshops = $parcelshopsRequest->getParcelshopsResponse()->getParcelshopsData();
-            var_dump($parcelshopsRequest->getParcelshopsResponse()->getParcelshopsData());
+            $parcelshops = $parcelshopsRequest->getParcelshopsResponse()->getParcelshopsData();
         } else {
             var_dump($parcelshopsRequest->getParcelshopsResponse()->getError());
         }
     } else {
-        // print("ParcelshopsConfig not complete");
         $parcelshops = "ParcelshopsConfig not complete";
     }
-    var_dump(json_encode($parcelshops));
-    // echo "Dit is een test";
+    echo json_encode($parcelshops);
 }
