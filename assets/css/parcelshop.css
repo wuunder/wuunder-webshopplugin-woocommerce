@@ -125,3 +125,65 @@
 #parcelShopsSearchBarContainer input {
     height: 40px;
 }
+
+#wuunderLoading {
+    margin: auto;
+    width: 100px;
+
+    position: absolute;
+    top: 0;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+
+    -webkit-animation:spin 3s linear infinite;
+    -moz-animation:spin 3s linear infinite;
+    animation:spin 3s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+#wrapper {
+  width:100%;
+  height:100%;
+  overflow: auto;
+}
+
+#parcelshopMap {
+  height: 80%;
+  width: 59%;
+  float:left;
+  margin-right: 3px;
+}
+
+#parcelshopList {
+  background-color: #f3f3f3;
+  float:right;
+  overflow:scroll;
+  height: 80%;
+  width: 40%;
+}
+
+#parcelshopItem {
+  padding: 3px;
+  border: 1px solid #858585;
+  /* float: right; */
+}
+
+#parcelshopItem:hover {
+  background-color: #e9e9e9;
+  border-color: #8fd600;
+}
+
+#parcelshopItem:focus + .opening_hours {
+  display:block;
+}
+
+#company_name {
+  font-weight: bold;
+}
+
+.opening_hours {
+  display:none;
+}

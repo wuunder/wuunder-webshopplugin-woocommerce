@@ -17,7 +17,7 @@ function parcelshop_html(){
     $pluginPathJS = $pluginPath . "/assets/js/parcelshop.js";
     $pluginPathImg = $pluginPath . "/assets/images/parcelshop/bring-to-parcelshop.png";
     echo <<<EOT
-    <div id="myModal" class="modal">
+    <div id="parcelshopPopup" class="modal">
       <div class="modal-content">
 
         <div>
@@ -37,11 +37,21 @@ function parcelshop_html(){
             <img id="wuunderLoading" src="$pluginPath/assets/images/parcelshop/wuunder_logo.png">
           </div>
 
-          <div id="parcelshopList"></div>
+          <div id="wrapper">
+            <div id="parcelshopMap"></div>
+            <div id="parcelshopList">
+              <div class='companyList' id='parcelshopItem'>
+                <strong>Jouw Adres</strong>
+                <div id="ownAdres">Noorderpoort 69, 5916PJ Venlo.</div>
+              </div>
+            </div>
+
+          </div>
 
       </div>
     </div>
     <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
+    <script type="text/javascript" data-cfasync="false" src="https://maps.googleapis.com/maps/api/js?key=MYKEY&callback=displayMap"></script>
 EOT;
 echo '<div id="parcelshopsSelectedContainer" onclick="showParcelshopPicker()"><a href="#" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div>';
 }
