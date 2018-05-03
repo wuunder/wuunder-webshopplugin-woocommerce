@@ -42,7 +42,7 @@ function parcelshop_html(){
             <div id="parcelshopList">
               <div class='companyList' id='parcelshopItem'>
                 <strong>Jouw Adres</strong>
-                <div id="ownAdres">Noorderpoort 69, 5916PJ Venlo.</div>
+                <div id="ownAdres"> </div>
               </div>
             </div>
 
@@ -51,7 +51,7 @@ function parcelshop_html(){
       </div>
     </div>
     <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
-    <script type="text/javascript" data-cfasync="false" src="https://maps.googleapis.com/maps/api/js?key=MYKEY&callback=displayMap"></script>
+    <script type="text/javascript" data-cfasync="false" src="https://maps.googleapis.com/maps/api/js?key=MyKey=displayMap"></script>
 EOT;
 echo '<div id="parcelshopsSelectedContainer" onclick="showParcelshopPicker()"><a href="#" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div>';
 }

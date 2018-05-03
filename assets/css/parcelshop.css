@@ -168,7 +168,6 @@
 #parcelshopItem {
   padding: 3px;
   border: 1px solid #858585;
-  /* float: right; */
 }
 
 #parcelshopItem:hover {
@@ -176,14 +175,12 @@
   border-color: #8fd600;
 }
 
-#parcelshopItem:focus + .opening_hours {
-  display:block;
+#company_logo {
+  width: 40px;
+  height: 35px;
+  /* float:left; */
 }
 
-#company_name {
-  font-weight: bold;
-}
-
-.opening_hours {
-  display:none;
+#opening_hours {
+  font-size: 14px;
 }
