@@ -20,9 +20,11 @@ window.onclick = function(event) {
     }
 }
 
-function showParcelshopPicker(){
+function showParcelshopPicker() {
     // Show the popup window
     modal.style.display = "block";
+    document.getElementById("wrapper").style.display = "none";
+    document.getElementById("parcelShopsSearchBarContainer").style.display = "none";
 
     ajaxRequest();
 }
@@ -30,6 +32,10 @@ function showParcelshopPicker(){
 // Capitalizes first letter of every new word.
 function capFirst(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+function km2meter(km) {
+    return Math.round(km*1000);
 }
 
 // Based on click of parcelshop info shows the opening hours which are normally hidden
@@ -101,41 +107,41 @@ function addMarkerToMap() {
 }
 
 // Fills the address bar in the popup & Jouw Adres above the list with the current location
-function setAddress(address){
-    document.getElementById("parcelShopsSearchBar").value = address.street_name + " " + address.house_number + " " + address.city;
-    document.getElementById("ownAdres").innerHTML = address.street_name + " " + address.house_number + " " + address.city;
+function setAddress(address) {
+    var current_address = "";
+    if(address.street_name){
+        current_address += address.street_name + " ";
+    }
+    if(address.house_number){
+        current_address += address.house_number + " ";
+    }
+    if(address.city){
+        current_address += address.city;
+    }
+    document.getElementById("parcelShopsSearchBar").value = current_address;
+    document.getElementById("ownAdres").innerHTML = current_address;
 }
 
 // Scrapes the billing address to use for the locator
-function getAddress(){
+function getAddress() {
   var street_and_number = document.getElementById('billing_address_1').value;
   var city = document.getElementById('billing_city').value;
-  return street_and_number + " " + city;
+  if(street_and_number || city) {
+      return street_and_number + " " + city;
+  } else {
+      return 'Utrecht';
+  }
 }
 
-// AJAX request for the parcelshops
-function ajaxRequest(){
-    jQuery.ajax({
-          type:'POST',
-          data:{ action:'parcelshoplocator',
-                address: getAddress() },
-          url: "../wp-admin/admin-ajax.php",
-          success: function(value) {
-            // Turn of the loading icon
-            loader.style.display = "none";
-
-            // Display the parcelshops
-            var val = JSON.parse(value.substring(0, value.length - 1));
-            displayMap(val.location);
-            setAddress(val.address);
-            addParcelshopList(val.parcelshops);
-          },
-
-          error: function (xhr, ajaxOptions, thrownError) {
-          console.log(xhr.status);
-          console.log(thrownError);
-          }
-        });
+function sortParcelshops(parcelshops) {
+    parcelshops.sort(function(a, b){
+        if (a.distance === b.distance) {
+            return 0;
+        } else {
+            return (a.distance < b.distance) ? -1 : 1;
+        }
+    });
+    return(parcelshops);
 }
 
 function displayMap(location) {
@@ -153,8 +159,34 @@ function displayMap(location) {
 var map = new google.maps.Map(document.getElementById("parcelshopMap"), mapOptions);
 }
 
+// AJAX request for the parcelshops
+function ajaxRequest() {
+    jQuery.ajax({
+          type:'POST',
+          data:{ action:'parcelshoplocator',
+                address: getAddress() },
+          url: "../wp-admin/admin-ajax.php",
+          success: function(value) {
 
-function addParcelshopList(data){
+// console.log(value);
+            // Display the parcelshops
+            var val = JSON.parse(value.substring(0, value.length - 1));
+            displayMap(val.location);
+            setAddress(val.address);
+            addParcelshopList(sortParcelshops(val.parcelshops));
+            loader.style.display = "none";
+            document.getElementById("wrapper").style.display = "block";
+            document.getElementById("parcelShopsSearchBarContainer").style.display = "block";
+          },
+
+          error: function (xhr, ajaxOptions, thrownError) {
+          console.log(xhr.status);
+          console.log(thrownError);
+          }
+        });
+}
+
+function addParcelshopList(data) {
       data.forEach(function(shops, i){
         var hours = getHours(shops.opening_hours);
         var logo  = getLogo(shops.carrier_name);
@@ -168,7 +200,7 @@ function addParcelshopList(data){
                           	"<div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
                             "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
                             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
-                            "<div id='distance'>" + shops.distance + "km</div></div>" +
+                            "<div id='distance'>" + km2meter(shops.distance) + "m</div></div>" +
                             "<div class='company_number"+i+"' id='opening_hours' style='display:none'>" +
                             hours + "</div>";
 

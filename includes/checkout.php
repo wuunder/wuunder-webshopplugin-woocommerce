@@ -34,7 +34,7 @@ function parcelshop_html(){
         </td>
 
           <div>
-            <img id="wuunderLoading" src="$pluginPath/assets/images/parcelshop/wuunder_logo.png">
+            <img id="wuunderLoading" src="$pluginPath/assets/images/parcelshop/Loading_icon.gif">
           </div>
 
           <div id="wrapper">
@@ -51,7 +51,7 @@ function parcelshop_html(){
       </div>
     </div>
     <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
-    <script type="text/javascript" data-cfasync="false" src="https://maps.googleapis.com/maps/api/js?key=MyKey=displayMap"></script>
+    <script type="text/javascript" data-cfasync="false" src="https://maps.googleapis.com/maps/api/js?key=MyKey"></script>
 EOT;
 echo '<div id="parcelshopsSelectedContainer" onclick="showParcelshopPicker()"><a href="#" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div>';
 }
