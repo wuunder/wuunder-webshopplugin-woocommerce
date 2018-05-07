@@ -26,9 +26,13 @@ window.onclick = function(event) {
 
 // To start a search from a new adres
 searchBar.onclick = function() {
-    // document.getElementById("wrapper").style.display = "none";
-    // document.getElementById("parcelShopsSearchBarContainer").style.display = "none";
+    // Removes the earlier list of parcelshops
+    var paras = document.getElementsByClassName('parcelshopItem');
+    while(paras[0]) {
+      paras[0].parentNode.removeChild(paras[0]);
+    }
 
+    // The new request
     ajaxRequest()
 }
 
@@ -46,16 +50,16 @@ function capFirst(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
-function km2meter(km) {
-    return Math.round(km*1000);
-}
-
 // Based on click of parcelshop info shows the opening hours which are normally hidden
-function showHours(index) {
+function showHours(index, lat, lng) {
     document.getElementsByClassName(previous)[0].style.display = "none";
     document.getElementsByClassName('company_number'+index)[0].style.display = "block";
     document.getElementsByClassName('com_num'+index)[0].scrollIntoView();
     previous = 'company_number'+index;
+
+    var center = new google.maps.LatLng(lat, lng);
+    // using global variable:
+    map.panTo(center);
 }
 
 // Parses the opening hours
@@ -116,7 +120,7 @@ function addMarkerToMap(lat, lng, logo, index) {
     map.setCenter(marker.getPosition());
 
     // Shows the opening hours for the selected shop
-    showHours(index);
+    showHours(index, lat, lng);
   });
 
 }
@@ -190,21 +194,17 @@ function ajaxRequest() {
                 address: getAddress() },
           url: "../wp-admin/admin-ajax.php",
           success: function(value) {
-
-// console.log(value);
-            // Display the parcelshops
-            var val = JSON.parse(value.substring(0, value.length - 1));
-            displayMap(val.location);
-            setAddress(val.address);
-            addParcelshopList(sortParcelshops(val.parcelshops));
-            loader.style.display = "none";
-            document.getElementById("wrapper").style.display = "block";
-            document.getElementById("parcelShopsSearchBarContainer").style.display = "block";
+              var val = JSON.parse(value.substring(0, value.length - 1));
+              displayMap(val.location);
+              setAddress(val.address);
+              addParcelshopList(sortParcelshops(val.parcelshops));
+              loader.style.display = "none";
+              document.getElementById("wrapper").style.display = "block";
+              document.getElementById("parcelShopsSearchBarContainer").style.display = "block";
           },
-
           error: function (xhr, ajaxOptions, thrownError) {
-          console.log(xhr.status);
-          console.log(thrownError);
+              console.log(xhr.status);
+              console.log(thrownError);
           }
         });
 }
@@ -217,15 +217,14 @@ function addParcelshopList(data) {
 
         var node = document.createElement("div");
         node.className += "parcelshopItem";
-        // node.onclick = parcelshopItemCallbackClosure(data.lat, data.long);
-        node.innerHTML =    "<div class='companyList com_num"+i+"' id='parcelshopItem' onclick='showHours("+i+")'>" +
+        node.innerHTML =    "<div class='companyList com_num"+i+"' id='parcelshopItem' onclick='showHours("+i+","+shops.latitude+","+shops.longitude+")'>" +
                             "<div><img id='company_logo' src='../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/"+logo+"'></div>" +
                           	"<div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
                             "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
                             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
-                            "<div id='distance'>" + km2meter(shops.distance) + "m</div></div>" +
+                            "<div id='distance'>" + Math.round(shops.distance*1000) + "m</div></div>" +
                             "<div class='company_number"+i+"' id='opening_hours' style='display:none'>" +
-                            hours + "</div>";
+                            hours + "<button class='parcelshopButton' type='button'>Kies Parcelshop</button></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
     });
 }
