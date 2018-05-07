@@ -8,6 +8,10 @@ var loader = document.getElementById('wuunderLoading');
 
 var previous = 'company_number0';
 
+var searchBar = document.getElementById('submitParcelShopsSearchBar');
+
+var map;
+
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
     modal.style.display = "none";
@@ -20,8 +24,16 @@ window.onclick = function(event) {
     }
 }
 
+// To start a search from a new adres
+searchBar.onclick = function() {
+    // document.getElementById("wrapper").style.display = "none";
+    // document.getElementById("parcelShopsSearchBarContainer").style.display = "none";
+
+    ajaxRequest()
+}
+
+// Shows the popup and starts the request towards Wuunder
 function showParcelshopPicker() {
-    // Show the popup window
     modal.style.display = "block";
     document.getElementById("wrapper").style.display = "none";
     document.getElementById("parcelShopsSearchBarContainer").style.display = "none";
@@ -42,6 +54,7 @@ function km2meter(km) {
 function showHours(index) {
     document.getElementsByClassName(previous)[0].style.display = "none";
     document.getElementsByClassName('company_number'+index)[0].style.display = "block";
+    document.getElementsByClassName('com_num'+index)[0].scrollIntoView();
     previous = 'company_number'+index;
 }
 
@@ -79,10 +92,10 @@ function getLogo(carrier_name) {
 }
 
 // Adds a marker for the respective parcelshop
-function addMarkerToMap() {
+function addMarkerToMap(lat, lng, logo, index) {
 
   var markerImage = {
-        url: "../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/position-sender.png",
+        url: "../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/" + logo,
         size: new google.maps.Size(81, 101),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(17, 34),
@@ -91,18 +104,20 @@ function addMarkerToMap() {
 
   var marker = new google.maps.Marker({
     position: {
-      lat: 51.1445517,
-      lng: 5.89
+      lat: lat,
+      lng: lng
     },
     icon: markerImage,
     map : map
   });
 
-//   marker.addListener('click', function () {
-//     map.setZoom(15);
-//     map.setCenter(marker.getPosition());
-//     openParcelshopItemDetails(window.parent.document.getElementsByClassName("parcelshopItem-" + i)[0]);
-//   });
+  marker.addListener('click', function () {
+    map.setZoom(15);
+    map.setCenter(marker.getPosition());
+
+    // Shows the opening hours for the selected shop
+    showHours(index);
+  });
 
 }
 
@@ -124,13 +139,18 @@ function setAddress(address) {
 
 // Scrapes the billing address to use for the locator
 function getAddress() {
-  var street_and_number = document.getElementById('billing_address_1').value;
-  var city = document.getElementById('billing_city').value;
-  if(street_and_number || city) {
-      return street_and_number + " " + city;
+  if(document.getElementById("wrapper").style.display === "none") {
+      var street_and_number = document.getElementById('billing_address_1').value;
+      var city = document.getElementById('billing_city').value;
+      if(street_and_number || city) {
+          return street_and_number + " " + city;
+      } else {
+          return 'Utrecht';
+      }
   } else {
-      return 'Utrecht';
+      return document.getElementById('parcelShopsSearchBar').value;
   }
+
 }
 
 function sortParcelshops(parcelshops) {
@@ -156,8 +176,11 @@ function displayMap(location) {
           rotateControl: false,
           fullscreenControl: false
     }
-var map = new google.maps.Map(document.getElementById("parcelshopMap"), mapOptions);
+map = new google.maps.Map(document.getElementById("parcelshopMap"), mapOptions);
+
+addMarkerToMap(location.lat, location.lng, "position-sender.png");
 }
+
 
 // AJAX request for the parcelshops
 function ajaxRequest() {
@@ -187,15 +210,15 @@ function ajaxRequest() {
 }
 
 function addParcelshopList(data) {
-      data.forEach(function(shops, i){
+    data.forEach(function(shops, i){
         var hours = getHours(shops.opening_hours);
         var logo  = getLogo(shops.carrier_name);
-        // addMarkerToMap(shops.latitude, shops.longitude, logo);
-// console.log(shops);
+        addMarkerToMap(shops.latitude, shops.longitude, logo, i);
+
         var node = document.createElement("div");
         node.className += "parcelshopItem";
         // node.onclick = parcelshopItemCallbackClosure(data.lat, data.long);
-        node.innerHTML =    "<div class='companyList' id='parcelshopItem' onclick='showHours("+i+")'>" +
+        node.innerHTML =    "<div class='companyList com_num"+i+"' id='parcelshopItem' onclick='showHours("+i+")'>" +
                             "<div><img id='company_logo' src='../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/"+logo+"'></div>" +
                           	"<div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
                             "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
@@ -203,7 +226,6 @@ function addParcelshopList(data) {
                             "<div id='distance'>" + km2meter(shops.distance) + "m</div></div>" +
                             "<div class='company_number"+i+"' id='opening_hours' style='display:none'>" +
                             hours + "</div>";
-
         window.parent.document.getElementById('parcelshopList').appendChild(node);
-      });
+    });
 }
