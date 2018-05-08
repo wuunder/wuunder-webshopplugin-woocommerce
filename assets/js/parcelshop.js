@@ -15,12 +15,14 @@ var map;
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
     modal.style.display = "none";
+    document.getElementsByTagName("BODY")[0].style.overflow = "scroll";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
+        document.getElementsByTagName("BODY")[0].style.overflow = "scroll";
     }
 }
 
@@ -39,8 +41,10 @@ searchBar.onclick = function() {
 // Shows the popup and starts the request towards Wuunder
 function showParcelshopPicker() {
     modal.style.display = "block";
+    loader.style.display = "block";
     document.getElementById("wrapper").style.display = "none";
     document.getElementById("parcelShopsSearchBarContainer").style.display = "none";
+    document.getElementsByTagName("BODY")[0].style.overflow = "hidden";
 
     ajaxRequest();
 }
@@ -58,7 +62,6 @@ function showHours(index, lat, lng) {
     previous = 'company_number'+index;
 
     var center = new google.maps.LatLng(lat, lng);
-    // using global variable:
     map.panTo(center);
 }
 
@@ -185,28 +188,29 @@ map = new google.maps.Map(document.getElementById("parcelshopMap"), mapOptions);
 addMarkerToMap(location.lat, location.lng, "position-sender.png");
 }
 
-
 // AJAX request for the parcelshops
 function ajaxRequest() {
-    jQuery.ajax({
-          type:'POST',
-          data:{ action:'parcelshoplocator',
-                address: getAddress() },
-          url: "../wp-admin/admin-ajax.php",
-          success: function(value) {
-              var val = JSON.parse(value.substring(0, value.length - 1));
-              displayMap(val.location);
-              setAddress(val.address);
-              addParcelshopList(sortParcelshops(val.parcelshops));
-              loader.style.display = "none";
-              document.getElementById("wrapper").style.display = "block";
-              document.getElementById("parcelShopsSearchBarContainer").style.display = "block";
-          },
-          error: function (xhr, ajaxOptions, thrownError) {
-              console.log(xhr.status);
-              console.log(thrownError);
-          }
-        });
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var val = JSON.parse(xhttp.responseText.substring(0, xhttp.responseText.length - 1));
+          displayMap(val.location);
+          setAddress(val.address);
+          addParcelshopList(sortParcelshops(val.parcelshops));
+          loader.style.display = "none";
+          document.getElementById("wrapper").style.display = "block";
+          document.getElementById("parcelShopsSearchBarContainer").style.display = "block";
+      } else if (this.readyState == 400) {
+          alert("Something went wrong: " + xhttp.responseText);
+      } else {
+          console.log("API request failed");
+      }
+    }
+    var data = new FormData();
+    data.append('action', 'parcelshoplocator');
+    data.append('address', getAddress());
+    xhttp.open("POST", "../wp-admin/admin-ajax.php");
+    xhttp.send(data);
 }
 
 function addParcelshopList(data) {
