@@ -12,6 +12,13 @@ var searchBar = document.getElementById('submitParcelShopsSearchBar');
 
 var map;
 
+var parcelshop_select = document.getElementById('shipping_method');
+console.log(parcelshop_select);
+
+parcelshop_select.onchange = function() {
+    alert("I have been clicked");
+}
+
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
     modal.style.display = "none";
@@ -188,7 +195,6 @@ map = new google.maps.Map(document.getElementById("parcelshopMap"), mapOptions);
 addMarkerToMap(location.lat, location.lng, "position-sender.png");
 }
 
-// AJAX request for the parcelshops
 function ajaxRequest() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {

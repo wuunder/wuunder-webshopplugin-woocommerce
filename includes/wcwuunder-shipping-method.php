@@ -6,7 +6,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
-	function your_shipping_method_init() {
+	function wc_wuunder_parcelshop_method() {
 		if ( ! class_exists( 'WC_wuunder_parcelshop' ) ) {
 			class WC_wuunder_parcelshop extends WC_Shipping_Method {
 				/**
@@ -15,12 +15,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				 * @access public
 				 * @return void
 				 */
-				public function __construct() {
+				public function __construct($instance_id = 0) {
 					$this->id                 = 'wuunder_parcelshop';
+					$this->instance_id        = absint( $instance_id );
 					$this->method_title       = __( 'Wuunder Parcelshop' );
-					$this->method_description = __( 'Wuunder Parcelshop locator, laat klanten zelf een locatie kiezen om hun pakketje op te halen.' );
+					$this->method_description = __( 'Laat klanten zelf een locatie kiezen om hun pakketje op te halen.' );
 
-					$this->enabled            = isset( $this->settings['enabled'] ) ? $this->settings['enabled'] : 'yes';
+					// $this->enabled            = ('yes' === $this->get_option('enabled') ) ? $this->get_option('enabled') : 'no';
+					$this->enabled            = 'yes';
 					$this->title              = "Wuunder Parcelshop Locator";
           $this->supports           = array(
                                   			'shipping-zones',
@@ -28,6 +30,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                                   			'instance-settings-modal',
                                         'settings'
                                   		);
+
+					// These are the options set by the user
+					$this->cost = $this->get_option('cost');
+					$this->carriers = $this->get_option('select_carriers');
 					$this->init();
 				}
 
@@ -48,19 +54,29 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
         function init_form_fields() {
             $this->form_fields = array(
-             'enabled' => array(
-                  'title' => __( 'Enable', 'wuunder_parcelshop' ),
-                  'type' => 'checkbox',
-                  'description' => __( 'Enable this shipping.', 'wuunder_parcelshop' ),
-                  'default' => 'no'
-								),
+							// Commented for now until its working.
+             // 'enabled' => array(
+             //      'title' => __( 'Enable/Disable', 'woocommerce' ),
+             //      'type' => 'checkbox',
+             //      'description' => __( 'Enable this shipping.', 'woocommerce' ),
+             //      'default' => 'yes'
+							// 	),
              'cost' => array(
-                  'title' => __( 'Kosten', 'wuunder_parcelshop' ),
+                  'title' => __( 'Kosten', 'woocommerce' ),
                   'type' => 'number',
-                  'description' => __( 'Kosten voor gebruik Parcelshop pick-up', 'wuunder_parcelshop' ),
+                  'description' => __( 'Kosten voor gebruik Parcelshop pick-up', 'woocommerce' ),
                   'default' => 5.0
-								)
-
+								),
+							'select_carriers' => array(
+									'title' => __( 'Welke Carriers', 'woocommerce'),
+									'type' => 'multiselect',
+									'description' => __( 'Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen)', 'woocommerce'),
+									'options' => array(
+											'DHL' => __("DHL"),
+											'DPD' => __("DPD"),
+											'PostNL' => __("PostNL")
+									)
+							)
              );
         }
 
@@ -75,7 +91,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					$rate = array(
 						'id' => $this->id,
 						'label' => $this->title,
-						'cost' => '10.99',
+						'cost' => $this->cost,
 						'calc_tax' => 'per_item'
 					);
 
@@ -87,10 +103,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		}
 	}
 
-	add_action( 'woocommerce_shipping_init', 'your_shipping_method_init' );
+	add_action( 'woocommerce_shipping_init', 'wc_wuunder_parcelshop_method' );
 
 	function wuunder_parcelshop_locator( $methods ) {
-		$methods['your_shipping_method'] = 'WC_wuunder_parcelshop';
+		$methods['wuunder_parcelshop'] = 'WC_wuunder_parcelshop';
 		return $methods;
 	}
 
