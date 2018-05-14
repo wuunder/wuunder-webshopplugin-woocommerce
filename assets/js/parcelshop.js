@@ -12,11 +12,12 @@ var searchBar = document.getElementById('submitParcelShopsSearchBar');
 
 var map;
 
-var parcelshop_select = document.getElementById('shipping_method');
-console.log(parcelshop_select);
-
-parcelshop_select.onchange = function() {
-    alert("I have been clicked");
+// If parcelshop is selected in shipment. Adds a button to choose a parcelshop
+if(document.getElementById('shipping_method_0_wuunder_parcelshop').checked) {
+    var node = document.createElement("div");
+    node.className += "chooseParcelshop";
+    node.innerHTML = '<div id="parcelshopsSelectedContainer" onclick="showParcelshopPicker()"><a href="#/" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div>';
+    window.parent.document.getElementsByClassName('shipping')[0].appendChild(node);
 }
 
 // When the user clicks on <span> (x), close the modal

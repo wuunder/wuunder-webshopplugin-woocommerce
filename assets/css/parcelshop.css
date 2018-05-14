@@ -74,6 +74,13 @@
     margin-left: -23px;
 }
 
+#parcelshopsSelectedContainer {
+    position: relative;
+    background-color: #94d600;
+    font0color: white;
+    width: 100%;
+}
+
 #parcelShopsSearchBar {
     border: 1px solid #858585;
     /* max-width: calc(100% - 100px); */
