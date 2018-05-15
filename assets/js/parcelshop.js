@@ -49,6 +49,7 @@ searchBar.onclick = function() {
 // When parcelshop is chosen shows adres
 function chooseParcelshop_button(adres) {
     modal.style.display = "none";
+    document.getElementsByTagName("BODY")[0].style.overflow = "scroll";
 
     if(document.getElementsByClassName('parcelshopInfo')[0]){
         document.getElementsByClassName('parcelshopInfo')[0].remove();
