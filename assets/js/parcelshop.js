@@ -46,6 +46,20 @@ searchBar.onclick = function() {
     ajaxRequest()
 }
 
+// When parcelshop is chosen shows adres
+function chooseParcelshop_button(adres) {
+    modal.style.display = "none";
+
+    if(document.getElementsByClassName('parcelshopInfo')[0]){
+        document.getElementsByClassName('parcelshopInfo')[0].remove();
+    }
+
+    var node = document.createElement("div");
+    node.className += "parcelshopInfo";
+    node.innerHTML = "<strong>Huidige Parcelshop: </strong><br>" + adres;
+    window.parent.document.getElementsByClassName('chooseParcelshop')[0].appendChild(node);
+}
+
 // Shows the popup and starts the request towards Wuunder
 function showParcelshopPicker() {
     modal.style.display = "block";
@@ -229,13 +243,13 @@ function addParcelshopList(data) {
         var node = document.createElement("div");
         node.className += "parcelshopItem";
         node.innerHTML =    "<div class='companyList com_num"+i+"' id='parcelshopItem' onclick='showHours("+i+","+shops.latitude+","+shops.longitude+")'>" +
-                            "<div><img id='company_logo' src='../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/"+logo+"'></div>" +
-                          	"<div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
+                            "<div id='parcelshopItem_logo'><img id='company_logo' src='../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/"+logo+"'></div>" +
+                          	"<div id='parcelshopItem_text'><div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
                             "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
                             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
-                            "<div id='distance'>" + Math.round(shops.distance*1000) + "m</div></div>" +
-                            "<div class='company_number"+i+"' id='opening_hours' style='display:none'>" +
-                            hours + "<button class='parcelshopButton' type='button'>Kies Parcelshop</button></div>";
+                            "<div id='distance'>" + Math.round(shops.distance*1000) + "m</div></div></div>" +
+                            "<div class='company_number"+i+"' id='opening_hours' style='display:none'><br><strong>Openingstijden</strong>" +
+                            hours + "<br><button class='parcelshopButton' onclick='chooseParcelshop_button(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "<br>" + shops[0].city + "\")' type='button'>Kies Parcelshop</button></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
     });
 }

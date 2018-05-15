@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
-add_action('woocommerce_before_order_notes', 'parcelshop_html');
+add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
 
 
 function callback_for_setting_up_scripts() {
@@ -53,7 +53,6 @@ function parcelshop_html(){
     <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
     <script type="text/javascript" data-cfasync="false" src="https://maps.googleapis.com/maps/api/js?key=MyKey"></script>
 EOT;
-// echo '<div id="parcelshopsSelectedContainer" onclick="showParcelshopPicker()"><a href="#/" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div>';
 }
 
 ?>

@@ -74,16 +74,12 @@
     margin-left: -23px;
 }
 
-#parcelshopsSelectedContainer {
-    position: relative;
-    background-color: #94d600;
-    font0color: white;
-    width: 100%;
-}
+/* .chooseParcelshop {
+
+} */
 
 #parcelShopsSearchBar {
     border: 1px solid #858585;
-    /* max-width: calc(100% - 100px); */
     width: 50%;
     float: left;
 }
@@ -158,6 +154,7 @@
 #parcelshopItem {
     padding: 3px;
     border: 1px solid #858585;
+    border-radius: 3px;
 }
 
 #parcelshopItem:hover {
@@ -172,10 +169,21 @@
 
 #opening_hours {
     font-size: 14px;
+    margin: auto;
+    width: 85%;
 }
 
 .parcelshopButton {
     background-color: #8fd600;
     border: 1px solid #858585;
     /* float: right; */
+}
+
+#parcelshopItem_logo {
+    float: left;
+}
+
+#parcelshopItem_text {
+    margin: auto;
+    width: 70%;
 }
