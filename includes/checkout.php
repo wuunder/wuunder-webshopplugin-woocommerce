@@ -2,8 +2,8 @@
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
+// add_action('woocommerce_checkout_before_customer_details', 'add_parcelshop_id');
 add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
-
 
 function callback_for_setting_up_scripts() {
     $pluginPath = dirname(plugin_dir_url(__FILE__));
@@ -23,7 +23,7 @@ function parcelshop_html(){
         <div>
           <img id="bring-to-parcelshop" src="$pluginPathImg" alt="parcelshop">
           <span id="parcelShopsTitleLogoChatbox">Kies een parcelshop</span>
-          <span class="close">&times;</span>
+          <span id="close_parcelshop_modal">&times;</span>
         </div>
 
         <td>
@@ -55,4 +55,12 @@ function parcelshop_html(){
 EOT;
 }
 
+
+add_action( 'woocommerce_checkout_update_order_meta', 'update_parcelshop_id' );
+// Field added for the parcelshop_id, so that it can be requested from backend
+function update_parcelshop_id( $order_id ) {
+    if (!empty($_POST['billing_parcelshop_id'])){
+      update_post_meta( $order_id, '_billing_parcelshop_id', sanitize_text_field($_POST['billing_parcelshop_id']));
+    }
+}
 ?>

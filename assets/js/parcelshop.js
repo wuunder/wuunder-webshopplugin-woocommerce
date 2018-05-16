@@ -2,7 +2,7 @@
 var modal = document.getElementById('parcelshopPopup');
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+var span = document.getElementById("close_parcelshop_modal");
 
 var loader = document.getElementById('wuunderLoading');
 
@@ -47,7 +47,7 @@ searchBar.onclick = function() {
 }
 
 // When parcelshop is chosen shows adres
-function chooseParcelshop_button(adres) {
+function chooseParcelshopButton(adres, parcelshop_id) {
     modal.style.display = "none";
     document.getElementsByTagName("BODY")[0].style.overflow = "scroll";
 
@@ -57,7 +57,8 @@ function chooseParcelshop_button(adres) {
 
     var node = document.createElement("div");
     node.className += "parcelshopInfo";
-    node.innerHTML = "<strong>Huidige Parcelshop: </strong><br>" + adres;
+    node.innerHTML = "<strong>Huidige Parcelshop: </strong><br>" + adres+
+                     "<div id='parcelshop_id_input>'<input type='hidden' class='input-hidden' name='billing_parcelshop_id' id='billing_parcelshop_id' value=" + parcelshop_id + "> </div>";
     window.parent.document.getElementsByClassName('chooseParcelshop')[0].appendChild(node);
 }
 
@@ -250,7 +251,8 @@ function addParcelshopList(data) {
                             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
                             "<div id='distance'>" + Math.round(shops.distance*1000) + "m</div></div></div>" +
                             "<div class='company_number"+i+"' id='opening_hours' style='display:none'><br><strong>Openingstijden</strong>" +
-                            hours + "<br><button class='parcelshopButton' onclick='chooseParcelshop_button(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "<br>" + shops[0].city + "\")' type='button'>Kies Parcelshop</button></div>";
+                            hours + "<br><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) +
+                            " " + shops[0].house_number + "<br>" + shops[0].city + "\", \"" + shops.id + "\")' type='button'>Kies Parcelshop</button></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
     });
 }
