@@ -186,6 +186,6 @@
     width: 70%;
 }
 
-#parcelshop_id {
+#parcelshop_id, #parcelshop_country {
     display: none;
 }

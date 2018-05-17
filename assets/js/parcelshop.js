@@ -46,8 +46,8 @@ searchBar.onclick = function() {
     ajaxRequest()
 }
 
-// When parcelshop is chosen shows adres
-function chooseParcelshopButton(adres, parcelshop_id) {
+// When parcelshop is chosen shows adres on checkout and adds hidden fields to checkout
+function chooseParcelshopButton(adres, parcelshop_id, parcelshop_country) {
     modal.style.display = "none";
     document.getElementsByTagName("BODY")[0].style.overflow = "scroll";
 
@@ -55,7 +55,9 @@ function chooseParcelshopButton(adres, parcelshop_id) {
         document.getElementsByClassName('parcelshopInfo')[0].remove();
     }
 
+    // Add these to hidden fields in checkout
     document.getElementById('parcelshop_id').value = parcelshop_id;
+    document.getElementById('parcelshop_country').value = parcelshop_country;
 
     var node = document.createElement("div");
     node.className += "parcelshopInfo";
@@ -253,7 +255,7 @@ function addParcelshopList(data) {
                             "<div id='distance'>" + Math.round(shops.distance*1000) + "m</div></div></div>" +
                             "<div class='company_number"+i+"' id='opening_hours' style='display:none'><br><strong>Openingstijden</strong>" +
                             hours + "<br><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) +
-                            " " + shops[0].house_number + "<br>" + shops[0].city + "\", \"" + shops.id + "\")' type='button'>Kies Parcelshop</button></div>";
+                            " " + shops[0].house_number + "<br>" + shops[0].city + "\", \"" + shops.id + "\", \"" + shops[0].alpha2 + "\")' type='button'>Kies Parcelshop</button></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
     });
 }
