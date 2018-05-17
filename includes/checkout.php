@@ -56,11 +56,23 @@ EOT;
 }
 
 
-add_action( 'woocommerce_checkout_update_order_meta', 'update_parcelshop_id' );
 // Field added for the parcelshop_id, so that it can be requested from backend
+add_action('woocommerce_after_order_notes', 'add_parcelshop_id_field');
+function add_parcelshop_id_field($checkout)
+{
+	woocommerce_form_field('parcelshop_id', array(
+		'type' => 'text',
+		'class' => array(
+			'my-field-class form-row-wide'
+		) ,
+	) , $checkout->get_value('parcelshop_id'));
+}
+
+// Save / Send the parcelshop id
+add_action( 'woocommerce_checkout_update_order_meta', 'update_parcelshop_id' );
 function update_parcelshop_id( $order_id ) {
-    if (!empty($_POST['billing_parcelshop_id'])){
-      update_post_meta( $order_id, '_billing_parcelshop_id', sanitize_text_field($_POST['billing_parcelshop_id']));
+    if (!empty($_POST['parcelshop_id'])){
+      update_post_meta( $order_id, 'parcelshop_id', sanitize_text_field($_POST['parcelshop_id']));
     }
 }
 ?>

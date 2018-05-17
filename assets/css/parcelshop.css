@@ -185,3 +185,7 @@
     margin: auto;
     width: 70%;
 }
+
+#parcelshop_id {
+    display: none;
+}

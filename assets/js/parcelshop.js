@@ -55,10 +55,11 @@ function chooseParcelshopButton(adres, parcelshop_id) {
         document.getElementsByClassName('parcelshopInfo')[0].remove();
     }
 
+    document.getElementById('parcelshop_id').value = parcelshop_id;
+
     var node = document.createElement("div");
     node.className += "parcelshopInfo";
-    node.innerHTML = "<strong>Huidige Parcelshop: </strong><br>" + adres+
-                     "<div id='parcelshop_id_input>'<input type='hidden' class='input-hidden' name='billing_parcelshop_id' id='billing_parcelshop_id' value=" + parcelshop_id + "> </div>";
+    node.innerHTML = "<strong>Huidige Parcelshop: </strong><br>" + adres;
     window.parent.document.getElementsByClassName('chooseParcelshop')[0].appendChild(node);
 }
 

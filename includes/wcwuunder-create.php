@@ -57,6 +57,7 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
             $orderItems = $this->get_order_items($orderId);
             $orderMeta = get_post_meta($orderId);
+
             $order = new WC_Order($orderId);
             $orderPicture = null;
             foreach ($orderItems['images'] as $image) {
@@ -65,7 +66,6 @@ if (!class_exists('WC_Wuunder_Create')) {
                     break;
                 }
             }
-
 
             $defLength = 80;
             $defWidth = 50;
@@ -112,7 +112,8 @@ if (!class_exists('WC_Wuunder_Create')) {
                 "delivery_address" => $customer,
                 "pickup_address" => $company,
                 "preferred_service_level" => (count($order->get_items('shipping')) > 0) ? $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : "",
-                "source" => $this->version_obj
+                "source" => $this->version_obj,
+                "parcelshop_id" => (isset($orderMeta['parcelshop_id'][0]) ? $orderMeta['parcelshop_id'][0] : null)
             );
         }
 
