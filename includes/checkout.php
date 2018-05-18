@@ -2,7 +2,6 @@
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
-// add_action('woocommerce_checkout_before_customer_details', 'add_parcelshop_id');
 add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
 
 function callback_for_setting_up_scripts() {
@@ -41,8 +40,13 @@ function parcelshop_html(){
             <div id="parcelshopMap"></div>
             <div id="parcelshopList">
               <div class='companyList' id='parcelshopItem'>
-                <strong>Jouw Adres</strong>
-                <div id="ownAdres"> </div>
+                <div id="yourLogo">
+                  <img id="yourLogoImg" src="$pluginPath/assets/images/parcelshop/position-sender.png">
+                </div>
+                <div id="yourAddress">
+                  <strong>Jouw Adres</strong>
+                  <div id="ownAdres"> </div>
+                </div>
               </div>
             </div>
 
@@ -64,7 +68,7 @@ function add_parcelshop_id_field($checkout) {
 			'my-field-class form-row-wide'
 		) ,
 	) , $checkout->get_value('parcelshop_id'));
-  
+
 	woocommerce_form_field('parcelshop_country', array(
 		'type' => 'text',
 		'class' => array(
@@ -85,9 +89,10 @@ function update_parcelshop_id( $order_id ) {
 add_action('woocommerce_checkout_process', 'check_parcelshop_selection');
 function check_parcelshop_selection() {
   if ($_POST['shipping_method'][0] === 'wuunder_parcelshop') {
-      if (!$_POST['parcelshop_id']) wc_add_notice(__('Kies eerst een parcelshop') , 'error');
+      if (!$_POST['parcelshop_id']) wc_add_notice(__('Kies eerst een <strong>parcelshop</strong>') , 'error');
 
-      if ($_POST['shipping_country'] != $_POST['parcelshop_country']) wc_add_notice(__('Het land van de verzendgegevens moet overeenkomen met het land van de parcelshop'), 'error');
+      if ($_POST['shipping_country'] != $_POST['parcelshop_country']) wc_add_notice(__('Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong>'), 'error');
   }
 }
+
 ?>

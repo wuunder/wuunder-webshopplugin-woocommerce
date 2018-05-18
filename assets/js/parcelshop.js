@@ -46,7 +46,7 @@ searchBar.onclick = function() {
     ajaxRequest()
 }
 
-// When parcelshop is chosen shows adres on checkout and adds hidden fields to checkout
+// When parcelshop is chosen shows adres
 function chooseParcelshopButton(adres, parcelshop_id, parcelshop_country) {
     modal.style.display = "none";
     document.getElementsByTagName("BODY")[0].style.overflow = "scroll";
@@ -94,12 +94,22 @@ function showHours(index, lat, lng) {
 
 // Parses the opening hours
 function getHours(days_hours) {
-    var opening_hours = "";
+    // var opening_hours = "";
+    var opening_hours = Array();
+    var parcelshop_day = "<div id=parcelshop_day>";
+    var parcelshop_hour = "<div id=parcelshop_hour>";
+
     days_hours.forEach(function(days){
       if (days.open_morning != "00:00" && days.close_afternoon != "00:00") {
-        opening_hours += "<div>" + days.weekday + " " + days.open_morning + " - " + days.close_afternoon + "</div>";
+        parcelshop_day += days.weekday + "<br>";
+        parcelshop_hour += days.open_morning + " - " + days.close_afternoon + "<br>";
       }
     });
+    parcelshop_day += "</div>";
+    parcelshop_hour += "</div>";
+
+    opening_hours['days'] = parcelshop_day;
+    opening_hours['hours'] = parcelshop_hour;
     return opening_hours;
 }
 
@@ -254,8 +264,8 @@ function addParcelshopList(data) {
                             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
                             "<div id='distance'>" + Math.round(shops.distance*1000) + "m</div></div></div>" +
                             "<div class='company_number"+i+"' id='opening_hours' style='display:none'><br><strong>Openingstijden</strong>" +
-                            hours + "<br><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) +
-                            " " + shops[0].house_number + "<br>" + shops[0].city + "\", \"" + shops.id + "\", \"" + shops[0].alpha2 + "\")' type='button'>Kies Parcelshop</button></div>";
+                            "<div>" + hours['days'] + hours['hours'] + "</div><br><div id='buttonContainer'><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) +
+                            " " + shops[0].house_number + "<br>" + shops[0].city + "\", \"" + shops.id + "\", \"" + shops[0].alpha2 + "\")' type='button'>Kies</button></div></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
     });
 }

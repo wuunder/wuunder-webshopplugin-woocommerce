@@ -150,19 +150,34 @@
 }
 
 #parcelshopItem {
-    padding: 3px;
-    border: 1px solid #858585;
+    /* padding: 3px; */
+    padding: 5px 25px;
     border-radius: 3px;
+    font-family: "Helvetica Neue", Verdana, Arial, sans-serif;
+    color: #636363;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 #parcelshopItem:hover {
     background-color: #e9e9e9;
-    border-color: #8fd600;
 }
 
 #company_logo {
     width: 40px;
     height: 35px;
+}
+
+.companyList {
+    overflow: hidden;
+}
+
+.companyList:hover {
+  border: 6px #94d600;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
 }
 
 #opening_hours {
@@ -174,18 +189,47 @@
 .parcelshopButton {
     background-color: #8fd600;
     border: 1px solid #858585;
-    /* float: right; */
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 15px;
+    color: white !important;
+    font-size: 15px;
+    float: right;
 }
 
 #parcelshopItem_logo {
     float: left;
+    padding-left: 10px;
 }
 
 #parcelshopItem_text {
     margin: auto;
-    width: 70%;
+    width: 65%;
+}
+
+#yourAddress {
+    margin: auto;
+    width: 65%;
+    padding-bottom: 25px;
 }
 
 #parcelshop_id, #parcelshop_country {
     display: none;
+}
+
+#parcelshop_day {
+    float: left;
+}
+
+#parcelshop_hour {
+    margin: auto;
+    width: 30%;
+}
+
+#yourLogoImg {
+    float: left;
+    width: 38px;
+    height: 42px;
 }
