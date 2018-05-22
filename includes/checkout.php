@@ -2,7 +2,8 @@
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
-add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
+// add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
+add_action('woocommerce_review_order_after_submit', 'parcelshop_html');
 
 function callback_for_setting_up_scripts() {
     $pluginPath = dirname(plugin_dir_url(__FILE__));

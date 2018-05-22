@@ -22,6 +22,7 @@
     width: 90%;
     height: 90%;
     border-radius: 25px;
+    overflow: hidden;
 }
 
 /* The Close Button */
@@ -136,9 +137,15 @@
 
 #parcelshopMap {
     height: 80%;
-    width: 59%;
+    width: calc(100% - 391px);
     float:left;
     margin-right: 3px;
+}
+
+@media (max-width: 849px) {
+  #parcelshopMap {
+    display: none !important;
+  }
 }
 
 #parcelshopList {
@@ -146,11 +153,11 @@
     float:right;
     overflow:scroll;
     height: 80%;
-    width: 40%;
+    width: 385px;
+    /* width: 35%; */
 }
 
 #parcelshopItem {
-    /* padding: 3px; */
     padding: 5px 25px;
     border-radius: 3px;
     font-family: "Helvetica Neue", Verdana, Arial, sans-serif;
@@ -172,18 +179,22 @@
     overflow: hidden;
 }
 
-.companyList:hover {
+/* .companyList:hover {
   border: 6px #94d600;
   border-bottom-style: solid;
   border-left-style: solid;
   border-top-left-radius: 0.5em;
-  border-bottom-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em; */
 }
 
 #opening_hours {
     font-size: 14px;
     margin: auto;
-    width: 85%;
+    width: 80%;
+}
+
+.opening_hours_list {
+    padding-left: 45px;
 }
 
 .parcelshopButton {
@@ -232,4 +243,28 @@
     float: left;
     width: 38px;
     height: 42px;
+}
+
+@media (max-width: 480px) {
+  #parcelshopList {
+      float: none;
+  }
+
+  #parcelshopItem {
+      padding: 0px !important;
+  }
+
+  .parcelshopButton {
+    float: left;
+  }
+
+  .opening_hours_list {
+    padding: 0px !important;
+  }
+
+  #parcelshop_hour {
+    margin: auto;
+    width: 25%;
+
+  }
 }

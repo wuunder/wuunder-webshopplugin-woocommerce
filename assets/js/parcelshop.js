@@ -12,12 +12,21 @@ var searchBar = document.getElementById('submitParcelShopsSearchBar');
 
 var map;
 
+var parcelshop_address;
+
 // If parcelshop is selected in shipment. Adds a button to choose a parcelshop
 if(document.getElementById('shipping_method_0_wuunder_parcelshop').checked) {
     var node = document.createElement("div");
     node.className += "chooseParcelshop";
     node.innerHTML = '<div id="parcelshopsSelectedContainer" onclick="showParcelshopPicker()"><a href="#/" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div>';
     window.parent.document.getElementsByClassName('shipping')[0].appendChild(node);
+
+    if(parcelshop_address) {
+        var node = document.createElement("div");
+        node.className += "parcelshopInfo";
+        node.innerHTML = "<strong>Huidige Parcelshop: </strong><br>" + parcelshop_address;
+        window.parent.document.getElementsByClassName('chooseParcelshop')[0].appendChild(node);
+    }
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -63,6 +72,8 @@ function chooseParcelshopButton(adres, parcelshop_id, parcelshop_country) {
     node.className += "parcelshopInfo";
     node.innerHTML = "<strong>Huidige Parcelshop: </strong><br>" + adres;
     window.parent.document.getElementsByClassName('chooseParcelshop')[0].appendChild(node);
+
+    parcelshop_address = adres;
 }
 
 // Shows the popup and starts the request towards Wuunder
@@ -83,9 +94,23 @@ function capFirst(str) {
 
 // Based on click of parcelshop info shows the opening hours which are normally hidden
 function showHours(index, lat, lng) {
-    document.getElementsByClassName(previous)[0].style.display = "none";
+    var hourStylingPrevious = document.getElementsByClassName(previous)[0].style;
+    hourStylingPrevious.display ='none';
+    hourStylingPrevious.borderLeft ='hidden';
+    hourStylingPrevious.borderBottom ='hidden';
+    // document.getElementsByClassName(previous)[0].style.display = "none";
+
     document.getElementsByClassName('company_number'+index)[0].style.display = "block";
+
+    var hourStyling = document.getElementsByClassName('com_num'+index)[0].style;
+    hourStyling.borderLeft   = 'solid';
+    hourStyling.borderBottom = 'solid';
+    hourStyling.borderTopLeftRadius    = '0.5em';
+    hourStyling.borderBottomLeftRadius = '0.5em';
+    hourStyling.borderColor = '#94d600';
+
     document.getElementsByClassName('com_num'+index)[0].scrollIntoView();
+
     previous = 'company_number'+index;
 
     var center = new google.maps.LatLng(lat, lng);
@@ -175,7 +200,10 @@ function setAddress(address) {
         current_address += address.house_number + " ";
     }
     if(address.city){
-        current_address += address.city;
+        current_address += address.city + " ";
+    }
+    if(address.zip_code){
+        current_address += address.zip_code;
     }
     document.getElementById("parcelShopsSearchBar").value = current_address;
     document.getElementById("ownAdres").innerHTML = current_address;
@@ -236,10 +264,8 @@ function ajaxRequest() {
           loader.style.display = "none";
           document.getElementById("wrapper").style.display = "block";
           document.getElementById("parcelShopsSearchBarContainer").style.display = "block";
-      } else if (this.readyState == 400) {
+      } else if (this.status == 400) {
           alert("Something went wrong: " + xhttp.responseText);
-      } else {
-          console.log("API request failed");
       }
     }
     var data = new FormData();
@@ -263,7 +289,7 @@ function addParcelshopList(data) {
                             "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
                             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
                             "<div id='distance'>" + Math.round(shops.distance*1000) + "m</div></div></div>" +
-                            "<div class='company_number"+i+"' id='opening_hours' style='display:none'><br><strong>Openingstijden</strong>" +
+                            "<div class='company_number"+i+" opening_hours_list' id='opening_hours' style='display:none'><br><strong>Openingstijden</strong>" +
                             "<div>" + hours['days'] + hours['hours'] + "</div><br><div id='buttonContainer'><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) +
                             " " + shops[0].house_number + "<br>" + shops[0].city + "\", \"" + shops.id + "\", \"" + shops[0].alpha2 + "\")' type='button'>Kies</button></div></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
