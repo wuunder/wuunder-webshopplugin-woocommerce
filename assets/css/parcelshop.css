@@ -255,16 +255,49 @@
   }
 
   .parcelshopButton {
-    float: left;
+      float: left;
   }
 
   .opening_hours_list {
-    padding: 0px !important;
+      padding: 0px !important;
   }
 
   #parcelshop_hour {
-    margin: auto;
-    width: 25%;
-
+      margin: auto;
+      width: 25%;
   }
+
+  #bring-to-parcelshop {
+      width: 20px;
+      height: 20px;
+      margin: 4px;
+  }
+
+  #parcelShopsTitleLogoChatbox {
+      padding: 2px;
+      margin-top: 7px;
+  }
+
+  #parcelShopsSearchBarContainer {
+      width: 100%;
+      height: 25px;
+  }
+
+  #parcelShopsSearchBarContainer:before {
+      width: 25px;
+      height: 23px;
+  }
+
+  #submitParcelShopsSearchBar {
+      width: 25px;
+      height: 23px;
+      font-size: 10px;
+      line-height: 20px !important;
+  }
+
+  #parcelShopsSearchBarContainer input {
+      height: 18px;
+  }
+
+
 }

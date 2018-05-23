@@ -109,7 +109,9 @@ function showHours(index, lat, lng) {
     hourStyling.borderBottomLeftRadius = '0.5em';
     hourStyling.borderColor = '#94d600';
 
-    document.getElementsByClassName('com_num'+index)[0].scrollIntoView();
+    var item = document.getElementsByClassName('com_num'+index)[0].parentNode;
+    item.parentNode.scrollTop = item.offsetTop - item.parentNode.offsetTop;
+
 
     previous = 'company_number'+index;
 
