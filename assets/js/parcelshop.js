@@ -51,8 +51,8 @@ searchBar.onclick = function() {
       paras[0].parentNode.removeChild(paras[0]);
     }
 
-    // The new request
-    ajaxRequest()
+    // The new request with address added
+    ajaxRequest(document.getElementById('parcelShopsSearchBar').value)
 }
 
 // When parcelshop is chosen shows adres
@@ -164,7 +164,6 @@ function getLogo(carrier_name) {
 
 // Adds a marker for the respective parcelshop
 function addMarkerToMap(lat, lng, logo, index) {
-
   var markerImage = {
         url: "../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/" + logo,
         size: new google.maps.Size(81, 101),
@@ -189,7 +188,6 @@ function addMarkerToMap(lat, lng, logo, index) {
     // Shows the opening hours for the selected shop
     showHours(index, lat, lng);
   });
-
 }
 
 // Fills the address bar in the popup & Jouw Adres above the list with the current location
@@ -209,22 +207,6 @@ function setAddress(address) {
     }
     document.getElementById("parcelShopsSearchBar").value = current_address;
     document.getElementById("ownAdres").innerHTML = current_address;
-}
-
-// Scrapes the billing address to use for the locator
-function getAddress() {
-  if(document.getElementById("wrapper").style.display === "none") {
-      var street_and_number = document.getElementById('billing_address_1').value;
-      var city = document.getElementById('billing_city').value;
-      if(street_and_number || city) {
-          return street_and_number + " " + city;
-      } else {
-          return 'Utrecht';
-      }
-  } else {
-      return document.getElementById('parcelShopsSearchBar').value;
-  }
-
 }
 
 function sortParcelshops(parcelshops) {
@@ -255,7 +237,7 @@ map = new google.maps.Map(document.getElementById("parcelshopMap"), mapOptions);
 addMarkerToMap(location.lat, location.lng, "position-sender.png");
 }
 
-function ajaxRequest() {
+function ajaxRequest(address = null) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -272,7 +254,7 @@ function ajaxRequest() {
     }
     var data = new FormData();
     data.append('action', 'parcelshoplocator');
-    data.append('address', getAddress());
+    (address ? data.append('address', address) : false);
     xhttp.open("POST", "../wp-admin/admin-ajax.php");
     xhttp.send(data);
 }
