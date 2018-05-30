@@ -165,7 +165,7 @@ function getLogo(carrier_name) {
 // Adds a marker for the respective parcelshop
 function addMarkerToMap(lat, lng, logo, index) {
   var markerImage = {
-        url: "../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/" + logo,
+        url: "../../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/" + logo,
         size: new google.maps.Size(81, 101),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(17, 34),
@@ -241,6 +241,7 @@ function ajaxRequest(address = null) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
+        console.log(xhttp.responseText);
           var val = JSON.parse(xhttp.responseText.substring(0, xhttp.responseText.length - 1));
           displayMap(val.location);
           setAddress(val.address);
@@ -255,7 +256,7 @@ function ajaxRequest(address = null) {
     var data = new FormData();
     data.append('action', 'parcelshoplocator');
     (address ? data.append('address', address) : false);
-    xhttp.open("POST", "../wp-admin/admin-ajax.php");
+    xhttp.open("POST", "../../wp-admin/admin-ajax.php");
     xhttp.send(data);
 }
 
@@ -268,7 +269,7 @@ function addParcelshopList(data) {
         var node = document.createElement("div");
         node.className += "parcelshopItem";
         node.innerHTML =    "<div class='companyList com_num"+i+"' id='parcelshopItem' onclick='showHours("+i+","+shops.latitude+","+shops.longitude+")'>" +
-                            "<div id='parcelshopItem_logo'><img id='company_logo' src='../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/"+logo+"'></div>" +
+                            "<div id='parcelshopItem_logo'><img id='company_logo' src='../../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/"+logo+"'></div>" +
                           	"<div id='parcelshopItem_text'><div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
                             "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
                             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
