@@ -191,14 +191,38 @@
   border-bottom-left-radius: 0.5em; */
 /*}*/
 
-#opening_hours {
+.opening_hours_list {
+    padding-left: 15px;
+    padding-bottom: 15px;
     font-size: 14px;
     margin: auto;
     width: 80%;
+    overflow: hidden;
 }
 
-.opening_hours_list {
-    padding-left: 45px;
+.opening_hours_list table, .opening_hours_list tr, .opening_hours_list td {
+    padding: 0;
+    margin: 0;
+}
+
+.parcelshopItem {
+    padding-top: 10px;
+}
+
+.parcelshopItem .opening_hours_list{
+    display: none;
+}
+
+.parcelshopItem.selected .opening_hours_list{
+    display: block;
+}
+
+.parcelshopItem.selected {
+    border: 6px #94d600;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
 }
 
 .parcelshopButton {
@@ -254,7 +278,7 @@
       float: none;
   }
 
-  #parcelshopItem {
+  .parcelshopItem {
       padding: 0px !important;
   }
 
