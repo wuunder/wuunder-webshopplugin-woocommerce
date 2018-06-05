@@ -6,10 +6,15 @@ add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
 add_action('woocommerce_review_order_after_submit', 'parcelshop_html');
 
 function callback_for_setting_up_scripts() {
-    $pluginPath = dirname(plugin_dir_url(__FILE__));
-    $pluginPath .= "/assets/css/parcelshop.css";
-    wp_register_style( 'wuunderCSS', $pluginPath);
+    $style_file = dirname(plugin_dir_url(__FILE__)) . "/assets/css/parcelshop.css";
+    $shipping_method = new WC_wuunder_parcelshop();
+    $google_api_key = $shipping_method->get_option('google_api_key');
+    $script_file = "//maps.googleapis.com/maps/api/js?key=" . $google_api_key;
+    wp_register_style( 'wuunderCSS', $style_file);
     wp_enqueue_style( 'wuunderCSS' );
+
+    wp_register_script( 'googleMapsJS', $script_file);
+    wp_enqueue_script( 'googleMapsJS' );
 }
 
 function parcelshop_html(){
@@ -56,7 +61,6 @@ function parcelshop_html(){
       </div>
     </div>
     <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
-    <script type="text/javascript" data-cfasync="false" src="https://maps.googleapis.com/maps/api/js?key=MyKey"></script>
 EOT;
 }
 
