@@ -5,3 +5,7 @@
 #alertBox {
     display: none;
 }
+
+[id^=wc_wuunder] {
+    max-width: 100%;
+}

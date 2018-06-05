@@ -71,7 +71,7 @@ if (!class_exists('Woocommerce_Wuunder')) {
             add_action('wp_ajax_nopriv_parcelshoplocator', 'parcelShopLocator');
 
             add_action('wp_loaded', function () {
-                if (strpos($_SERVER['REQUEST_URI'], "/wuunder/webhook") === 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (strpos($_SERVER['REQUEST_URI'], "/wuunder/webhook") !== false && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     $this->webhook();
                     exit;
                 }
