@@ -6,7 +6,15 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
-        private $version_obj = array("product" => "Woocommerce extension", "version" => array("build" => "2.3.1", "plugin" => "2.0"));
+        private $version_obj = array(
+            "product" => "Woocommerce extension",
+            "version" => array(
+                "build" => "2.4.0",
+                "plugin" => "2.0"),
+            "platform" => array(
+                "name" => "OpenCart",
+                "build" => VERSION
+            ));
 
         public function __construct()
         {
@@ -18,13 +26,13 @@ if (!class_exists('WC_Wuunder_Create')) {
             wp_enqueue_style('wuunder-admin', (dirname(plugin_dir_url(__FILE__)) . '/assets/css/wuunder-admin.css'));
 
             add_action('woocommerce_before_checkout_form',
-              function(){
-                echo '<p>Hier komt de parcelshop locator</p>';
-                $file = "/var/www/html/log.txt";
-                $current = file_get_contents($file);
-                $current .= "checkout reached";
-                file_put_contents($file, $current);
-              });
+                function () {
+                    echo '<p>Hier komt de parcelshop locator</p>';
+                    $file = "/var/www/html/log.txt";
+                    $current = file_get_contents($file);
+                    $current .= "checkout reached";
+                    file_put_contents($file, $current);
+                });
         }
 
         public function sample_admin_notice__error()
