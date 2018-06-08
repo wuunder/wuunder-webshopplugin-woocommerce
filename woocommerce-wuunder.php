@@ -63,9 +63,9 @@ if (!class_exists('Woocommerce_Wuunder')) {
             add_action('admin_enqueue_scripts', array(&$this, 'add_admin_styles_scripts'));
 
             require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php');
-            include_once('includes/checkout.php');
             include_once('includes/parcelshop.php');
             include_once('includes/wcwuunder-shipping-method.php');
+            include_once('includes/checkout.php');
 
             add_action('wp_ajax_parcelshoplocator', 'parcelShopLocator');
             add_action('wp_ajax_nopriv_parcelshoplocator', 'parcelShopLocator');
@@ -109,27 +109,29 @@ if (!class_exists('Woocommerce_Wuunder')) {
 
             $orderBookingToken = get_post_meta($orderId, '_wuunder_label_booking_token')[0];
             if ($data['action'] === "shipment_booked") {
-              if ($bookingToken === $orderBookingToken) {
-                  if (!empty($data['shipment']['id']) || !empty($data['shipment']['track_and_trace_url']) || !empty($data['shipment']['label_url'])) {
-                      update_post_meta($orderId, '_wuunder_label_id', $data['shipment']['id']);
-                      update_post_meta($orderId, '_wuunder_track_and_trace_url', $data['shipment']['track_and_trace_url']);
-                      update_post_meta($orderId, '_wuunder_label_url', $data['shipment']['label_url']);
+                if ($bookingToken === $orderBookingToken) {
+                    if (!empty($data['shipment']['id']) || !empty($data['shipment']['track_and_trace_url']) || !empty($data['shipment']['label_url'])) {
+                        update_post_meta($orderId, '_wuunder_label_id', $data['shipment']['id']);
+                        update_post_meta($orderId, '_wuunder_track_and_trace_url', $data['shipment']['track_and_trace_url']);
+                        update_post_meta($orderId, '_wuunder_label_url', $data['shipment']['label_url']);
 
-                      $order = new WC_Order($orderId);
-                      $order->update_status(get_option("wc_wuunder_post_booking_status"));
-                      $errorRedirect = false;
-                  }
-              }
+                        $order = new WC_Order($orderId);
+                        $order->update_status(get_option("wc_wuunder_post_booking_status"));
+                        $errorRedirect = false;
+                    }
+                }
             } elseif ($data['action'] === "track_and_trace_updated") {
-              // This is the 2nd webhook
-              $order = wc_get_order($orderId);
-              $note = __("Het pakket is aangemeld bij: ". $data["carrier_name"] ."\n De track and trace code is: ".$data["track_and_trace_code"]);
-              $order->add_order_note($note);
-              $order->save();
-              $errorRedirect = false;
+                // This is the 2nd webhook
+                $order = wc_get_order($orderId);
+                $note = __("Het pakket is aangemeld bij: " . $data["carrier_name"] . "\n De track and trace code is: " . $data["track_and_trace_code"]);
+                $order->add_order_note($note);
+                $order->save();
+                $errorRedirect = false;
             }
 
-            if($errorRedirect){wp_redirect("", 500);}
+            if ($errorRedirect) {
+                wp_redirect("", 500);
+            }
         }
 
     }
