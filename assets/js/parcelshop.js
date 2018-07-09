@@ -157,7 +157,7 @@ function getLogo(carrier_name) {
         case "GLS":
             logo = "GLS-locator.png";
             break;
-        case "POST_NL":
+        case "POSTNL":
             logo = "POSTNL-locator.png";
             break;
         default:
@@ -169,7 +169,7 @@ function getLogo(carrier_name) {
 // Adds a marker for the respective parcelshop
 function addMarkerToMap(lat, lng, logo, index) {
     var markerImage = {
-        url: "../../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/" + logo,
+        url: pluginPath + "/assets/images/parcelshop/" + logo,
         size: new google.maps.Size(81, 101),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(17, 34),
@@ -275,7 +275,7 @@ function addParcelshopList(data) {
         var node = document.createElement("div");
         node.className += "parcelshopItem parcelshopItem" + i;
         node.onclick = parcelshopItemCallbackClosure(shops.latitude, shops.longitude);
-        node.innerHTML = "<div id='parcelshopItem_logo'><img id='company_logo' src='../../wp-content/plugins/woocommerce-wuunder/assets/images/parcelshop/" + logo + "'></div>" +
+        node.innerHTML = "<div id='parcelshopItem_logo'><img id='company_logo' src='" + pluginPath + "/assets/images/parcelshop/" + logo + "'></div>" +
             "<div id='parcelshopItem_text'><div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
             "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
             "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +

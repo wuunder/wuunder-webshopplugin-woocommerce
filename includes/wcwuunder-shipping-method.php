@@ -30,14 +30,12 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     $this->supports = array(
                         'shipping-zones',
                         'instance-settings',
-                        'instance-settings-modal',
-                        'settings'
+                        'instance-settings-modal'
                     );
 
                     // These are the options set by the user
                     $this->cost = $this->get_option('cost');
                     $this->carriers = $this->get_option('select_carriers');
-                    $this->google_api_key = $this->get_option('google_api_key');
                     $this->init();
                 }
 
@@ -59,19 +57,12 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 
                 function init_form_fields()
                 {
-                    $this->form_fields = array(
-                        // Commented for now until its working.
-                        // 'enabled' => array(
-                        //      'title' => __( 'Enable/Disable', 'woocommerce' ),
-                        //      'type' => 'checkbox',
-                        //      'description' => __( 'Enable this shipping.', 'woocommerce' ),
-                        //      'default' => 'yes'
-                        // 	),
+                    $this->instance_form_fields = array(
                         'cost' => array(
                             'title' => __('Kosten', 'woocommerce'),
                             'type' => 'number',
                             'description' => __('Kosten voor gebruik Parcelshop pick-up', 'woocommerce'),
-                            'default' => 5.0
+                            'default' => 0.0
                         ),
                         'select_carriers' => array(
                             'title' => __('Welke Carriers', 'woocommerce'),
@@ -82,12 +73,6 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                                 'DPD' => __("DPD"),
                                 'PostNL' => __("PostNL")
                             )
-                        ),
-                        'google_api_key' => array(
-                            'title' => __('Google API key', 'woocommerce'),
-                            'type' => 'text',
-                            'description' => __('Google maps api key', 'woocommerce'),
-                            'default' => ""
                         ),
                     );
                 }

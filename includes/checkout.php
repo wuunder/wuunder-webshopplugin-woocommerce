@@ -9,8 +9,7 @@ function callback_for_setting_up_scripts()
 {
     if (class_exists('WC_wuunder_parcelshop')) {
         $style_file = dirname(plugin_dir_url(__FILE__)) . "/assets/css/parcelshop.css";
-        $shipping_method = new WC_wuunder_parcelshop();
-        $google_api_key = $shipping_method->get_option('google_api_key');
+        $google_api_key = get_option("wc_wuunder_google_maps_api_key");
         $script_file = "//maps.googleapis.com/maps/api/js?key=" . $google_api_key;
         wp_register_style('wuunderCSS', $style_file);
         wp_enqueue_style('wuunderCSS');
@@ -64,6 +63,9 @@ function parcelshop_html()
 
       </div>
     </div>
+    <script>
+        var pluginPath = "$pluginPath";
+    </script>
     <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
 EOT;
 }

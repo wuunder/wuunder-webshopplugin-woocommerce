@@ -21,7 +21,7 @@ function parcelShopLocator()
     $connector->setLanguage("NL");
     $parcelshopsRequest = $connector->getParcelshopsByAddress();
     $parcelshopsConfig = new \Wuunder\Api\Config\ParcelshopsConfig();
-    $parcelshopsConfig->setProviders(array("DHL_PARCEL", "DPD"));
+    $parcelshopsConfig->setProviders(array("DHL_PARCEL", "DPD", "POST_NL"));
     $parcelshopsConfig->setAddress($shipping_address);
 
     if ($parcelshopsConfig->validate()) {

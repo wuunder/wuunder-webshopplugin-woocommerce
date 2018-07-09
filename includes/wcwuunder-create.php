@@ -6,18 +6,19 @@ if (!class_exists('WC_Wuunder_Create')) {
     class WC_Wuunder_Create
     {
         public $order_id;
-        private $version_obj = array(
-            "product" => "Woocommerce extension",
-            "version" => array(
-                "build" => "2.4.0",
-                "plugin" => "2.0"),
-            "platform" => array(
-                "name" => "OpenCart",
-                "build" => VERSION
-            ));
+        private $version_obj;
 
         public function __construct()
         {
+            $this->version_obj = array(
+                "product" => "Woocommerce extension",
+                "version" => array(
+                    "build" => "2.4.0",
+                    "plugin" => "2.0"),
+                "platform" => array(
+                    "name" => "Woocommerce",
+                    "build" => WC()->version
+                ));
             add_action('load-edit.php', array(&$this, 'generateBookingUrl'));
             add_action('load-edit.php', array(&$this, 'test'));
             add_action('woocommerce_admin_order_actions_end', array(&$this, 'add_listing_actions'));

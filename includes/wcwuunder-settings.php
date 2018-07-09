@@ -137,6 +137,12 @@ if (!class_exists('WC_Wuunder_Settings')) {
                         'options' => $mappedStatuses,
                         'id' => 'wc_wuunder_post_booking_status'
                     ),
+                    'google_maps_api_key' => array(
+                        'name' => __('Google maps api key, for parcelshop locator:', 'woocommerce-wuunder'),
+                        'type' => 'text',
+                        'options' => $mappedStatuses,
+                        'id' => 'wc_wuunder_google_maps_api_key'
+                    ),
                     'section_end' => array(
                         'type' => 'sectionend',
                         'id' => 'wc_wuunder_section_end'
