@@ -135,7 +135,7 @@ function getHours(days_hours) {
     var opening_hours_list = "<div><table>";
 
     days_hours.forEach(function (days) {
-        if (days.open_morning !== "00:00" && days.close_afternoon !== "00:00") {
+        if (days.open_morning !== "00:00" && days.open_morning !== null && days.close_afternoon !== "00:00" && days.close_afternoon !== null) {
             opening_hours_list += "<tr><td>" + days.weekday + "</td><td>" + days.open_morning + " - " + days.close_afternoon + "</td></tr>";
         }
     });
