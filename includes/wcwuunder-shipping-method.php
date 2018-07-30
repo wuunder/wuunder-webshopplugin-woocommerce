@@ -64,6 +64,12 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                             'description' => __('Kosten voor gebruik Parcelshop pick-up', 'woocommerce'),
                             'default' => 0.0
                         ),
+                        'free_from' => array(
+                            'title' => __('Gratis verzending vanaf', 'woocommerce'),
+                            'type' => 'number',
+                            'description' => __('Vanaf welk bestelbedrag is de verzending gratis. Als 0 dan nooit.', 'woocommerce'),
+                            'default' => 0.0
+                        ),
                         'select_carriers' => array(
                             'title' => __('Welke Carriers', 'woocommerce'),
                             'type' => 'multiselect',
@@ -86,10 +92,14 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                  */
                 public function calculate_shipping($package = array())
                 {
+                    $cost = $this->get_option('cost');
+                    if ($this->get_option('free_from') > 0 && $package['contents_cost'] >= $this->get_option('free_from')) {
+                        $cost = 0;
+                    }
                     $rate = array(
                         'id' => $this->id,
                         'label' => $this->title,
-                        'cost' => $this->cost,
+                        'cost' => $cost,
                         'calc_tax' => 'per_item'
                     );
 
