@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "wuunder/connector-php",
-            "version": "1.0.4",
+            "version": "1.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wuunder/connector-php.git",
-                "reference": "caeda625fce8e47463afedfbc67ce07e46a4cf5a"
+                "reference": "705295b23b4f3ae4563814ce2a7f2b5af7a6f760"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wuunder/connector-php/zipball/caeda625fce8e47463afedfbc67ce07e46a4cf5a",
-                "reference": "caeda625fce8e47463afedfbc67ce07e46a4cf5a",
+                "url": "https://api.github.com/repos/wuunder/connector-php/zipball/705295b23b4f3ae4563814ce2a7f2b5af7a6f760",
+                "reference": "705295b23b4f3ae4563814ce2a7f2b5af7a6f760",
                 "shasum": ""
             },
             "archive": {
@@ -45,9 +45,9 @@
             ],
             "authors": [
                 {
-                    "name": "Timo Janssen",
-                    "email": "timo.janssen@wearewuunder.com",
-                    "homepage": "https://wuunder.com"
+                    "name": "Wuunder",
+                    "email": "info@wearewuunder.com",
+                    "homepage": "https://wearewuunder.com/"
                 }
             ],
             "description": "PHP connector for Wuunder API's",
@@ -63,7 +63,7 @@
                 "source": "https://github.com/wuunder/connector-php",
                 "issues": "https://github.com/wuunder/connector-php/issues"
             },
-            "time": "2018-04-30T13:26:32+00:00"
+            "time": "2018-07-23T13:12:41+00:00"
         }
     ],
     "packages-dev": [],

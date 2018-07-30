@@ -248,7 +248,7 @@ function ajaxRequest(address) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            var val = JSON.parse(xhttp.responseText.substring(0, xhttp.responseText.length - 1));
+            var val = JSON.parse(xhttp.responseText);
             displayMap(val.location);
             setAddress(val.address);
             addParcelshopList(sortParcelshops(val.parcelshops));

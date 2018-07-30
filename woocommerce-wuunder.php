@@ -76,7 +76,7 @@ if (!class_exists('Woocommerce_Wuunder')) {
                     exit;
                 }
             });
-            add_action('load-edit.php', array(&$this, 'webhook'));
+//            add_action('load-edit.php', array(&$this, 'webhook'));
         }
 
         public function ww_load_textdomain()
@@ -98,6 +98,13 @@ if (!class_exists('Woocommerce_Wuunder')) {
 
         public function webhook()
         {
+            $logger = wc_get_logger();
+            $context = array('source' => "wuunder_connector");
+
+            $logger->log('info', "Test webhook", $context);
+            $logger->log('info', $_REQUEST['order'], $context);
+            $logger->log('info', $_REQUEST['token'], $context);
+
             if (!isset($_REQUEST['order']) || !isset($_REQUEST['token'])) {
                 wp_redirect("", 500);
                 return;
