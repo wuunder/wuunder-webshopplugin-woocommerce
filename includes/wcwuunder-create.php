@@ -264,6 +264,19 @@ if (!class_exists('WC_Wuunder_Create')) {
             return array($addressLine, "");
         }
 
+
+        private function get_customer_address_street_and_housenumber($order_meta, $suffix) {
+            if (isset($order_meta['_shipping' . $suffix]) && !empty($order_meta['_shipping' . $suffix][0])) {
+                return $order_meta['_shipping' . $suffix][0];
+            } else if (isset($order_meta['_shipping_address_1']) && !empty($order_meta['_shipping_address_1'])) {
+                return "";
+            } else if (isset($order_meta['_billing' . $suffix]) && !empty($order_meta['_billing' . $suffix][0])) {
+                return $order_meta['_billing' . $suffix][0];
+            } else {
+                return "";
+            }
+        }
+
         /**
          * Retrieves part of the customer address
          *
@@ -312,11 +325,11 @@ if (!class_exists('WC_Wuunder_Create')) {
             // Get customer address from order
             $order_meta = get_post_meta($orderid);
             $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
-            $street_name = $this->get_customer_address_part($order_meta, '_street_name');
+            $street_name = $this->get_customer_address_street_and_housenumber($order_meta, '_street_name');
             if (empty($street_name)) {
                 $street_name = $this->get_customer_address_from_address_line($order_meta)[0];
             }
-            $house_number = $this->get_customer_address_part($order_meta, '_house_number') . $this->get_customer_address_part($order_meta, '_house_number_suffix');
+            $house_number = $this->get_customer_address_street_and_housenumber($order_meta, '_house_number') . $this->get_customer_address_street_and_housenumber($order_meta, '_house_number_suffix');
             if (empty($house_number)) {
                 $house_number = $this->get_customer_address_from_address_line($order_meta)[1];
             }
