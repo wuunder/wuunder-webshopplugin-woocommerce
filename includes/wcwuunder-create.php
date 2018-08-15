@@ -13,7 +13,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $this->version_obj = array(
                 "product" => "Woocommerce extension",
                 "version" => array(
-                    "build" => "2.4.2",
+                    "build" => "2.4.3",
                     "plugin" => "2.0"),
                 "platform" => array(
                     "name" => "Woocommerce",
@@ -111,6 +111,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $bookingConfig->setRedirectUrl($redirectUrl);
 
             $bookingConfig->setDescription($description);
+            $bookingConfig->setPicture($orderPicture);
             $bookingConfig->setKind($totalWeight > 23000 ? "pallet" : "package");
             $bookingConfig->setValue($value ? $value : null);
             $bookingConfig->setLength($this->roundButNull($dimensions[0]));
@@ -146,12 +147,15 @@ if (!class_exists('WC_Wuunder_Create')) {
                 $status = get_option('wc_wuunder_api_status');
                 $apiKey = ($status == 'productie' ? get_option('wc_wuunder_api') : get_option('wc_wuunder_test_api'));
 
+
+
                 $connector = new Wuunder\Connector($apiKey, $status !== 'productie');
                 $booking = $connector->createBooking();
                 $bookingConfig = $this->setBookingConfig($order_id);
 
                 if ($bookingConfig->validate()) {
                     $booking->setConfig($bookingConfig);
+                    $logger->log('info', "Going to fire for bookingurl", $context);
                     if ($booking->fire()) {
                         $url = $booking->getBookingResponse()->getBookingUrl();
                     } else {
@@ -160,6 +164,8 @@ if (!class_exists('WC_Wuunder_Create')) {
                 } else {
                     $logger->log('error', "Bookingconfig not complete", $context);
                 }
+
+                $logger->log('info', "Handling response", $context);
 
                 if (isset($url)) {
                     update_post_meta($order_id, '_wuunder_label_booking_url', $url);
@@ -265,7 +271,8 @@ if (!class_exists('WC_Wuunder_Create')) {
         }
 
 
-        private function get_customer_address_street_and_housenumber($order_meta, $suffix) {
+        private function get_customer_address_street_and_housenumber($order_meta, $suffix)
+        {
             if (isset($order_meta['_shipping' . $suffix]) && !empty($order_meta['_shipping' . $suffix][0])) {
                 return $order_meta['_shipping' . $suffix][0];
             } else if (isset($order_meta['_shipping_address_1']) && !empty($order_meta['_shipping_address_1'])) {
@@ -361,9 +368,12 @@ if (!class_exists('WC_Wuunder_Create')) {
         {
             $logger = wc_get_logger();
             $context = array('source' => "wuunder_connector");
+
             try {
                 $fileSize = (substr($imagepath, 0, 4) === "http") ? $this->remote_filesize($imagepath) : filesize($imagepath);
-                if ($fileSize <= 2097152) { //smaller or equal to 2MB
+                $logger->log("Handling a image of size: " . $fileSize, $context);
+                if ($fileSize > 0 && $fileSize <= 2097152) { //smaller or equal to 2MB
+                    $logger->log("Base64 encoding image", $context);
                     $imagedata = file_get_contents($imagepath);
                     $image = base64_encode($imagedata);
                 } else {
@@ -376,6 +386,45 @@ if (!class_exists('WC_Wuunder_Create')) {
             }
         }
 
+        function curl_get_file_size($url)
+        {
+            // Assume failure.
+            $result = -1;
+
+            $curl = curl_init($url);
+
+            // Issue a HEAD request and follow any redirects.
+            curl_setopt($curl, CURLOPT_NOBODY, true);
+            curl_setopt($curl, CURLOPT_HEADER, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+//            curl_setopt($curl, CURLOPT_USERAGENT, get_user_agent_string());
+            curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1000);
+
+            $data = curl_exec($curl);
+            curl_close($curl);
+
+            if ($data) {
+                $content_length = "unknown";
+                $status = "unknown";
+
+                if (preg_match("/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches)) {
+                    $status = (int)$matches[1];
+                }
+
+                if (preg_match("/Content-Length: (\d+)/", $data, $matches)) {
+                    $content_length = (int)$matches[1];
+                }
+
+                // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+                if ($status == 200 || ($status > 300 && $status <= 308)) {
+                    $result = $content_length;
+                }
+            }
+
+            return $result;
+        }
+
         /**
          * Employed in get_base64_image to get the correct path
          *
@@ -384,17 +433,8 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         private function remote_filesize($url)
         {
-            static $regex = '/^Content-Length: *+\K\d++$/im';
-            if (!$fp = @fopen($url, 'rb')) {
-                return false;
-            }
-            if (
-                isset($http_response_header) &&
-                preg_match($regex, implode("\n", $http_response_header), $matches)
-            ) {
-                return (int)$matches[0];
-            }
-            return strlen(stream_get_contents($fp));
+            $remoteFilesize = $this->curl_get_file_size($url);
+            return $remoteFilesize;
         }
 
         /**
