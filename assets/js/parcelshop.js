@@ -277,12 +277,12 @@ function addParcelshopList(data) {
         node.onclick = parcelshopItemCallbackClosure(shops.latitude, shops.longitude);
         node.innerHTML = "<div id='parcelshopItem_logo'><img id='company_logo' src='" + pluginPath + "/assets/images/parcelshop/" + logo + "'></div>" +
             "<div id='parcelshopItem_text'><div id='company_info'><div id='company_name'><strong>" + capFirst(shops.company_name) + "</strong></div>" +
-            "<div id='street_name_and_number'>" + capFirst(shops[0].street_name) + " " + shops[0].house_number + "</div>" +
-            "<div id='zip_code_and_city'>" + shops[0].zip_code + " " + shops[0].city + "</div>" +
+            "<div id='street_name_and_number'>" + capFirst(shops.address.street_name) + " " + shops.address.house_number + "</div>" +
+            "<div id='zip_code_and_city'>" + shops.address.zip_code + " " + shops.address.city + "</div>" +
             "<div id='distance'>" + Math.round(shops.distance * 1000) + "m</div></div></div>" +
             "<div class='opening_hours_list'><br><strong>Openingstijden</strong>" +
-            "<div>" + hours + "</div><br><div id='buttonContainer'><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops[0].street_name) +
-            " " + shops[0].house_number + "<br>" + shops[0].city + "\", \"" + shops.id + "\", \"" + shops[0].alpha2 + "\")' type='button'>Kies</button></div>";
+            "<div>" + hours + "</div><br><div id='buttonContainer'><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops.address.street_name) +
+            " " + shops.address.house_number + "<br>" + shops.address.city + "\", \"" + shops.id + "\", \"" + shops.address.alpha2 + "\")' type='button'>Kies</button></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
     });
 }
