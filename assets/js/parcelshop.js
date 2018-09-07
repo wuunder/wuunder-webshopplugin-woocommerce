@@ -270,7 +270,11 @@ function addParcelshopList(data) {
     data.forEach(function (shops, i) {
         var hours = getHours(shops.opening_hours);
         var logo = getLogo(shops.carrier_name);
+        var parcelshopInfoHtml = capFirst(shops.company_name) + "<br>" + capFirst(shops.address.street_name) +
+            " " + shops.address.house_number + "<br>" + shops.address.city;
         addMarkerToMap(shops.latitude, shops.longitude, logo, i);
+        parcelshopInfoHtml = parcelshopInfoHtml.replace(/"/g, '\\"').replace(/'/g, "\\'");
+        console.log(parcelshopInfoHtml);
 
         var node = document.createElement("div");
         node.className += "parcelshopItem parcelshopItem" + i;
@@ -281,8 +285,7 @@ function addParcelshopList(data) {
             "<div id='zip_code_and_city'>" + shops.address.zip_code + " " + shops.address.city + "</div>" +
             "<div id='distance'>" + Math.round(shops.distance * 1000) + "m</div></div></div>" +
             "<div class='opening_hours_list'><br><strong>Openingstijden</strong>" +
-            "<div>" + hours + "</div><br><div id='buttonContainer'><button class='parcelshopButton' onclick='chooseParcelshopButton(\"" + capFirst(shops.company_name) + "<br>" + capFirst(shops.address.street_name) +
-            " " + shops.address.house_number + "<br>" + shops.address.city + "\", \"" + shops.id + "\", \"" + shops.address.alpha2 + "\")' type='button'>Kies</button></div>";
+            "<div>" + hours + "</div><br><div id='buttonContainer'><button class='parcelshopButton' onclick=\"chooseParcelshopButton('" + parcelshopInfoHtml + "', '" + shops.id + "', '" + shops.address.alpha2 + "')\" type='button'>Kies</button></div>";
         window.parent.document.getElementById('parcelshopList').appendChild(node);
     });
 }

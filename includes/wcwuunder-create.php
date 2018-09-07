@@ -13,7 +13,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $this->version_obj = array(
                 "product" => "Woocommerce extension",
                 "version" => array(
-                    "build" => "2.4.6",
+                    "build" => "2.4.7",
                     "plugin" => "2.0"),
                 "platform" => array(
                     "name" => "Woocommerce",
@@ -118,6 +118,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $bookingConfig->setWidth($this->roundButNull($dimensions[1]));
             $bookingConfig->setHeight($this->roundButNull($dimensions[2]));
             $bookingConfig->setWeight($totalWeight ? $totalWeight : null);
+            $bookingConfig->setCustomerReference($orderId);
             $bookingConfig->setPreferredServiceLevel((count($order->get_items('shipping')) > 0) ? $this->get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : "");
             $bookingConfig->setSource($this->version_obj);
 

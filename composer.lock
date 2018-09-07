@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "wuunder/connector-php",
-            "version": "1.0.10",
+            "version": "1.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wuunder/connector-php.git",
-                "reference": "705295b23b4f3ae4563814ce2a7f2b5af7a6f760"
+                "reference": "cdcfb58e303dcf53a4506e768a5f24f349b82209"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wuunder/connector-php/zipball/705295b23b4f3ae4563814ce2a7f2b5af7a6f760",
-                "reference": "705295b23b4f3ae4563814ce2a7f2b5af7a6f760",
+                "url": "https://api.github.com/repos/wuunder/connector-php/zipball/cdcfb58e303dcf53a4506e768a5f24f349b82209",
+                "reference": "cdcfb58e303dcf53a4506e768a5f24f349b82209",
                 "shasum": ""
             },
             "archive": {
@@ -63,7 +63,7 @@
                 "source": "https://github.com/wuunder/connector-php",
                 "issues": "https://github.com/wuunder/connector-php/issues"
             },
-            "time": "2018-07-23T13:12:41+00:00"
+            "time": "2018-08-02T07:33:54+00:00"
         }
     ],
     "packages-dev": [],
