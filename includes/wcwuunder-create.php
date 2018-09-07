@@ -13,7 +13,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $this->version_obj = array(
                 "product" => "Woocommerce extension",
                 "version" => array(
-                    "build" => "2.4.5",
+                    "build" => "2.4.6",
                     "plugin" => "2.0"),
                 "platform" => array(
                     "name" => "Woocommerce",
@@ -241,6 +241,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $pickupAddress->setZipCode(get_option('wc_wuunder_company_postode'));
             $pickupAddress->setPhoneNumber(get_option('wc_wuunder_company_phone'));
             $pickupAddress->setCountry(get_option('wc_wuunder_company_country'));
+            $pickupAddress->setBusiness(get_option('wc_wuunder_company_name'));
             if ($pickupAddress->validate()) {
                 return $pickupAddress;
             } else {
