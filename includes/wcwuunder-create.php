@@ -72,10 +72,21 @@ if (!class_exists('WC_Wuunder_Create')) {
 
             $order = new WC_Order($orderId);
             $orderPicture = null;
-            foreach ($orderItems['images'] as $image) {
-                if (!is_null($image)) {
-                    $orderPicture = $this->get_base64_image($image);
-                    break;
+            $base64String = get_option('wc_wuunder_default_image_base64');
+            if (!empty($base64String)) {
+                $maxImageSize = 2000000; //2mb
+                $maxBase64StringSize = $maxImageSize * 1.37;
+                if (strlen($base64String) <= $maxBase64StringSize) {
+                    $orderPicture = $base64String;
+                }
+            }
+
+            if (is_null($orderPicture)) {
+                foreach ($orderItems['images'] as $image) {
+                    if (!is_null($image)) {
+                        $orderPicture = $this->get_base64_image($image);
+                        break;
+                    }
                 }
             }
 
@@ -190,7 +201,7 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         private function roundButNull($val)
         {
-            if (is_null($val)) {
+            if (empty($val)) {
                 return null;
             }
 

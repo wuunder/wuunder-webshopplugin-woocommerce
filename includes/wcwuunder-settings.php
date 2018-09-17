@@ -25,7 +25,7 @@ if (!class_exists('WC_Wuunder_Settings')) {
         { ?>
             <style>
                 .address {
-                    width: 350px;
+                    width: 550px;
                     padding: 0 20px 20px 20px;
                     border: 1px solid #ccc;
                     background-color: #fff;
@@ -34,7 +34,7 @@ if (!class_exists('WC_Wuunder_Settings')) {
                 }
 
                 .mappings {
-                    width: calc(100% - 500px);
+                    width: calc(100% - 700px);
                     min-width: 400px;
                     padding: 0 20px 20px 20px;
                     border: 1px solid #ccc;
@@ -138,10 +138,14 @@ if (!class_exists('WC_Wuunder_Settings')) {
                         'id' => 'wc_wuunder_post_booking_status'
                     ),
                     'google_maps_api_key' => array(
-                        'name' => __('Google maps api key, for parcelshop locator:', 'woocommerce-wuunder'),
+                        'name' => __('Google maps api key, voor parcelshoppicker:', 'woocommerce-wuunder'),
                         'type' => 'text',
-                        'options' => $mappedStatuses,
                         'id' => 'wc_wuunder_google_maps_api_key'
+                    ),
+                    'default_image_base64' => array(
+                        'name' => __('Standaard order image (base64 string), Leeg voor geen:', 'woocommerce-wuunder'),
+                        'type' => 'text',
+                        'id' => 'wc_wuunder_default_image_base64'
                     ),
                     'section_end' => array(
                         'type' => 'sectionend',
