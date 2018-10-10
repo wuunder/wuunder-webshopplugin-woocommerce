@@ -29,6 +29,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     $this->title = "Wuunder Parcelshop Locator";
                     $this->supports = array(
                         'shipping-zones',
+                        'settings',
                         'instance-settings',
                         'instance-settings-modal'
                     );
@@ -57,6 +58,19 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 
                 function init_form_fields()
                 {
+                    $this->form_fields = array(
+                        'select_carriers' => array(
+                            'title' => __('Welke Carriers', 'woocommerce'),
+                            'type' => 'multiselect',
+                            'description' => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen)', 'woocommerce'),
+                            'options' => array(
+                                'DHL_PARCEL' => __("DHL"),
+                                'DPD' => __("DPD"),
+                                'POST_NL' => __("PostNL")
+                            )
+                        )
+                    );
+
                     $this->instance_form_fields = array(
                         'cost' => array(
                             'title' => __('Kosten', 'woocommerce'),
@@ -69,17 +83,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                             'type' => 'number',
                             'description' => __('Vanaf welk bestelbedrag is de verzending gratis. Als 0 dan nooit.', 'woocommerce'),
                             'default' => 0.0
-                        ),
-                        'select_carriers' => array(
-                            'title' => __('Welke Carriers', 'woocommerce'),
-                            'type' => 'multiselect',
-                            'description' => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen)', 'woocommerce'),
-                            'options' => array(
-                                'DHL' => __("DHL"),
-                                'DPD' => __("DPD"),
-                                'PostNL' => __("PostNL")
-                            )
-                        ),
+                        )
                     );
                 }
 
