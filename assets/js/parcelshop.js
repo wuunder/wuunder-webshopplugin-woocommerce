@@ -13,7 +13,7 @@ var map;
 var parcelshop_address;
 
 // If parcelshop is selected in shipment. Adds a button to choose a parcelshop
-if (document.getElementById('shipping_method_0_wuunder_parcelshop').checked) {
+if (document.getElementById('shipping_method_0_wuunder_parcelshop') && document.getElementById('shipping_method_0_wuunder_parcelshop').checked) {
     var node = document.createElement("div");
     node.className += "chooseParcelshop";
     node.innerHTML = '<div id="parcelshopsSelectedContainer" onclick="showParcelshopPicker()"><a href="#/" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div>';

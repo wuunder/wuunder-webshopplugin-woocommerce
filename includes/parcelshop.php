@@ -1,12 +1,10 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 function parcelShopLocator()
 {
     include_once('wcwuunder-shipping-method.php');
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+//    error_reporting(E_ALL);
+//    ini_set('display_errors', 1);
     $status = get_option('wc_wuunder_api_status');
     $apiKey = ($status == 'productie' ? get_option('wc_wuunder_api') : get_option('wc_wuunder_test_api'));
 
@@ -24,9 +22,6 @@ function parcelShopLocator()
     $connector->setLanguage("NL");
     $parcelshopsRequest = $connector->getParcelshopsByAddress();
     $parcelshopsConfig = new \Wuunder\Api\Config\ParcelshopsConfig();
-
-    $logger = wc_get_logger();
-    $context = array('source' => "wuunder_connector");
 
     $parcelshopsConfig->setProviders(get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers']);
     $parcelshopsConfig->setAddress($shipping_address);
