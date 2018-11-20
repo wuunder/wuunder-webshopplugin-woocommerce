@@ -13,7 +13,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $this->version_obj = array(
                 "product" => "Woocommerce extension",
                 "version" => array(
-                    "build" => "2.6.0",
+                    "build" => "2.6.1",
                     "plugin" => "2.0"),
                 "platform" => array(
                     "name" => "Woocommerce",
@@ -100,11 +100,15 @@ if (!class_exists('WC_Wuunder_Create')) {
             $dimensions = null;
             $description = "";
 
+            foreach ($order->get_items() as $item_id => $item_product) {
+                $product = $item_product->get_product();
+                if ($dimensions === null) {
+                    $dimensions = array($product->get_length(), $product->get_width(), $product->get_height());
+                }
+            }
+
             foreach ($orderItems['products'] as $item) {
                 $totalWeight += $item['total_weight'];
-                if ($dimensions === null) {
-                    $dimensions = explode(' x ', $item['dimensions']);
-                }
                 $description .= "- " . $item['quantity'] . "x " . $item['name'] . " \r\n";
             }
 
@@ -391,10 +395,10 @@ if (!class_exists('WC_Wuunder_Create')) {
             try {
                 $fileSize = (substr($imagepath, 0, 4) === "http") ? $this->remote_filesize($imagepath) : filesize($imagepath);
                 if (WP_DEBUG)
-                    $logger->log("Handling a image of size: " . $fileSize, $context);
+                    $logger->log("info", "Handling a image of size: " . $fileSize, $context);
                 if ($fileSize > 0 && $fileSize <= 2097152) { //smaller or equal to 2MB
                     if (WP_DEBUG)
-                        $logger->log("Base64 encoding image", $context);
+                        $logger->log("info", "Base64 encoding image", $context);
                     $imagedata = file_get_contents($imagepath);
                     $image = base64_encode($imagedata);
                 } else {
