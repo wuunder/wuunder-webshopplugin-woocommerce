@@ -41,6 +41,7 @@ if (!defined('WOOCOMMERCE_VERSION')) {
 }
 
 require_once 'vendor/autoload.php';
+require_once WW_PLUGIN_ADMIN_DIR . '/logger.php';
 
 if (!class_exists('Woocommerce_Wuunder')) {
 
@@ -98,14 +99,9 @@ if (!class_exists('Woocommerce_Wuunder')) {
 
         public function webhook()
         {
-            if (WP_DEBUG) {
-                $logger = wc_get_logger();
-                $context = array('source' => "wuunder_connector");
-
-                $logger->log('info', "Test webhook", $context);
-                $logger->log('info', $_REQUEST['order'], $context);
-                $logger->log('info', $_REQUEST['token'], $context);
-            }
+            log('info', "Test webhook");
+            log('info', $_REQUEST['order']);
+            log('info', $_REQUEST['token']);
 
             if (!isset($_REQUEST['order']) || !isset($_REQUEST['token'])) {
                 wp_redirect("", 500);

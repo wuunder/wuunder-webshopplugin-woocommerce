@@ -64,12 +64,8 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         private function setBookingConfig($orderId)
         {
-            if (WP_DEBUG) {
-                $logger = wc_get_logger();
-                $context = array('source' => "wuunder_connector");
-                $logger->log('info', "Filling the booking config", $context);
-            }
-
+            log('info', "Filling the booking config");
+            
             $orderItems = $this->get_order_items($orderId);
 
             $order = new WC_Order($orderId);
@@ -155,12 +151,8 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         public function generateBookingUrl()
         {
-            $logger = wc_get_logger();
-            $context = array('source' => "wuunder_connector");
-
             if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
-                if (WP_DEBUG)
-                    $logger->log('info', "Generating the booking url", $context);
+                log('info', "Generating the booking url");
                 $order_id = $_REQUEST['order'];
 
                 $status = get_option('wc_wuunder_api_status');
@@ -173,19 +165,17 @@ if (!class_exists('WC_Wuunder_Create')) {
 
                 if ($bookingConfig->validate()) {
                     $booking->setConfig($bookingConfig);
-                    if (WP_DEBUG)
-                        $logger->log('info', "Going to fire for bookingurl", $context);
+                    log('info', "Going to fire for bookingurl");
                     if ($booking->fire()) {
                         $url = $booking->getBookingResponse()->getBookingUrl();
-                    } else if (WP_DEBUG) {
-                        $logger->log('error', $booking->getBookingResponse()->getError(), $context);
+                    } else {
+                        log('error', $booking->getBookingResponse()->getError());
                     }
-                } else if (WP_DEBUG) {
-                    $logger->log('error', "Bookingconfig not complete", $context);
+                } else {
+                    log('error', "Bookingconfig not complete");
                 }
 
-                if (WP_DEBUG)
-                    $logger->log('info', "Handling response", $context);
+                log('info', "Handling response");
 
                 if (isset($url)) {
                     update_post_meta($order_id, '_wuunder_label_booking_url', $url);
@@ -247,8 +237,6 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         public function get_company_address()
         {
-            $logger = wc_get_logger();
-            $context = array('source' => "wuunder_connector");
 
             $pickupAddress = new \Wuunder\Api\Config\AddressConfig();
 
@@ -265,8 +253,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             if ($pickupAddress->validate()) {
                 return $pickupAddress;
             } else {
-                if (WP_DEBUG)
-                    $logger->log('error', "Invalid pickup address. There are mistakes or missing fields.", $context);
+                log('error', "Invalid pickup address. There are mistakes or missing fields.");
                 return $pickupAddress;
             }
         }
@@ -348,9 +335,6 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         public function get_customer_address($orderid)
         {
-            $logger = wc_get_logger();
-            $context = array('source' => "wuunder_connector");
-
             // Get customer address from order
             $order_meta = get_post_meta($orderid);
             $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
@@ -375,8 +359,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             if ($deliveryAddress->validate()) {
                 return $deliveryAddress;
             } else {
-                if (WP_DEBUG)
-                    $logger->log('error', "Invalid delivery address. There are mistakes or missing fields.", $context);
+                log('error', "Invalid delivery address. There are mistakes or missing fields.");
                 return $deliveryAddress;
             }
         }
@@ -389,16 +372,11 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         public function get_base64_image($imagepath)
         {
-            $logger = wc_get_logger();
-            $context = array('source' => "wuunder_connector");
-
             try {
                 $fileSize = (substr($imagepath, 0, 4) === "http") ? $this->remote_filesize($imagepath) : filesize($imagepath);
-                if (WP_DEBUG)
-                    $logger->log("info", "Handling a image of size: " . $fileSize, $context);
+                log("info", "Handling a image of size: " . $fileSize);
                 if ($fileSize > 0 && $fileSize <= 2097152) { //smaller or equal to 2MB
-                    if (WP_DEBUG)
-                        $logger->log("info", "Base64 encoding image", $context);
+                    log("info", "Base64 encoding image");
                     $imagedata = file_get_contents($imagepath);
                     $image = base64_encode($imagedata);
                 } else {
@@ -406,8 +384,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 }
                 return $image;
             } catch (Exception $e) {
-                if (WP_DEBUG)
-                    $logger->log('error', $e, $context);
+                log('error', $e);
                 return "";
             }
         }
