@@ -68,8 +68,9 @@ if (!class_exists('Woocommerce_Wuunder')) {
             include_once('includes/wcwuunder-shipping-method.php');
             include_once('includes/checkout.php');
 
-            add_action('wp_ajax_parcelshoplocator', 'parcelShopLocator');
-            add_action('wp_ajax_nopriv_parcelshoplocator', 'parcelShopLocator');
+            add_action('wp_ajax_wuunder_parcelshoplocator_get_parcelshop_address', 'getParcelshopAddress');
+            add_action('wp_ajax_wuunder_parcelshoplocator_get_address', 'getAddress');
+            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_address', 'getAddress');
 
             add_action('wp_loaded', function () {
                 if (strpos($_SERVER['REQUEST_URI'], "/wuunder/webhook") !== false && $_SERVER['REQUEST_METHOD'] === 'POST') {

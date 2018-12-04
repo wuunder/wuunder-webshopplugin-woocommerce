@@ -64,9 +64,9 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                             'type' => 'multiselect',
                             'description' => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen)', 'woocommerce'),
                             'options' => array(
-                                'DHL_PARCEL' => __("DHL"),
-                                'DPD' => __("DPD"),
-                                'POST_NL' => __("PostNL")
+                                'dhl' => __("DHL"),
+                                'dpd' => __("DPD"),
+                                'postnl' => __("PostNL")
                             )
                         )
                     );
