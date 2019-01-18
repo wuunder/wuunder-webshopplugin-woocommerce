@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if( !class_exists('WC_Wuunder_Admin') ) {
+if ( !class_exists( 'WC_Wuunder_Admin' ) ) {
 
 	class WC_Wuunder_Admin {
 
@@ -16,12 +16,12 @@ if( !class_exists('WC_Wuunder_Admin') ) {
 
 		public function init_admin() {
 
-			if( array_key_exists('woocommerce', $GLOBALS) == false) {
+			if( false == array_key_exists( 'woocommerce', $GLOBALS ) ) {
 				return;
 			}
 
-			require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-settings.php' );
-			require_once(WW_PLUGIN_ADMIN_DIR . '/wcwuunder-create.php' );
+			require_once( WW_PLUGIN_ADMIN_DIR . '/wcwuunder-settings.php' );
+			require_once( WW_PLUGIN_ADMIN_DIR . '/wcwuunder-create.php' );
 
 		}
 		
