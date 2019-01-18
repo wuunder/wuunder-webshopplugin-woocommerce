@@ -20,53 +20,23 @@ function callback_for_setting_up_scripts() {
     }
 }
 
-function parcelshop_html() {
-    $pluginPath = dirname(plugin_dir_url( __FILE__ ) );
-    $pluginPathJS = $pluginPath . '/assets/js/parcelshop.js';
-    $pluginPathImg = $pluginPath . '/assets/images/parcelshop/bring-to-parcelshop.png';
+
+function parcelshop_html()
+{
+    $pluginPath = dirname(plugin_dir_url(__FILE__));
+    $pluginPathJS = $pluginPath . "/assets/js/parcelshop.js";
+
+    $baseWebshopUrl = get_site_url(null, "/wp-admin/");
+    $tmpEnvironment = new \Wuunder\Api\Environment(get_option('wc_wuunder_api_status') === 'staging' ? 'staging' : 'production');
+
+    $baseApiUrl = substr($tmpEnvironment->getStageBaseUrl(), 0, -3);
+    $availableCarriers = implode(',', get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers']);
+
     echo <<<EOT
-    <div id="parcelshopPopup" class="modal">
-      <div class="modal-content">
-
-        <div>
-          <img id="bring-to-parcelshop" src="$pluginPathImg" alt="parcelshop">
-          <span id="parcelShopsTitleLogoChatbox">Kies een parcelshop</span>
-          <span id="close_parcelshop_modal">&times;</span>
-        </div>
-
-        <td>
-          <span id="parcelShopsSearchBarContainer">
-          <input id="parcelShopsSearchBar" type="text" placeholder="Search for address">
-          <span id="submitParcelShopsSearchBar">OK</span>
-          </span>
-        </td>
-
-          <div>
-            <img id="wuunderLoading" src="$pluginPath/assets/images/parcelshop/Loading_icon.gif">
-          </div>
-
-          <div id="wrapper">
-            <div id="parcelshopMap"></div>
-            <div id="parcelshopList">
-              <div class='companyList' id='parcelshopItem'>
-                <div id="yourLogo">
-                  <img id="yourLogoImg" src="$pluginPath/assets/images/parcelshop/position-sender.png">
-                </div>
-                <div id="yourAddress">
-                  <strong>Jouw Adres</strong>
-                  <div id="ownAdres"> </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-      </div>
-    </div>
-    <script>
-        var pluginPath = "$pluginPath";
-    </script>
-    <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
+        <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
+        <script type="text/javascript">
+            initParcelshopLocator("$baseWebshopUrl", "$baseApiUrl", "$availableCarriers");
+        </script>
 EOT;
 }
 
@@ -96,18 +66,21 @@ function update_parcelshop_id( $order_id ) {
     }
 }
 
-// Check to see if a parcelshop is selected when parcel method is selected && Check if shipping country == parcelshop country
-add_action( 'woocommerce_checkout_process', 'check_parcelshop_selection' );
-function check_parcelshop_selection() {
-    if ( 'wuunder_parcelshop' === $_POST['shipping_method'][0] ) {
-        if ( !$_POST['parcelshop_id'] ) {
-            wc_add_notice( __( 'Kies eerst een <strong>parcelshop</strong>' ), 'error' );
-        } 
-
-        if ( $_POST['shipping_country'] != $_POST['parcelshop_country'] ) {
-            wc_add_notice( __( 'Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong>' ), 'error' );
-        }
-    }
-}
-
+//<<<<<<< HEAD
+//// Check to see if a parcelshop is selected when parcel method is selected && Check if shipping country == parcelshop country
+//add_action( 'woocommerce_checkout_process', 'check_parcelshop_selection' );
+//function check_parcelshop_selection() {
+//    if ( 'wuunder_parcelshop' === $_POST['shipping_method'][0] ) {
+//        if ( !$_POST['parcelshop_id'] ) {
+//            wc_add_notice( __( 'Kies eerst een <strong>parcelshop</strong>' ), 'error' );
+//        }
+//
+//        if ( $_POST['shipping_country'] != $_POST['parcelshop_country'] ) {
+//            wc_add_notice( __( 'Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong>' ), 'error' );
+//        }
+//    }
+//}
+//
+//=======
+//>>>>>>> f4bbe1748e986e61957972fe442458b9c2dfccc8
 ?>

@@ -57,13 +57,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 function init_form_fields() {
                     $this->form_fields = array(
                         'select_carriers' => array(
-                            'title'         => __( 'Welke Carriers', 'woocommerce' ),
-                            'type'          => 'multiselect',
-                            'description'   => __( 'Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen )', 'woocommerce' ),
-                            'options'       => array(
-                                'DHL_PARCEL'    => __( 'DHL' ),
-                                'DPD'           => __( 'DPD' ),
-                                'POST_NL'       => __( 'PostNL' )
+                            'title' => __('Welke Carriers', 'woocommerce'),
+                            'type' => 'multiselect',
+                            'description' => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen)', 'woocommerce'),
+                            'options' => array(
+                                'dhl' => __("DHL"),
+                                'dpd' => __("DPD"),
+                                'postnl' => __("PostNL")
                             )
                         )
                     );
