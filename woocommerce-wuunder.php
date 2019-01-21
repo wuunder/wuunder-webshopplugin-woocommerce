@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: WooCommerce Wuunder
- * Plugin URI: http://wearewuunder.com
+ * Plugin URI: https://wearewuunder.com/wuunder-voor-webshops/
  * Description: Wuunder shipping plugin
- * Version: 2.6.2
+ * Version: 2.6.3
  * Author: Wuunder
  * Author URI: http://wearewuunder.com
  */
@@ -57,7 +57,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
         public static $plugin_path;
         public static $plugin_basename;
 
-        const VERSION = '2.6.2';
+        const VERSION = '2.6.3';
 
         public function __construct() {
 
