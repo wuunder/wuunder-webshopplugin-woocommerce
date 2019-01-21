@@ -61,7 +61,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @return $bookingConfig
          */
         private function setBookingConfig( $orderId ) {
-            log( 'info', 'Filling the booking config' );
+            wuunder_log( 'info', 'Filling the booking config' );
             
             $orderItems = $this->get_order_items( $orderId );
 
@@ -148,31 +148,31 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * Returns the user to the original order page with the redirect.
          */
         public function generateBookingUrl() {
-            if ( 'bookorder' === isset($_REQUEST['order'] ) && $_REQUEST['action'] ) {
-                log( 'info', 'Generating the booking url' );
+            if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
+                wuunder_log( 'info', 'Generating the booking url' );
                 $order_id = $_REQUEST['order'];
 
                 $status = get_option( 'wc_wuunder_api_status' );
                 $apiKey = ( 'productie' == $status ? get_option( 'wc_wuunder_api' ) : get_option( 'wc_wuunder_test_api' ) );
 
 
-                $connector = 'productie' !== new Wuunder\Connector( $apiKey, $status );
+                $connector = new Wuunder\Connector( $apiKey, 'productie' !== $status );
                 $booking = $connector->createBooking();
                 $bookingConfig = $this->setBookingConfig( $order_id );
 
                 if ( $bookingConfig->validate() ) {
                     $booking->setConfig( $bookingConfig );
-                    log( 'info', 'Going to fire for bookingurl' );
+                    wuunder_log( 'info', 'Going to fire for bookingurl' );
                     if ( $booking->fire() ) {
                         $url = $booking->getBookingResponse()->getBookingUrl();
                     } else {
-                        log( 'error', $booking->getBookingResponse()->getError() );
+                        wuunder_log( 'error', $booking->getBookingResponse()->getError() );
                     }
                 } else {
-                    log( 'error', 'Bookingconfig not complete' );
+                    wuunder_log( 'error', 'Bookingconfig not complete' );
                 }
 
-                log( 'info', 'Handling response' );
+                wuunder_log( 'info', 'Handling response' );
 
                 if  (isset( $url ) ) {
                     update_post_meta( $order_id, '_wuunder_label_booking_url', $url );
@@ -244,7 +244,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             if ( $pickupAddress->validate() ) {
                 return $pickupAddress;
             } else {
-                log( 'error', 'Invalid pickup address. There are mistakes or missing fields.' );
+                wuunder_log( 'error', 'Invalid pickup address. There are mistakes or missing fields.' );
                 return $pickupAddress;
             }
         }
@@ -344,7 +344,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             if ( $deliveryAddress->validate() ) {
                 return $deliveryAddress;
             } else {
-                log( 'error', 'Invalid delivery address. There are mistakes or missing fields.' );
+                wuunder_log( 'error', 'Invalid delivery address. There are mistakes or missing fields.' );
                 return $deliveryAddress;
             }
         }
@@ -358,9 +358,9 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
         public function get_base64_image( $imagepath ) {
             try {
                 $fileSize = ( 'http' === substr( $imagepath, 0, 4 ) ) ? $this->remote_filesize( $imagepath ) : filesize( $imagepath );
-                log( 'info', 'Handling a image of size: ' . $fileSize );
+                wuunder_log( 'info', 'Handling a image of size: ' . $fileSize );
                 if ( $fileSize > 0 && $fileSize <= 2097152 ) { //smaller or equal to 2MB
-                    log( 'info', 'Base64 encoding image' );
+                    wuunder_log( 'info', 'Base64 encoding image' );
                     $imagedata = file_get_contents( $imagepath );
                     $image = base64_encode( $imagedata );
                 } else {
@@ -368,7 +368,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
                 }
                 return $image;
             } catch ( Exception $e ) {
-                log( 'error', $e );
+                wuunder_log( 'error', $e );
                 return '';
             }
         }

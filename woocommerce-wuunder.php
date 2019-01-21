@@ -73,6 +73,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             include_once( 'includes/checkout.php' );
 
             add_action('wp_ajax_wuunder_parcelshoplocator_get_parcelshop_address', 'getParcelshopAddress');
+            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_parcelshop_address', 'getParcelshopAddress');
             add_action('wp_ajax_wuunder_parcelshoplocator_get_address', 'getAddress');
             add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_address', 'getAddress');
 
@@ -101,9 +102,9 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
         }
 
         public function webhook() {
-            log( 'info', 'Test webhook' );
-            log( 'info', $_REQUEST['order'] );
-            log( 'info', $_REQUEST['token'] );
+            wuunder_log( 'info', 'Test webhook' );
+            wuunder_log( 'info', $_REQUEST['order'] );
+            wuunder_log( 'info', $_REQUEST['token'] );
 
             if ( !isset($_REQUEST['order'] ) || !isset( $_REQUEST['token'] ) ) {
                 wp_redirect( '', 500 );
