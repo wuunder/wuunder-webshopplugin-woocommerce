@@ -12,5 +12,11 @@ We make shipping any parcel, pallet and document easy, personal and efficient. A
 * Locate the __WooCommerce Wuunder__ plugin and activate it.
 * Your plugin is now ready for use!
 
+## Support ##
+For technical suport you can reach us at:
+* itsupport@wearewuunder.com
+For shipping support you can reach us at:
+* info@wearewuunder.com
+
 ## Changelog ##
 Changelog can be found [here](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/blob/master/CHANGELOG.md).
