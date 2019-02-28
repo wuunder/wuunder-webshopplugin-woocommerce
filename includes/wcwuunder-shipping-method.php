@@ -22,7 +22,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     $this->instance_id = absint( $instance_id );
                     $this->method_title = __( 'Wuunder Parcelshop' );
                     $this->method_description = __( 'Laat klanten zelf een locatie kiezen om hun pakketje op te halen.' );
-
                     // $this->enabled            = ( 'yes' === $this->get_option( 'enabled') ) ? $this->get_option( 'enabled') : 'no';
                     $this->enabled = 'yes';
                     $this->title = 'Wuunder Parcelshop Locator';
@@ -73,13 +72,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             'title'         => __( 'Kosten', 'woocommerce' ),
                             'type'          => 'number',
                             'description'   => __( 'Kosten voor gebruik Parcelshop pick-up', 'woocommerce' ),
-                            'default'       => 0.0
+                            'default'       => 5.0,
+                            'desc_tip'      => true
                         ),
                         'free_from' => array(
                             'title'         => __( 'Gratis verzending vanaf', 'woocommerce' ),
                             'type'          => 'number',
-                            'description'   => __( 'Vanaf welk bestelbedrag is de verzending gratis. Als 0 dan nooit.', 'woocommerce' ),
-                            'default'       => 0.0
+                            'description'   => __( 'Vanaf welk bestelbedrag is de verzending gratis. Stel 0 in voor nooit.', 'woocommerce' ),
+                            'default'       => 0.0,
+                            'desc_tip'      => true
                         )
                     );
                 }
