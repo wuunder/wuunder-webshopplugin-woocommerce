@@ -72,14 +72,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             'title'         => __( 'Kosten', 'woocommerce' ),
                             'type'          => 'number',
                             'description'   => __( 'Kosten voor gebruik Parcelshop pick-up', 'woocommerce' ),
-                            'default'       => 5.0,
+                            'default'       => 3.5,
                             'desc_tip'      => true
                         ),
                         'free_from' => array(
                             'title'         => __( 'Gratis verzending vanaf', 'woocommerce' ),
                             'type'          => 'number',
                             'description'   => __( 'Vanaf welk bestelbedrag is de verzending gratis. Stel 0 in voor nooit.', 'woocommerce' ),
-                            'default'       => 0.0,
+                            'default'       => 50.00,
                             'desc_tip'      => true
                         )
                     );
