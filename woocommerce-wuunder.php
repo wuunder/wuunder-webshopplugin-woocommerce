@@ -71,6 +71,8 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             include_once( 'includes/parcelshop.php' );
             include_once( 'includes/wcwuunder-shipping-method.php' );
             include_once( 'includes/checkout.php' );
+            include_once( 'includes/wcwuunder-DPD-standard-shipping.php' );
+
 
             add_action('wp_ajax_wuunder_parcelshoplocator_get_parcelshop_address', 'getParcelshopAddress');
             add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_parcelshop_address', 'getParcelshopAddress');
