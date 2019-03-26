@@ -30,8 +30,10 @@ function parcelshop_html()
 
     $baseApiUrl = substr($tmpEnvironment->getStageBaseUrl(), 0, -3);
     $carrierList = get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers'];
-    if ( 2 < strlen($carrierList)  ) {
+    if ( 0 !== count($carrierList)  ) {
         $availableCarriers = implode(',', $carrierList);
+    } else {
+        $availableCarriers = '';
     }
 
     echo <<<EOT
