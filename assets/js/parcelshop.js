@@ -53,6 +53,7 @@ function _showParcelshopLocator() {
     var address = "";
 
     jQuery.post( baseUrl + "admin-ajax.php", {action: 'wuunder_parcelshoplocator_get_address', address: address}, function( data ) {
+        console.log(data);
         shippingAddress = data;
         _openIframe();
     });
@@ -109,8 +110,8 @@ function _loadSelectedParcelshopAddress(id) {
         var parcelshopInfoHtml = _capFirst(data.company_name) + "<br>" + _capFirst(data.address.street_name) +
             " " + data.address.house_number + "<br>" + data.address.city;
         parcelshopInfoHtml = parcelshopInfoHtml.replace(/"/g, '\\"').replace(/'/g, "\\'");
+        console.log(parcelshopInfoHtml);
         parcelshopAddress = parcelshopInfoHtml;
-        window.parent.document.getElementById('parcelshop_country').value = data.address.alpha2;
         _printParcelshopAddress();
     });
 }
@@ -131,4 +132,3 @@ function removeElement(element) {
         element && element.parentNode && element.parentNode.removeChild(element);
     }
 }
-
