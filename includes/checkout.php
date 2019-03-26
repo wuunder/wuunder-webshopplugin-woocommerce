@@ -4,7 +4,6 @@ if ( !defined('ABSPATH') ) {
 } // Exit if accessed directly
 
 add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
-// add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
 add_action('woocommerce_review_order_after_submit', 'parcelshop_html');
 
 function callback_for_setting_up_scripts() {
@@ -66,21 +65,17 @@ function update_parcelshop_id( $order_id ) {
     }
 }
 
-//<<<<<<< HEAD
-//// Check to see if a parcelshop is selected when parcel method is selected && Check if shipping country == parcelshop country
-//add_action( 'woocommerce_checkout_process', 'check_parcelshop_selection' );
-//function check_parcelshop_selection() {
-//    if ( 'wuunder_parcelshop' === $_POST['shipping_method'][0] ) {
-//        if ( !$_POST['parcelshop_id'] ) {
-//            wc_add_notice( __( 'Kies eerst een <strong>parcelshop</strong>' ), 'error' );
-//        }
-//
-//        if ( $_POST['shipping_country'] != $_POST['parcelshop_country'] ) {
-//            wc_add_notice( __( 'Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong>' ), 'error' );
-//        }
-//    }
-//}
-//
-//=======
-//>>>>>>> f4bbe1748e986e61957972fe442458b9c2dfccc8
+// Check to see if a parcelshop is selected when parcel method is selected && Check if shipping country == parcelshop country
+add_action( 'woocommerce_checkout_process', 'check_parcelshop_selection' );
+function check_parcelshop_selection() {
+    if ( 'wuunder_parcelshop' === $_POST['shipping_method'][0] ) {
+        if ( !$_POST['parcelshop_id'] ) {
+            wc_add_notice( __( 'Kies eerst een <strong>parcelshop</strong>' ), 'error' );
+        }
+
+        if ( $_POST['shipping_country'] != $_POST['parcelshop_country'] ) {
+            wc_add_notice( __( 'Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong>' ), 'error' );
+        }
+    }
+}
 ?>
