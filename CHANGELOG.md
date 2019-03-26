@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 
 
-##Old Change Log Format
+## Old Change Log Format
 
 ## [2.2.2](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tree/2.2.2) (2017-12-28)
 [Full Changelog](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/compare/2.2.1...2.2.2)
