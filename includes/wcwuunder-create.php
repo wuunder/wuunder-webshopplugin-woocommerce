@@ -109,7 +109,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
                 $dimensions = array( null, null, null );
             }
 
-            $value = ($order->get_subtotal() * 100);
+            $value = intval($order->get_subtotal() * 100);
 
             $bookingToken = uniqid();
             update_post_meta( $orderId, '_wuunder_label_booking_token', $bookingToken );
