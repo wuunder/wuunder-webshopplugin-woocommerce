@@ -1,4 +1,27 @@
 # Change Log
+All notable changes to this project will be documented in this file.
+Please file changes under `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed` or `Security`.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/).
+
+## Unreleased
+
+## [2.x.x] - 2019-03-26
+
+### Fixed
+
+- Parcelshop selection fix & endline char fix ([#12](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/pull/12))
+
+
+
+
+
+
+## 
+
+
+
+##Old Change Log Format
 
 ## [2.2.2](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tree/2.2.2) (2017-12-28)
 [Full Changelog](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/compare/2.2.1...2.2.2)
