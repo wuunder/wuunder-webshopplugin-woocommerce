@@ -142,7 +142,7 @@ This is a test release. Not ready for production.
 
 ### Fix
 
--Fixed warning with building api data [@timoj](https://github.com/timoj)
+- Fixed warning with building api data [@timoj](https://github.com/timoj)
 
 
 ## Released
