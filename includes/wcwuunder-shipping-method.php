@@ -48,21 +48,22 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     // Load the settings API
                     $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
                     $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
-
+                    $defaultCarriers = 'dpd,dhl,postnl';
                     // Save settings in admin if you have any defined
                     add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+                    update_option( 'default_carrier_list', $defaultCarriers );
                 }
 
                 function init_form_fields() {
                     $this->form_fields = array(
-                        'select_carriers' => array(
-                            'title' => __('Welke Carriers', 'woocommerce'),
-                            'type' => 'multiselect',
-                            'description' => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen)', 'woocommerce'),
-                            'options' => array(
-                                'dhl' => __("DHL"),
-                                'dpd' => __("DPD"),
-                                'postnl' => __("PostNL")
+                        'select_carriers'   => array(
+                            'title'             => __('Welke Carriers', 'woocommerce'),
+                            'type'              => 'multiselect',
+                            'description'       => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen). Als geen selectie wordt gemaakt, dan zijn alle carriers geselecteerd.', 'woocommerce'),
+                            'options'           => array(
+                                'dhl'           => __("DHL"),
+                                'dpd'           => __("DPD"),
+                                'postnl'        => _ ("PostNL")
                             )
                         )
                     );
