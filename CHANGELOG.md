@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 - Parcelshop selection fix & endline char fix ([#12](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/pull/12))
+- Added default option to the parcelshop shipping method ([#WWE-4](https://wuunder.atlassian.net/projects/WWE/issues/WWE-4))
 
 
 
