@@ -31,6 +31,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         'instance-settings',
                         'instance-settings-modal'
                     );
+                    $this->defaultCarriers = array(
+                        'dhl' => __("DHL"),
+                        'dpd' => __("DPD"),
+                        'postnl' => __("PostNL")
+                    );
 
                     // These are the options set by the user
                     $this->cost = $this->get_option( 'cost' );
@@ -51,7 +56,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     $defaultCarriers = 'dpd,dhl,postnl';
                     // Save settings in admin if you have any defined
                     add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
-                    update_option( 'default_carrier_list', $defaultCarriers );
+                    update_option( 'default_carrier_list', $this->defaultCarriers );
                 }
 
                 function init_form_fields() {
@@ -60,11 +65,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             'title'             => __('Welke Carriers', 'woocommerce'),
                             'type'              => 'multiselect',
                             'description'       => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen). Als geen selectie wordt gemaakt, dan zijn alle carriers geselecteerd.', 'woocommerce'),
-                            'options'           => array(
-                                'dhl'           => __("DHL"),
-                                'dpd'           => __("DPD"),
-                                'postnl'        => _ ("PostNL")
-                            )
+                            'options'           => $this->defaultCarriers
                         )
                     );
 

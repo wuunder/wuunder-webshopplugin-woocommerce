@@ -33,7 +33,7 @@ function parcelshop_html()
     if ( 0 !== strlen($carrierList)  ) {
         $availableCarriers = implode(',', $carrierList);
     } else {
-        $availableCarriers = get_option('default_carrier_list');
+        $availableCarriers = implode(',', array_keys(get_option('default_carrier_list')));
     }
 
     echo <<<EOT
