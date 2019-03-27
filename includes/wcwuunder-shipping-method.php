@@ -53,7 +53,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     // Load the settings API
                     $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
                     $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
-                    $defaultCarriers = 'dpd,dhl,postnl';
                     // Save settings in admin if you have any defined
                     add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
                     update_option( 'default_carrier_list', $this->defaultCarriers );
