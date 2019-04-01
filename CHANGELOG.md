@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
-## [2.6.4](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.6.4) - 2019-04-01
+## [2.7.0](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.0) - 2019-04-01
 
 ### Fix
 
