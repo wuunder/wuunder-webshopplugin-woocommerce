@@ -43,7 +43,7 @@ function _printParcelshopAddress() {
         }
         var currentParcelshop = document.createElement('div');
         currentParcelshop.className += 'parcelshopInfo';
-        currentParcelshop.innerHTML = '<br/><strong>Huidige Parcelshop:</strong><br/>' + parcelshopAddress;
+        currentParcelshop.innerHTML = '<br/><strong>Ophalen in parcelshop:</strong><br/>' + parcelshopAddress;
         window.parent.document.getElementById('parcelshopsSelectedContainer').appendChild(currentParcelshop);
     }
 }

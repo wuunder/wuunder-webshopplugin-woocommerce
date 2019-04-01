@@ -3,7 +3,16 @@ All notable changes to this project will be documented in this file.
 Please file changes under `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed` or `Security`.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
-## Unreleased
+
+## Un-released
+
+## Released 
+
+## [2.6.4](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.6.4) - 2019-04-01
+
+- Parcelshop selection fix & endline char fix ([#12](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/pull/12))
+- Changed text when the customer has selected a parcelshop in the checkout page.([#WWE-8](https://wuunder.atlassian.net/projects/WWE/issues/WWE-8))
+- Added default option to the parcelshop shipping method ([#WWE-4](https://wuunder.atlassian.net/projects/WWE/issues/WWE-4))
 
 ## [2.6.3](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/releases/tag/2.6.3) Pre-release - 2018-1-21
 
@@ -112,6 +121,7 @@ This is a test release. Not ready for production.
 
 ## [2.3.1](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/releases/tag/2.3.1) Pre-release - 2018-03-27
 
+
 ### Fix
 
 - Fixed warning with building api data [@timoj](https://github.com/timoj)
@@ -130,7 +140,7 @@ This is a test release. Not ready for production.
 ## Released
 
 
-# Old change log
+## Old Change Log Format
 
 ## [2.2.2](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tree/2.2.2) (2017-12-28)
 [Full Changelog](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/compare/2.2.1...2.2.2)

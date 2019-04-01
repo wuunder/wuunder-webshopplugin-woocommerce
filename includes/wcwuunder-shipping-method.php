@@ -31,6 +31,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         'instance-settings',
                         'instance-settings-modal'
                     );
+                    $this->defaultCarriers = array(
+                        'dhl' => __("DHL"),
+                        'dpd' => __("DPD"),
+                        'postnl' => __("PostNL")
+                    );
 
                     // These are the options set by the user
                     $this->cost = $this->get_option( 'cost' );
@@ -48,22 +53,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     // Load the settings API
                     $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
                     $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
-
                     // Save settings in admin if you have any defined
                     add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+                    update_option( 'default_carrier_list', $this->defaultCarriers );
                 }
 
                 function init_form_fields() {
                     $this->form_fields = array(
-                        'select_carriers' => array(
-                            'title' => __('Welke Carriers', 'woocommerce'),
-                            'type' => 'multiselect',
-                            'description' => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen)', 'woocommerce'),
-                            'options' => array(
-                                'dhl' => __("DHL"),
-                                'dpd' => __("DPD"),
-                                'postnl' => __("PostNL")
-                            )
+                        'select_carriers'   => array(
+                            'title'             => __('Welke Carriers', 'woocommerce'),
+                            'type'              => 'multiselect',
+                            'description'       => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen). Als geen selectie wordt gemaakt, dan zijn alle carriers geselecteerd.', 'woocommerce'),
+                            'options'           => $this->defaultCarriers
                         )
                     );
 

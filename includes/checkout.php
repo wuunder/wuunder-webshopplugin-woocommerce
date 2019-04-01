@@ -30,7 +30,12 @@ function parcelshop_html()
     $tmpEnvironment = new \Wuunder\Api\Environment(get_option('wc_wuunder_api_status') === 'staging' ? 'staging' : 'production');
 
     $baseApiUrl = substr($tmpEnvironment->getStageBaseUrl(), 0, -3);
-    $availableCarriers = implode(',', get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers']);
+    $carrierList = implode(',', get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers']);
+    if ( 0 !== strlen($carrierList)  ) {
+        $availableCarriers = $carrierList;
+    } else {
+        $availableCarriers = implode(',', array_keys(get_option('default_carrier_list')));
+    }
 
     echo <<<EOT
         <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
