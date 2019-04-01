@@ -4,17 +4,15 @@ Please file changes under `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed` o
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## Unreleased [2.x.x] - 2019-0x-xx
+## Un-released
+
+## Released [2.2.3] - 2019-04-01
 
 ### Fixed
 
 - Parcelshop selection fix & endline char fix ([#12](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/pull/12))
 - Changed text when the customer has selected a parcelshop in the checkout page.([#WWE-8](https://wuunder.atlassian.net/projects/WWE/issues/WWE-8))
 - Added default option to the parcelshop shipping method ([#WWE-4](https://wuunder.atlassian.net/projects/WWE/issues/WWE-4))
-
-
-
-
 
 
 ## 
