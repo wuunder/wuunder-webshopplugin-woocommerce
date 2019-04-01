@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Un-released
 
-## Released [2.2.3](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tree/2.2.3) - 2019-04-01
+## Released 
+
+## [2.2.3](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tree/2.2.3) - 2019-04-01
 
 ### Fixed
 
