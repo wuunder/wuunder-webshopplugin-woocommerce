@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [2.6.4](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.6.4) - 2019-04-01
 
+### Fix
+
 - Parcelshop selection fix & endline char fix ([#12](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/pull/12))
 - Changed text when the customer has selected a parcelshop in the checkout page.([#WWE-8](https://wuunder.atlassian.net/projects/WWE/issues/WWE-8))
 - Added default option to the parcelshop shipping method ([#WWE-4](https://wuunder.atlassian.net/projects/WWE/issues/WWE-4))
