@@ -19,4 +19,4 @@ For shipping support you can reach us at:
 * info@wearewuunder.com
 
 ## Changelog ##
-Changelog can be found [here](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/blob/master/CHANGELOG.md).
+Changelog can be found [here](CHANGELOG.md).
