@@ -12,7 +12,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             $this->version_obj = array(
                 'product'   => 'Woocommerce extension',
                 'version'   => array(
-                    'build'     => '2.6.3',
+                    'build'     => '2.7.0',
                     'plugin'    => '2.0' ),
                 'platform'  => array(
                     'name'      => 'Woocommerce',
@@ -62,7 +62,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          */
         private function setBookingConfig( $orderId ) {
             wuunder_log( 'info', 'Filling the booking config' );
-            
+
             $orderItems = $this->get_order_items( $orderId );
 
             $order = new WC_Order( $orderId );
@@ -451,7 +451,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
                     $target = ' target="_blank" ';
                     ?>
                     <a
-                    <?php 
+                    <?php
                     echo $target; ?>href=" <?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
                     <img src="<?php echo $data['img']; ?>" style="width:18px; margin: 4px 3px;"
                          alt="<?php echo $data['title']; ?>">
