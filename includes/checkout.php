@@ -82,7 +82,7 @@ function check_parcelshop_selection() {
         }
 
         if ( $_POST['shipping_country'] != $_POST['parcelshop_country'] ) {
-            wc_add_notice( __( 'Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong>' ), 'error' );
+            wc_add_notice( __( 'Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong> '), 'error' );
         }
     }
 }

@@ -3,6 +3,7 @@ var parcelshopShippingMethodElem = document.getElementById('shipping_method_0_wu
 
 var shippingAddress;
 var parcelshopAddress;
+var rawParcelshopAddress;
 
 var baseUrl;
 var baseUrlApi;
@@ -45,6 +46,7 @@ function _printParcelshopAddress() {
         currentParcelshop.className += 'parcelshopInfo';
         currentParcelshop.innerHTML = '<br/><strong>Ophalen in parcelshop:</strong><br/>' + parcelshopAddress;
         window.parent.document.getElementById('parcelshopsSelectedContainer').appendChild(currentParcelshop);
+        window.parent.document.getElementById('parcelshop_country').value = rawParcelshopAddress.address.alpha2;
     }
 }
 
@@ -52,8 +54,10 @@ function _printParcelshopAddress() {
 function _showParcelshopLocator() {
     var address = "";
 
-    jQuery.post( baseUrl + "admin-ajax.php", {action: 'wuunder_parcelshoplocator_get_address', address: address}, function( data ) {
-        console.log(data);
+    jQuery.post(baseUrl + "admin-ajax.php", {
+        action: 'wuunder_parcelshoplocator_get_address',
+        address: address
+    }, function (data) {
         shippingAddress = data;
         _openIframe();
     });
@@ -105,12 +109,15 @@ function _openIframe() {
 }
 
 function _loadSelectedParcelshopAddress(id) {
-    jQuery.post( baseUrl + "admin-ajax.php", {action: 'wuunder_parcelshoplocator_get_parcelshop_address', parcelshop_id: id}, function( data ) {
+    jQuery.post(baseUrl + "admin-ajax.php", {
+        action: 'wuunder_parcelshoplocator_get_parcelshop_address',
+        parcelshop_id: id
+    }, function (data) {
         data = JSON.parse(data);
+        rawParcelshopAddress = data;
         var parcelshopInfoHtml = _capFirst(data.company_name) + "<br>" + _capFirst(data.address.street_name) +
             " " + data.address.house_number + "<br>" + data.address.city;
         parcelshopInfoHtml = parcelshopInfoHtml.replace(/"/g, '\\"').replace(/'/g, "\\'");
-        console.log(parcelshopInfoHtml);
         parcelshopAddress = parcelshopInfoHtml;
         _printParcelshopAddress();
     });
