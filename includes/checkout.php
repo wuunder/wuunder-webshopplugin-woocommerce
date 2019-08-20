@@ -5,7 +5,7 @@ if ( !defined('ABSPATH') ) {
 
 add_action('wp_enqueue_scripts', 'wcwp_callback_for_setting_up_scripts');
 // add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
-add_action('woocommerce_review_order_after_submit', 'parcelshop_html');
+add_action('woocommerce_review_order_after_submit', 'wcwp_parcelshop_html');
 
 function wcwp_callback_for_setting_up_scripts() {
     if ( class_exists('WC_wuunder_parcelshop' ) ) {
