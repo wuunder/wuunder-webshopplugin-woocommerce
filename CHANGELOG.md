@@ -10,8 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fix
 
-- Checkout validation parcelshop locator bugfixed [@timoj](https://github.com/timoj)
-- Code styling [@timoj](https://github.com/timoj)
+- Checkout validation parcelshop locator bugfixed [@timoj](https://github.com/timoj)  [WWE-97](https://wuunder.atlassian.net/secure/RapidBoard.jspa?rapidView=6&projectKey=WWE&modal=detail&selectedIssue=WWE-97)
+- Code styling [@timoj](https://github.com/timoj)  [WWE-97](https://wuunder.atlassian.net/secure/RapidBoard.jspa?rapidView=6&projectKey=WWE&modal=detail&selectedIssue=WWE-97)
 
 ## Released 
 
