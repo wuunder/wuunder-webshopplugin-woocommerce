@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Un-released
 
+## 2019-08-20
+
+### Fix
+
+- Checkout validation parcelshop locator bugfixed [@timoj](https://github.com/timoj)
+- Code styling [@timoj](https://github.com/timoj)
+
 ## Released 
 
 ## [2.7.0](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.0) - 2019-04-01
