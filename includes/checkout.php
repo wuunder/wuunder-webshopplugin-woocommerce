@@ -3,11 +3,11 @@ if ( !defined('ABSPATH') ) {
     exit;
 } // Exit if accessed directly
 
-add_action('wp_enqueue_scripts', 'callback_for_setting_up_scripts');
+add_action('wp_enqueue_scripts', 'wcwp_callback_for_setting_up_scripts');
 // add_action('woocommerce_review_order_before_submit', 'parcelshop_html');
 add_action('woocommerce_review_order_after_submit', 'parcelshop_html');
 
-function callback_for_setting_up_scripts() {
+function wcwp_callback_for_setting_up_scripts() {
     if ( class_exists('WC_wuunder_parcelshop' ) ) {
         $style_file = dirname ( plugin_dir_url( __FILE__ ) ) . '/assets/css/parcelshop.css';
         $google_api_key = get_option( 'wc_wuunder_google_maps_api_key' );
@@ -21,7 +21,7 @@ function callback_for_setting_up_scripts() {
 }
 
 
-function parcelshop_html()
+function wcwp_parcelshop_html()
 {
     $pluginPath = dirname(plugin_dir_url(__FILE__));
     $pluginPathJS = $pluginPath . "/assets/js/parcelshop.js";
@@ -48,8 +48,8 @@ EOT;
 }
 
 // Field added for the parcelshop_id, so that it can be requested from backend
-add_action( 'woocommerce_after_order_notes', 'add_parcelshop_id_field' );
-function add_parcelshop_id_field( $checkout ) {
+add_action( 'woocommerce_after_order_notes', 'wcwp_add_parcelshop_id_field' );
+function wcwp_add_parcelshop_id_field($checkout ) {
     woocommerce_form_field('parcelshop_id', array(
         'type' => 'text',
         'class' => array(
@@ -66,16 +66,16 @@ function add_parcelshop_id_field( $checkout ) {
 }
 
 // Save / Send the parcelshop id
-add_action( 'woocommerce_checkout_update_order_meta', 'update_parcelshop_id' );
-function update_parcelshop_id( $order_id ) {
+add_action( 'woocommerce_checkout_update_order_meta', 'wcwp_update_parcelshop_id' );
+function wcwp_update_parcelshop_id( $order_id ) {
     if ( ! empty( $_POST['parcelshop_id'] ) ) {
         update_post_meta( $order_id, 'parcelshop_id', sanitize_text_field( $_POST['parcelshop_id'] ) );
     }
 }
 
 // Check to see if a parcelshop is selected when parcel method is selected && Check if shipping country == parcelshop country
-add_action( 'woocommerce_checkout_process', 'check_parcelshop_selection' );
-function check_parcelshop_selection() {
+add_action( 'woocommerce_checkout_process', 'wcwp_check_parcelshop_selection' );
+function wcwp_check_parcelshop_selection() {
     if ( 'wuunder_parcelshop' === $_POST['shipping_method'][0] ) {
         if ( !$_POST['parcelshop_id'] ) {
             wc_add_notice( __( 'Kies eerst een <strong>parcelshop</strong>' ), 'error' );

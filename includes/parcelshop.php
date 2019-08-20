@@ -1,6 +1,6 @@
 <?php
 
-function parcelShopLocator()
+function wcwp_parcelShopLocator()
 {
     include_once( 'wcwuunder-shipping-method.php' );
 //    error_reporting(E_ALL);
@@ -41,7 +41,7 @@ function parcelShopLocator()
 }
 
 
-function getAddress() {
+function wcwp_getAddress() {
     $shipping_address = null;
 
     if(!empty($_POST['address'])) {
@@ -58,7 +58,7 @@ function getAddress() {
     exit;
 }
 
-function getParcelshopAddress() {
+function wcwp_getParcelshopAddress() {
     $shipping_address = null;
 
     if(empty($_POST['parcelshop_id'])) {

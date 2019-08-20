@@ -8,18 +8,18 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
 
         public function __construct() {
             // Add setting tab "Reatiler" on woocommerce settings page
-            add_filter( 'woocommerce_settings_tabs_array', array( &$this, 'add_settings_tab' ), 50 );
-            add_action( 'woocommerce_settings_tabs_wuunder', array( &$this, 'settings_tab' ) );
-            add_action( 'woocommerce_update_options_wuunder', array(&$this, 'update_settings' ) );
+            add_filter( 'woocommerce_settings_tabs_array', array( &$this, 'wcwp_add_settings_tab' ), 50 );
+            add_action( 'woocommerce_settings_tabs_wuunder', array( &$this, 'wcwp_settings_tab' ) );
+            add_action( 'woocommerce_update_options_wuunder', array(&$this, 'wcwp_update_settings' ) );
 
         }
 
-        public static function add_settings_tab( $settings_tabs ) {
+        public static function wcwp_add_settings_tab($settings_tabs ) {
             $settings_tabs['wuunder'] = __( 'Wuunder', 'woocommerce-wuunder' );
             return $settings_tabs;
         }
 
-        public static function settings_tab() {
+        public static function wcwp_settings_tab() {
             ?>
             <style>
                 .address {
@@ -74,26 +74,26 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
 				<p>Meer weten? Bezoek onze website <a href="http://www.wearewuunder.com/" target="_blank">www.wearewuunder.com</a> of stuur een e-mail naar <a href="mailto:info@WeAreWuunder.com" target="_blank">Info@WeAreWuunder.com</a>.</p>
             </div>';
 
-            woocommerce_admin_fields( self::get_settings() );
+            woocommerce_admin_fields( self::wcwp_get_settings() );
             echo '<h1>Afhaaladressen</h1>';
             echo '<p>Op onderstaande adressen worden je zendingen opgehaald of retouren weer afgeleverd. Gebruik de Bedrijfsnaam, contactpersoon en telefoonnummer waar de chauffeur van de vervoerder terecht kan met vragen. Naar het e-mail adres dat je hier gebruikt sturen we ook de verzendlabels mocht je deze niet willen downloaden via WooCommerce. Gebruik voor retouren de knop in het scherm met de “bestellingen”.</p>';
             echo '<div class="row" style="overflow:hidden;">';
             echo '<div class="address">';
-            woocommerce_admin_fields(self::get_address() );
+            woocommerce_admin_fields(self::wcwp_get_address() );
             echo '</div>';
             echo '<div class="mappings">';
-            woocommerce_admin_fields(self::get_mappings() );
+            woocommerce_admin_fields(self::wcwp_get_mappings() );
             echo '</div>';
             echo '</div>';
         }
 
-        public static function update_settings() {
-            woocommerce_update_options(self::get_settings() );
-            woocommerce_update_options(self::get_mappings() );
-            woocommerce_update_options(self::get_address() );
+        public static function wcwp_update_settings() {
+            woocommerce_update_options(self::wcwp_get_settings() );
+            woocommerce_update_options(self::wcwp_get_mappings() );
+            woocommerce_update_options(self::wcwp_get_address() );
         }
 
-        public static function get_settings() {
+        public static function wcwp_get_settings() {
             $statuses = wc_get_order_statuses();
             $mappedStatuses = array();
             foreach ( $statuses as $key => $value ) {
@@ -152,7 +152,7 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
 
 	    }
 
-	    public static function get_mappings() {
+	    public static function wcwp_get_mappings() {
             global $woocommerce;
             $shipping_methods = $woocommerce->shipping->get_shipping_methods();
             $options = array(
@@ -222,7 +222,7 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
             return apply_filters( 'wc_wuunder_settings', $settings );
         }
 
-        public static function get_address() {
+        public static function wcwp_get_address() {
 
             $settings =
                 array(
