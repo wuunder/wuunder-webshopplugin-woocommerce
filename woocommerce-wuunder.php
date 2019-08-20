@@ -12,20 +12,20 @@ if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-if ( !defined( 'WW_PLUGIN_DIR' ) ) {
-    define( 'WW_PLUGIN_DIR', dirname( __FILE__ ) );
+if ( !defined( 'WCWP_PLUGIN_DIR' ) ) {
+    define( 'WCWP_PLUGIN_DIR', dirname( __FILE__ ) );
 }
 
-if ( !defined( 'WW_PLUGIN_ROOT_PHP' ) ) {
-    define('WW_PLUGIN_ROOT_PHP', dirname( __FILE__ ) . '/' . basename( __FILE__ ) );
+if ( !defined( 'WCWP_PLUGIN_ROOT_PHP' ) ) {
+    define('WCWP_PLUGIN_ROOT_PHP', dirname( __FILE__ ) . '/' . basename( __FILE__ ) );
 }
 
-if ( !defined( 'WW_PLUGIN_ADMIN_DIR' ) ) {
-    define( 'WW_PLUGIN_ADMIN_DIR', dirname( __FILE__ ) . '/includes' );
+if ( !defined( 'WCWP_PLUGIN_ADMIN_DIR' ) ) {
+    define( 'WCWP_PLUGIN_ADMIN_DIR', dirname( __FILE__ ) . '/includes' );
 }
 
-if ( !defined( 'WW_PLUGIN_TEMPLATE_DIR' ) ) {
-    define( 'WW_PLUGIN_TEMPLATE_DIR', dirname( __FILE__ ) . '/template' );
+if ( !defined( 'WCWP_PLUGIN_TEMPLATE_DIR' ) ) {
+    define( 'WCWP_PLUGIN_TEMPLATE_DIR', dirname( __FILE__ ) . '/template' );
 }
 
 if ( !defined( 'WOOCOMMERCE_VERSION' ) ) {
@@ -47,7 +47,7 @@ if ( !defined( 'WOOCOMMERCE_VERSION' ) ) {
 }
 
 require_once 'vendor/autoload.php';
-require_once WW_PLUGIN_ADMIN_DIR . '/logger.php';
+require_once WCWP_PLUGIN_ADMIN_DIR . '/logger.php';
 
 if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
 
@@ -65,34 +65,34 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             self::$plugin_url = plugin_dir_url( self::$plugin_basename );
             self::$plugin_path = trailingslashit( dirname( __FILE__ ) );
 
-            add_action( 'admin_enqueue_scripts', array( &$this, 'add_admin_styles_scripts' ) );
+            add_action( 'admin_enqueue_scripts', array( &$this, 'wcwp_add_admin_styles_scripts' ) );
 
-            require_once( WW_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php' );
+            require_once( WCWP_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php' );
             include_once( 'includes/parcelshop.php' );
             include_once( 'includes/wcwuunder-shipping-method.php' );
             include_once( 'includes/checkout.php' );
             include_once( 'includes/wcwuunder-DPD-standard-shipping.php' );
 
 
-            add_action('wp_ajax_wuunder_parcelshoplocator_get_parcelshop_address', 'getParcelshopAddress');
-            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_parcelshop_address', 'getParcelshopAddress');
-            add_action('wp_ajax_wuunder_parcelshoplocator_get_address', 'getAddress');
-            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_address', 'getAddress');
+            add_action('wp_ajax_wuunder_parcelshoplocator_get_parcelshop_address', 'wcwp_getParcelshopAddress');
+            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_parcelshop_address', 'wcwp_getParcelshopAddress');
+            add_action('wp_ajax_wuunder_parcelshoplocator_get_address', 'wcwp_getAddress');
+            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_address', 'wcwp_getAddress');
 
             add_action( 'wp_loaded', function () {
                 if ( false !== strpos( $_SERVER['REQUEST_URI'], '/wuunder/webhook' ) && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
-                    $this->webhook();
+                    $this->wcwp_webhook();
                     exit;
                 }
             } );
 //            add_action('load-edit.php', array( &$this, 'webhook' ) );
         }
 
-        public function ww_load_textdomain() {
-            load_plugin_textdomain( 'woocommerce-wuunder', false, WW_PLUGIN_DIR . '/lang/' );
+        public function wcwp_load_textdomain() {
+            load_plugin_textdomain( 'woocommerce-wuunder', false, WCWP_PLUGIN_DIR . '/lang/' );
         }
 
-        public function add_admin_styles_scripts() {
+        public function wcwp_add_admin_styles_scripts() {
             global $post_type;
             if ( 'shop_order' == $post_type ) {
 //                wp_enqueue_script( 'thickbox' );
@@ -103,10 +103,10 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             }
         }
 
-        public function webhook() {
-            wuunder_log( 'info', 'Test webhook' );
-            wuunder_log( 'info', $_REQUEST['order'] );
-            wuunder_log( 'info', $_REQUEST['token'] );
+        public function wcwp_webhook() {
+            wcwp_log( 'info', 'Test webhook' );
+            wcwp_log( 'info', $_REQUEST['order'] );
+            wcwp_log( 'info', $_REQUEST['token'] );
 
             if ( !isset($_REQUEST['order'] ) || !isset( $_REQUEST['token'] ) ) {
                 wp_redirect( '', 500 );

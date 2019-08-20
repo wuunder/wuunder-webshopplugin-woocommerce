@@ -20,8 +20,8 @@ if ( !class_exists( 'WC_Wuunder_Admin' ) ) {
 				return;
 			}
 
-			require_once( WW_PLUGIN_ADMIN_DIR . '/wcwuunder-settings.php' );
-			require_once( WW_PLUGIN_ADMIN_DIR . '/wcwuunder-create.php' );
+			require_once( WCWP_PLUGIN_ADMIN_DIR . '/wcwuunder-settings.php' );
+			require_once( WCWP_PLUGIN_ADMIN_DIR . '/wcwuunder-create.php' );
 
 		}
 		

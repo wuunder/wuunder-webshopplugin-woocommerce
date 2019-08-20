@@ -18,18 +18,17 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
                     'name'      => 'Woocommerce',
                     'build'     => WC()->version
                 ) );
-            add_action( 'load-edit.php', array(&$this, 'generateBookingUrl' ) );
-            add_action( 'load-edit.php', array(&$this, 'test' ) );
-            add_action( 'woocommerce_admin_order_actions_end', array( &$this, 'add_listing_actions' ) );
-            add_action( 'add_meta_boxes_shop_order', array( &$this, 'add_meta_boxes' ) );
-            add_action( 'admin_notices', array( &$this, 'sample_admin_notice__error' ) );
+            add_action( 'load-edit.php', array(&$this, 'wcwp_generateBookingUrl' ) );
+            add_action( 'woocommerce_admin_order_actions_end', array( &$this, 'wcwp_add_listing_actions' ) );
+            add_action( 'add_meta_boxes_shop_order', array( &$this, 'wcwp_add_meta_boxes' ) );
+            add_action( 'admin_notices', array( &$this, 'wcwp_sample_admin_notice__error' ) );
             wp_enqueue_style( 'wuunder-admin', ( dirname( plugin_dir_url( __FILE__ ) ) . '/assets/css/wuunder-admin.css' ) );
         }
 
         /**
          * Creates an error message for the admin order page
          */
-        public function sample_admin_notice__error() {
+        public function wcwp_sample_admin_notice__error() {
 
             if ( 'error' == isset( $_GET['notice'] ) && $_GET['notice'] ) {
 
@@ -60,10 +59,10 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $orderId
          * @return $bookingConfig
          */
-        private function setBookingConfig( $orderId ) {
-            wuunder_log( 'info', 'Filling the booking config' );
+        private function wcwp_setBookingConfig($orderId ) {
+            wcwp_log( 'info', 'Filling the booking config' );
             
-            $orderItems = $this->get_order_items( $orderId );
+            $orderItems = $this->wcwp_get_order_items( $orderId );
 
             $order = new WC_Order( $orderId );
             $orderPicture = null;
@@ -79,15 +78,15 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             if (is_null($orderPicture ) ) {
                 foreach ( $orderItems['images'] as $image ) {
                     if ( !is_null( $image ) ) {
-                        $orderPicture = $this->get_base64_image( $image );
+                        $orderPicture = $this->wcwp_get_base64_image( $image );
                         break;
                     }
                 }
             }
 
             // Get WooCommerce Wuunder Address from options page
-            $company = $this->get_company_address();
-            $customer = $this->get_customer_address( $orderId );
+            $company = $this->wcwp_get_company_address();
+            $customer = $this->wcwp_get_customer_address( $orderId );
 
             $totalWeight = 0;
             $dimensions = null;
@@ -124,12 +123,12 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             $bookingConfig->setPicture( $orderPicture );
             $bookingConfig->setKind( $totalWeight > 23000 ? 'pallet' : 'package' );
             $bookingConfig->setValue( $value ? $value : null );
-            $bookingConfig->setLength( $this->roundButNull( $dimensions[0] ) );
-            $bookingConfig->setWidth( $this->roundButNull( $dimensions[1] ) );
-            $bookingConfig->setHeight( $this->roundButNull( $dimensions[2] ) );
+            $bookingConfig->setLength( $this->wcwp_roundButNull( $dimensions[0] ) );
+            $bookingConfig->setWidth( $this->wcwp_roundButNull( $dimensions[1] ) );
+            $bookingConfig->setHeight( $this->wcwp_roundButNull( $dimensions[2] ) );
             $bookingConfig->setWeight( $totalWeight ? $totalWeight : null );
             $bookingConfig->setCustomerReference( $orderId );
-            $bookingConfig->setPreferredServiceLevel((count( $order->get_items( 'shipping' ) ) > 0) ? $this->get_filter_from_shippingmethod( reset( $order->get_items( 'shipping' ) )->get_method_id() ) : '' );
+            $bookingConfig->setPreferredServiceLevel((count( $order->get_items( 'shipping' ) ) > 0) ? $this->wcwp_get_filter_from_shippingmethod( reset( $order->get_items( 'shipping' ) )->get_method_id() ) : '' );
             $bookingConfig->setSource( $this->version_obj );
 
             $orderMeta = get_post_meta( $orderId );
@@ -147,9 +146,9 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * Generates the booking url that takes the user to Wuunder.
          * Returns the user to the original order page with the redirect.
          */
-        public function generateBookingUrl() {
+        public function wcwp_generateBookingUrl() {
             if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
-                wuunder_log( 'info', 'Generating the booking url' );
+                wcwp_log( 'info', 'Generating the booking url' );
                 $order_id = $_REQUEST['order'];
 
                 $status = get_option( 'wc_wuunder_api_status' );
@@ -158,21 +157,21 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
 
                 $connector = new Wuunder\Connector( $apiKey, 'productie' !== $status );
                 $booking = $connector->createBooking();
-                $bookingConfig = $this->setBookingConfig( $order_id );
+                $bookingConfig = $this->wcwp_setBookingConfig( $order_id );
 
                 if ( $bookingConfig->validate() ) {
                     $booking->setConfig( $bookingConfig );
-                    wuunder_log( 'info', 'Going to fire for bookingurl' );
+                    wcwp_log( 'info', 'Going to fire for bookingurl' );
                     if ( $booking->fire() ) {
                         $url = $booking->getBookingResponse()->getBookingUrl();
                     } else {
-                        wuunder_log( 'error', $booking->getBookingResponse()->getError() );
+                        wcwp_log( 'error', $booking->getBookingResponse()->getError() );
                     }
                 } else {
-                    wuunder_log( 'error', 'Bookingconfig not complete' );
+                    wcwp_log( 'error', 'Bookingconfig not complete' );
                 }
 
-                wuunder_log( 'info', 'Handling response' );
+                wcwp_log( 'info', 'Handling response' );
 
                 if  (isset( $url ) ) {
                     update_post_meta( $order_id, '_wuunder_label_booking_url', $url );
@@ -184,16 +183,13 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             }
         }
 
-        public function test() {
-        }
-
         /**
          * Returns rounded value, or null
          *
          * @param $val
          * @return float|null
          */
-        private function roundButNull( $val ) {
+        private function wcwp_roundButNull($val ) {
             if ( empty( $val ) ) {
                 return null;
             }
@@ -207,7 +203,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $shipping_method
          * @return
          */
-        private function get_filter_from_shippingmethod( $shipping_method ) {
+        private function wcwp_get_filter_from_shippingmethod($shipping_method ) {
             if ( false !== strpos( $shipping_method, ':' ) ) {
                 $shipping_method = explode( ':', $shipping_method )[0];
             }
@@ -229,7 +225,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          *
          * @return $pickupAddress
          */
-        public function get_company_address() {
+        public function wcwp_get_company_address() {
             $pickupAddress = new \Wuunder\Api\Config\AddressConfig();
             $pickupAddress->setEmailAddress(get_option( 'wc_wuunder_company_email' ) );
             $pickupAddress->setFamilyName(get_option( 'wc_wuunder_company_lastname' ) );
@@ -244,7 +240,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             if ( $pickupAddress->validate() ) {
                 return $pickupAddress;
             } else {
-                wuunder_log( 'error', 'Invalid pickup address. There are mistakes or missing fields.' );
+                wcwp_log( 'error', 'Invalid pickup address. There are mistakes or missing fields.' );
                 return $pickupAddress;
             }
         }
@@ -255,7 +251,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $addressLine
          * @return array containing 2 values: streetName and streetNumber
          */
-        private function separateAddressLine( $addressLine ) {
+        private function wcwp_separateAddressLine($addressLine ) {
             if ( preg_match( '/^([^\d]*[^\d\s]) *(\d.*)$/', $addressLine, $result ) ) {
                 if ( count( $result ) >= 2 ) {
                     $streetName = $result[1];
@@ -270,7 +266,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
         }
 
 
-        private function get_customer_address_street_and_housenumber( $order_meta, $suffix ) {
+        private function wcwp_get_customer_address_street_and_housenumber($order_meta, $suffix ) {
             if ( isset( $order_meta['_shipping' . $suffix]) && ! empty( $order_meta['_shipping' . $suffix][0] ) ) {
                 return $order_meta['_shipping' . $suffix][0];
             } else if ( isset( $order_meta['_shipping_address_1'] ) && ! empty( $order_meta['_shipping_address_1'] ) ) {
@@ -288,7 +284,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $order_meta , $suffix
          * @return $order_meta
          */
-        private function get_customer_address_part( $order_meta, $suffix ) {
+        private function wcwp_get_customer_address_part($order_meta, $suffix ) {
             if ( isset($order_meta['_shipping' . $suffix] ) && ! empty( $order_meta['_shipping' . $suffix][0] ) ) {
                 return $order_meta['_shipping' . $suffix][0];
             } else if ( isset($order_meta['_billing' . $suffix] ) && ! empty( $order_meta['_billing' . $suffix][0] ) ) {
@@ -304,11 +300,11 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $order_meta
          * @return array containing 2 values: streetName and streetNumber
          */
-        private function get_customer_address_from_address_line( $order_meta ) {
+        private function wcwp_get_customer_address_from_address_line($order_meta ) {
             if ( isset( $order_meta['_shipping_address_1'] ) && ! empty( $order_meta['_shipping_address_1'] ) ) {
-                return $this->separateAddressLine( $order_meta['_shipping_address_1'][0] );
+                return $this->wcwp_separateAddressLine( $order_meta['_shipping_address_1'][0] );
             } else if ( isset( $order_meta['_billing_address_1'] ) && ! empty( $order_meta['_billing_address_1'] ) ) {
-                return $this->separateAddressLine( $order_meta['_billing_address_1'][0] );
+                return $this->wcwp_separateAddressLine( $order_meta['_billing_address_1'][0] );
             } else {
                 return '';
             }
@@ -320,31 +316,31 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $orderid
          * @return $deliveryAddress
          */
-        public function get_customer_address( $orderid ) {
+        public function wcwp_get_customer_address($orderid ) {
             // Get customer address from order
             $order_meta = get_post_meta( $orderid );
             $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
-            $street_name = $this->get_customer_address_street_and_housenumber( $order_meta, '_street_name' );
+            $street_name = $this->wcwp_get_customer_address_street_and_housenumber( $order_meta, '_street_name' );
             if ( empty( $street_name ) ) {
-                $street_name = $this->get_customer_address_from_address_line( $order_meta )[0];
+                $street_name = $this->wcwp_get_customer_address_from_address_line( $order_meta )[0];
             }
-            $house_number = $this->get_customer_address_street_and_housenumber( $order_meta, '_house_number' ) . $this->get_customer_address_street_and_housenumber( $order_meta, '_house_number_suffix' );
+            $house_number = $this->wcwp_get_customer_address_street_and_housenumber( $order_meta, '_house_number' ) . $this->wcwp_get_customer_address_street_and_housenumber( $order_meta, '_house_number_suffix' );
             if ( empty( $house_number ) ) {
-                $house_number = $this->get_customer_address_from_address_line( $order_meta )[1];
+                $house_number = $this->wcwp_get_customer_address_from_address_line( $order_meta )[1];
             }
-            $deliveryAddress->setEmailAddress( $this->get_customer_address_part( $order_meta, '_email' ) );
-            $deliveryAddress->setFamilyName( $this->get_customer_address_part( $order_meta, '_last_name' ) );
-            $deliveryAddress->setGivenName( $this->get_customer_address_part( $order_meta, '_first_name' ) );
-            $deliveryAddress->setLocality( $this->get_customer_address_part( $order_meta, '_city' ) );
+            $deliveryAddress->setEmailAddress( $this->wcwp_get_customer_address_part( $order_meta, '_email' ) );
+            $deliveryAddress->setFamilyName( $this->wcwp_get_customer_address_part( $order_meta, '_last_name' ) );
+            $deliveryAddress->setGivenName( $this->wcwp_get_customer_address_part( $order_meta, '_first_name' ) );
+            $deliveryAddress->setLocality( $this->wcwp_get_customer_address_part( $order_meta, '_city' ) );
             $deliveryAddress->setStreetName( $street_name );
             $deliveryAddress->setHouseNumber( $house_number );
-            $deliveryAddress->setZipCode(str_replace( ' ', '', $this->get_customer_address_part( $order_meta, '_postcode' ) ) );
+            $deliveryAddress->setZipCode(str_replace( ' ', '', $this->wcwp_get_customer_address_part( $order_meta, '_postcode' ) ) );
             $deliveryAddress->setPhoneNumber( $order_meta['_billing_phone'][0] );
-            $deliveryAddress->setCountry( $this->get_customer_address_part( $order_meta, '_country' ) );
+            $deliveryAddress->setCountry( $this->wcwp_get_customer_address_part( $order_meta, '_country' ) );
             if ( $deliveryAddress->validate() ) {
                 return $deliveryAddress;
             } else {
-                wuunder_log( 'error', 'Invalid delivery address. There are mistakes or missing fields.' );
+                wcwp_log( 'error', 'Invalid delivery address. There are mistakes or missing fields.' );
                 return $deliveryAddress;
             }
         }
@@ -355,12 +351,12 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $imagepath
          * @return $image
          */
-        public function get_base64_image( $imagepath ) {
+        public function wcwp_get_base64_image($imagepath ) {
             try {
-                $fileSize = ( 'http' === substr( $imagepath, 0, 4 ) ) ? $this->remote_filesize( $imagepath ) : filesize( $imagepath );
-                wuunder_log( 'info', 'Handling a image of size: ' . $fileSize );
+                $fileSize = ( 'http' === substr( $imagepath, 0, 4 ) ) ? $this->wcwp_remote_filesize( $imagepath ) : filesize( $imagepath );
+                wcwp_log( 'info', 'Handling a image of size: ' . $fileSize );
                 if ( $fileSize > 0 && $fileSize <= 2097152 ) { //smaller or equal to 2MB
-                    wuunder_log( 'info', 'Base64 encoding image' );
+                    wcwp_log( 'info', 'Base64 encoding image' );
                     $imagedata = file_get_contents( $imagepath );
                     $image = base64_encode( $imagedata );
                 } else {
@@ -368,12 +364,12 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
                 }
                 return $image;
             } catch ( Exception $e ) {
-                wuunder_log( 'error', $e );
+                wcwp_log( 'error', $e );
                 return '';
             }
         }
 
-        function curl_get_file_size( $url ) {
+        function wcwp_curl_get_file_size($url ) {
             // Assume failure.
             $result = -1;
 
@@ -417,8 +413,8 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * @param $url
          * @return string
          */
-        private function remote_filesize( $url ) {
-            $remoteFilesize = $this->curl_get_file_size( $url );
+        private function wcwp_remote_filesize($url ) {
+            $remoteFilesize = $this->wcwp_curl_get_file_size( $url );
             return $remoteFilesize;
         }
 
@@ -426,7 +422,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          *
          * @param $order
          */
-        public function add_listing_actions( $order ) {
+        public function wcwp_add_listing_actions($order ) {
             // do not show buttons for trashed orders
             if ( 'trash' == $order->get_status() ) {
                 return;
@@ -485,7 +481,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
         /**
          * Add the meta box on the single order page
          */
-        public function add_meta_boxes() {
+        public function wcwp_add_meta_boxes() {
             // create PDF buttons
             add_meta_box(
                 'wpo_wcpdf-box',
@@ -500,17 +496,17 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
         /**
          * Create the meta box content on the single order page
          */
-        public function sidebar_box_content( $post ) {
+        public function wcwp_sidebar_box_content($post ) {
             global $post_id;
             $order = new WC_Order( $post_id );
-            $this->add_listing_actions( $order );
+            $this->wcwp_add_listing_actions( $order );
         }
 
         /**
          *
          *
          */
-        public function get_order_items(  $order_id ) {
+        public function wcwp_get_order_items($order_id ) {
 
             global $woocommerce;
             $order = new WC_Order(  $order_id );
