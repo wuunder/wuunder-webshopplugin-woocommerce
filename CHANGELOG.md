@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Un-released
 
+### Fix
+
+- Code styling and typo fixes
+
 ## 2019-08-20
 
 ### Fix
