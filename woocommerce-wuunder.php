@@ -69,6 +69,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
 
             require_once( WCWP_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php' );
             include_once( 'includes/parcelshop.php' );
+            include_once( 'includes/wcwuunder-settings.php' );
             include_once( 'includes/wcwuunder-shipping-method.php' );
             include_once( 'includes/checkout.php' );
             include_once( 'includes/wcwuunder-DPD-standard-shipping.php' );
@@ -85,6 +86,9 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
                     exit;
                 }
             } );
+            if ( version_compare( WC_VERSION, '3.7', '>=' )) {
+                add_action( 'wp_loaded', array(WC_Wuunder_Settings::class, 'wcwp_save_action_for_update_settings' ) );
+            }
 //            add_action('load-edit.php', array( &$this, 'webhook' ) );
         }
 
