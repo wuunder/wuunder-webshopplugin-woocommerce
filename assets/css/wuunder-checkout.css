@@ -2,12 +2,16 @@
 .woocommerce-page form .form-row-quart,
 .woocommerce form .form-row-quart-first,
 .woocommerce-page form .form-row-quart-first {
-	float: left;
-	width: 22%;
-	overflow: visible;
+    float: left;
+    width: 22%;
+    overflow: visible;
 }
 
 .woocommerce-page form .form-row-quart-first,
 .woocommerce form .form-row-quart-first {
-	
+
+}
+
+.wuunder-hidden-checkout-field {
+    display: none;
 }

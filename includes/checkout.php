@@ -9,11 +9,14 @@ add_action('woocommerce_review_order_after_submit', 'wcwp_parcelshop_html');
 
 function wcwp_callback_for_setting_up_scripts() {
     if ( class_exists('WC_wuunder_parcelshop' ) ) {
-        $style_file = dirname ( plugin_dir_url( __FILE__ ) ) . '/assets/css/parcelshop.css';
+        $style_file_parcelshop_locator = dirname ( plugin_dir_url( __FILE__ ) ) . '/assets/css/parcelshop.css';
+        $style_file_checkout_fields = dirname ( plugin_dir_url( __FILE__ ) ) . '/assets/css/wuunder-checkout.css';
         $google_api_key = get_option( 'wc_wuunder_google_maps_api_key' );
         $script_file = '//maps.googleapis.com/maps/api/js?key=' . $google_api_key;
-        wp_register_style( 'wuunderCSS', $style_file );
-        wp_enqueue_style( 'wuunderCSS' );
+        wp_register_style( 'wuunderCSSParcelshopLocator', $style_file_parcelshop_locator );
+        wp_enqueue_style( 'wuunderCSSParcelshopLocator' );
+        wp_register_style( 'wuunderCSSCheckout', $style_file_checkout_fields );
+        wp_enqueue_style( 'wuunderCSSCheckout' );
 
         wp_register_script( 'googleMapsJS', $script_file );
         wp_enqueue_script( 'googleMapsJS' );
@@ -53,14 +56,14 @@ function wcwp_add_parcelshop_id_field($checkout ) {
     woocommerce_form_field('parcelshop_id', array(
         'type' => 'text',
         'class' => array(
-            'my-field-class form-row-wide'
+            'wuunder-hidden-checkout-field form-row-wide'
         ),
     ), $checkout->get_value( 'parcelshop_id' ) );
 
     woocommerce_form_field('parcelshop_country', array(
         'type' => 'text',
         'class' => array(
-            'my-field-class form-row-wide'
+            'wuunder-hidden-checkout-field form-row-wide'
         ),
     ), $checkout->get_value( 'parcelshop_country' ) );
 }
