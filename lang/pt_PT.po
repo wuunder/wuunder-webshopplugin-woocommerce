@@ -12,11 +12,11 @@ msgstr ""
 "POT-Creation-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: nl_NL\n"
+"Language: pt_PT\n"
 
-
+#: wp-includes/rest-api/class-wp-rest-request.php:850
 msgid "Click here to select a parcelshop"
-msgstr "Klik hier om een parcelshop te kiezen"
+msgstr "Clique aqui para selecionar uma parcela"
 
 msgid "Pickup in parcelshop"
-msgstr "Ophalen in parcelshop"
+msgstr "Coleta em parcelshop"

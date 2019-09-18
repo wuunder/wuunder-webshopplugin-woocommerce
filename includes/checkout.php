@@ -42,10 +42,13 @@ function wcwp_parcelshop_html()
         $availableCarriers = implode(',', array_keys($defaultCarrierConfig));
     }
 
+    $chooseParcelshopText = __('Click here to select a parcelshop');
+    $chosenParcelshopText = __('Pickup in parcelshop');
+
     echo <<<EOT
         <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
         <script type="text/javascript">
-            initParcelshopLocator("$baseWebshopUrl", "$baseApiUrl", "$availableCarriers");
+            initParcelshopLocator("$baseWebshopUrl", "$baseApiUrl", "$availableCarriers", "$chooseParcelshopText", "$chosenParcelshopText");
         </script>
 EOT;
 }
