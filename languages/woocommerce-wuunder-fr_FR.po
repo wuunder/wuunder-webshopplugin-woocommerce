@@ -14,9 +14,10 @@ msgstr ""
 "Language-Team: \n"
 "Language: fr_FR\n"
 
-#: wp-includes/rest-api/class-wp-rest-request.php:850
+#: includes/checkout.php:45
 msgid "Click here to select a parcelshop"
 msgstr "Cliquez ici pour sélectionner un colis"
 
+#: includes/checkout.php:46
 msgid "Pickup in parcelshop"
 msgstr "Ramassage en colis"

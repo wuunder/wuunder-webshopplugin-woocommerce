@@ -42,8 +42,8 @@ function wcwp_parcelshop_html()
         $availableCarriers = implode(',', array_keys($defaultCarrierConfig));
     }
 
-    $chooseParcelshopText = __('Click here to select a parcelshop');
-    $chosenParcelshopText = __('Pickup in parcelshop');
+    $chooseParcelshopText = __('Click here to select a parcelshop', 'woocommerce-wuunder');
+    $chosenParcelshopText = __('Pickup in parcelshop', 'woocommerce-wuunder');
 
     echo <<<EOT
         <script type="text/javascript" data-cfasync="false" src="$pluginPathJS"></script>
