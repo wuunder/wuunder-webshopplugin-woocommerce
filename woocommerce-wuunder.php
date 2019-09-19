@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Wuunder
  * Plugin URI: https://wearewuunder.com/wuunder-voor-webshops/
  * Description: Wuunder shipping plugin
- * Version: 2.6.3
+ * Version: 2.7.2
  * Author: Wuunder
  * Author URI: http://wearewuunder.com
  */
@@ -57,7 +57,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
         public static $plugin_path;
         public static $plugin_basename;
 
-        const VERSION = '2.6.3';
+        const VERSION = '2.7.2';
 
         public function __construct() {
 
@@ -69,6 +69,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
 
             require_once( WCWP_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php' );
             include_once( 'includes/parcelshop.php' );
+            include_once( 'includes/wcwuunder-settings.php' );
             include_once( 'includes/wcwuunder-shipping-method.php' );
             include_once( 'includes/checkout.php' );
             include_once( 'includes/wcwuunder-DPD-standard-shipping.php' );
@@ -85,11 +86,17 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
                     exit;
                 }
             } );
-//            add_action('load-edit.php', array( &$this, 'webhook' ) );
+            if ( version_compare( WC_VERSION, '3.7', '>=' )) {
+                add_action( 'wp_loaded', array(WC_Wuunder_Settings::class, 'wcwp_save_action_for_update_settings' ) );
+            }
+            add_action('plugins_loaded', array( &$this, 'wcwp_load_textdomain' ) );
         }
 
         public function wcwp_load_textdomain() {
-            load_plugin_textdomain( 'woocommerce-wuunder', false, WCWP_PLUGIN_DIR . '/lang/' );
+            $plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages/'; /* Relative to WP_PLUGIN_DIR */
+
+            $domain = 'woocommerce-wuunder';
+            load_plugin_textdomain( $domain, FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
         }
 
         public function wcwp_add_admin_styles_scripts() {

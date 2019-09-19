@@ -9,10 +9,15 @@ var baseUrl;
 var baseUrlApi;
 var availableCarrierList;
 
-function initParcelshopLocator(url, apiUrl, carrierList) {
+var chooseParcelshopText;
+var chosenParcelshopText;
+
+function initParcelshopLocator(url, apiUrl, carrierList, chooseParcelshopTxt, chosenParcelshopTxt) {
     baseUrl = url;
     baseUrlApi = apiUrl;
     availableCarrierList = carrierList;
+    chooseParcelshopText = chooseParcelshopTxt;
+    chosenParcelshopText = chosenParcelshopTxt;
 
     if (parcelshopShippingMethodElem) {
         parcelshopShippingMethodElem.onchange = _onShippingMethodChange;
@@ -24,7 +29,7 @@ function _onShippingMethodChange() {
     if (parcelshopShippingMethodElem.checked) {
         var container = document.createElement('tr');
         container.className += "chooseParcelshop";
-        container.innerHTML = '<td></td><td><div id="parcelshopsSelectedContainer" onclick="_showParcelshopLocator()"><a href="#/" id="selectParcelshop">Klik hier om een parcelshop te kiezen</a></div></td>';
+        container.innerHTML = '<td></td><td><div id="parcelshopsSelectedContainer" onclick="_showParcelshopLocator()"><a href="#/" id="selectParcelshop">' + chooseParcelshopText + '</a></div></td>';
         // window.parent.document.getElementsByClassName('shipping')[0].appendChild(container);
         window.parent.document.getElementsByClassName('woocommerce-shipping-totals')[0].parentNode.insertBefore(container, window.parent.document.getElementsByClassName('woocommerce-shipping-totals shipping')[0].nextSibling);
 
@@ -44,7 +49,7 @@ function _printParcelshopAddress() {
         }
         var currentParcelshop = document.createElement('div');
         currentParcelshop.className += 'parcelshopInfo';
-        currentParcelshop.innerHTML = '<br/><strong>Ophalen in parcelshop:</strong><br/>' + parcelshopAddress;
+        currentParcelshop.innerHTML = '<br/><strong>' + chosenParcelshopText + ':</strong><br/>' + parcelshopAddress;
         window.parent.document.getElementById('parcelshopsSelectedContainer').appendChild(currentParcelshop);
         window.parent.document.getElementById('parcelshop_country').value = rawParcelshopAddress.address.alpha2;
     }

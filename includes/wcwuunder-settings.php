@@ -10,8 +10,13 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
             // Add setting tab "Reatiler" on woocommerce settings page
             add_filter( 'woocommerce_settings_tabs_array', array( &$this, 'wcwp_add_settings_tab' ), 50 );
             add_action( 'woocommerce_settings_tabs_wuunder', array( &$this, 'wcwp_settings_tab' ) );
-            add_action( 'woocommerce_update_options_wuunder', array(&$this, 'wcwp_update_settings' ) );
+            if ( version_compare( WC_VERSION, '3.7', '<' )) {
+                add_action('woocommerce_update_options_wuunder', array(&$this, 'wcwp_update_settings'));
+            }
+        }
 
+        public static function wcwp_save_action_for_update_settings() {
+            add_action( 'woocommerce_update_options_wuunder', array(WC_Wuunder_Settings::class,'wcwp_update_settings' ));
         }
 
         public static function wcwp_add_settings_tab($settings_tabs ) {
