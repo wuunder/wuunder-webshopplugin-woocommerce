@@ -12,7 +12,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             $this->version_obj = array(
                 'product'   => 'Woocommerce extension',
                 'version'   => array(
-                    'build'     => '2.7.2',
+                    'build'     => '2.7.3',
                     'plugin'    => '2.0' ),
                 'platform'  => array(
                     'name'      => 'Woocommerce',

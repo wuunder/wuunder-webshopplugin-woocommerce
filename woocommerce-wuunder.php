@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Wuunder
  * Plugin URI: https://wearewuunder.com/wuunder-voor-webshops/
  * Description: Wuunder shipping plugin
- * Version: 2.7.2
+ * Version: 2.7.3
  * Author: Wuunder
  * Author URI: http://wearewuunder.com
  */
@@ -57,7 +57,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
         public static $plugin_path;
         public static $plugin_basename;
 
-        const VERSION = '2.7.2';
+        const VERSION = '2.7.3';
 
         public function __construct() {
 
@@ -65,15 +65,12 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             self::$plugin_url = plugin_dir_url( self::$plugin_basename );
             self::$plugin_path = trailingslashit( dirname( __FILE__ ) );
 
-            add_action( 'admin_enqueue_scripts', array( &$this, 'wcwp_add_admin_styles_scripts' ) );
-
             require_once( WCWP_PLUGIN_ADMIN_DIR . '/wcwuunder-admin.php' );
             include_once( 'includes/parcelshop.php' );
             include_once( 'includes/wcwuunder-settings.php' );
             include_once( 'includes/wcwuunder-shipping-method.php' );
             include_once( 'includes/checkout.php' );
             include_once( 'includes/wcwuunder-DPD-standard-shipping.php' );
-
 
             add_action('wp_ajax_wuunder_parcelshoplocator_get_parcelshop_address', 'wcwp_getParcelshopAddress');
             add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_parcelshop_address', 'wcwp_getParcelshopAddress');
@@ -86,28 +83,15 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
                     exit;
                 }
             } );
-            if ( version_compare( WC_VERSION, '3.7', '>=' )) {
+            if ( version_compare( WOOCOMMERCE_VERSION, '3.7', '>=' )) {
                 add_action( 'wp_loaded', array(WC_Wuunder_Settings::class, 'wcwp_save_action_for_update_settings' ) );
             }
             add_action('plugins_loaded', array( &$this, 'wcwp_load_textdomain' ) );
         }
 
         public function wcwp_load_textdomain() {
-            $plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages/'; /* Relative to WP_PLUGIN_DIR */
-
             $domain = 'woocommerce-wuunder';
             load_plugin_textdomain( $domain, FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
-        }
-
-        public function wcwp_add_admin_styles_scripts() {
-            global $post_type;
-            if ( 'shop_order' == $post_type ) {
-//                wp_enqueue_script( 'thickbox' );
-//                wp_enqueue_style( 'thickbox' );
-//
-//                wp_register_style( 'bootstrap-admin-styles', plugins_url( '/assets/css/bootstrap-simplex.min.css', __FILE__ ), array(), '', 'all' );
-//                wp_enqueue_style( 'bootstrap-admin-styles' );
-            }
         }
 
         public function wcwp_webhook() {
