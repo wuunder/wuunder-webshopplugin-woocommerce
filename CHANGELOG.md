@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.4](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.4) - 2019-09-27
+
+### Added
+- Preferred_service_level to Woocommerce REST API Orders resourcelist
+
 ## [2.7.3](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.3) - 2019-09-25
 
 ### Fix
