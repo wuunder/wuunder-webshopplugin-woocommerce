@@ -486,7 +486,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             add_meta_box(
                 'wpo_wcpdf-box',
                 __( 'Wuunder', 'woocommerce-wuunder' ),
-                array( $this, 'sidebar_box_content' ),
+                array( $this, 'wcwp_sidebar_box_content' ),
                 'shop_order',
                 'side',
                 'default'
