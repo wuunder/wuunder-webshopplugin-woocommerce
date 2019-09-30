@@ -53,6 +53,29 @@ function wcwp_parcelshop_html()
 EOT;
 }
 
+/**
+ * Returns the filter (preferred service level) that is set in the Wuunder config
+ *
+ * @param $shipping_method
+ * @return
+ */
+function wcwp_get_filter_from_shippingmethod($shipping_method ) {
+    if ( false !== strpos( $shipping_method, ':' ) ) {
+        $shipping_method = explode( ':', $shipping_method )[0];
+    }
+    if ( $shipping_method === get_option( 'wc_wuunder_mapping_method_1' ) ) {
+        return get_option( 'wc_wuunder_mapping_filter_1' );
+    } elseif ( $shipping_method === get_option( 'wc_wuunder_mapping_method_2' ) ) {
+        return get_option( 'wc_wuunder_mapping_filter_2' );
+    } elseif ( $shipping_method === get_option( 'wc_wuunder_mapping_method_3') ) {
+        return get_option( 'wc_wuunder_mapping_filter_3' );
+    } elseif ( $shipping_method === get_option( 'wc_wuunder_mapping_method_4' ) ) {
+        return get_option( 'wc_wuunder_mapping_filter_4' );
+    } else {
+        return '';
+    }
+}
+
 // Field added for the parcelshop_id, so that it can be requested from backend
 add_action( 'woocommerce_after_order_notes', 'wcwp_add_parcelshop_id_field' );
 function wcwp_add_parcelshop_id_field($checkout ) {
@@ -70,6 +93,24 @@ function wcwp_add_parcelshop_id_field($checkout ) {
         ),
     ), $checkout->get_value( 'parcelshop_country' ) );
 }
+
+/*
+ * Add a referanse field to the Order API response.
+*/
+function prefix_wc_rest_prepare_order_object( $response, $object, $request ) {
+    $shipping_method_id = null;
+    try {
+        $order = new WC_Order($object->get_id());
+        $shipping_object = $order->get_items('shipping');
+        $shipping_method_id = wcwp_get_filter_from_shippingmethod(reset($shipping_object)->get_method_id());
+    } catch (Exception $e) {
+
+    }
+    $response->data['wuunder_preferred_service_level'] = $shipping_method_id;
+
+    return $response;
+}
+add_filter( 'woocommerce_rest_prepare_shop_order_object', 'prefix_wc_rest_prepare_order_object', 10, 3 );
 
 // Save / Send the parcelshop id
 add_action( 'woocommerce_checkout_update_order_meta', 'wcwp_update_parcelshop_id' );

@@ -12,7 +12,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             $this->version_obj = array(
                 'product'   => 'Woocommerce extension',
                 'version'   => array(
-                    'build'     => '2.7.3',
+                    'build'     => '2.7.4',
                     'plugin'    => '2.0' ),
                 'platform'  => array(
                     'name'      => 'Woocommerce',
@@ -486,7 +486,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             add_meta_box(
                 'wpo_wcpdf-box',
                 __( 'Wuunder', 'woocommerce-wuunder' ),
-                array( $this, 'sidebar_box_content' ),
+                array( $this, 'wcwp_sidebar_box_content' ),
                 'shop_order',
                 'side',
                 'default'
