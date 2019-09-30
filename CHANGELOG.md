@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.5](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.4) - 2019-09-30
+
+### Fixed
+- Parcelshop locator wuunder production settings
+
+
 ## [2.7.4](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.4) - 2019-09-27
 
 ### Added
