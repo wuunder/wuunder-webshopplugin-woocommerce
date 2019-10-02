@@ -61,7 +61,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          */
         private function wcwp_setBookingConfig($orderId ) {
             wcwp_log( 'info', 'Filling the booking config' );
-            
+
             $orderItems = $this->wcwp_get_order_items( $orderId );
 
             $order = new WC_Order( $orderId );
@@ -101,14 +101,14 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
 
             foreach ( $orderItems['products'] as $item ) {
                 $totalWeight += $item['total_weight'];
-                $description .= '- ' . $item['quantity'] . 'x ' . $item['name'] . ' \r\n';
+                $description .= '- ' . $item['quantity'] . 'x ' . $item['name'] . "\r\n";
             }
 
             if ( 3 !== count( $dimensions ) ) {
                 $dimensions = array( null, null, null );
             }
 
-            $value = intval( $order->get_subtotal() * 100 );
+            $value = intval(($order->get_total() + $order->get_total_discount() - $order->get_shipping_total()) * 100);
 
             $bookingToken = uniqid();
             update_post_meta( $orderId, '_wuunder_label_booking_token', $bookingToken );
@@ -447,7 +447,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
                     $target = ' target="_blank" ';
                     ?>
                     <a
-                    <?php 
+                    <?php
                     echo $target; ?>href=" <?php echo $data['url']; ?>" class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
                     <img src="<?php echo $data['img']; ?>" style="width:18px; margin: 4px 3px;"
                          alt="<?php echo $data['title']; ?>">
