@@ -101,8 +101,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
 
             foreach ( $orderItems['products'] as $item ) {
                 $totalWeight += $item['total_weight'];
-                $description .= '- ' . $item['quantity'] . 'x ' . $item['name'] . '
-';
+                $description .= '- ' . $item['quantity'] . 'x ' . $item['name'] . "\r\n";
             }
 
             if ( 3 !== count( $dimensions ) ) {
