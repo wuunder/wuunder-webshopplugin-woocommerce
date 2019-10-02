@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fixed
 - Parcelshop locator wuunder production settings
+- Order value
+- Line ending description
 
 
 ## [2.7.4](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.4) - 2019-09-27
