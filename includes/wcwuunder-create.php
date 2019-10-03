@@ -109,9 +109,15 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             }
 
             $value = intval(($order->get_total() + $order->get_total_discount() - $order->get_shipping_total()) * 100);
+            $bookingTokenData = get_post_meta( $orderId, '_wuunder_label_booking_token' );
 
-            $bookingToken = uniqid();
-            update_post_meta( $orderId, '_wuunder_label_booking_token', $bookingToken );
+            if (count($bookingTokenData)) {
+                $bookingToken = $bookingTokenData[0];
+            } else {
+                $bookingToken = uniqid();
+                update_post_meta( $orderId, '_wuunder_label_booking_token', $bookingToken );
+            }
+
             $redirectUrl = get_site_url( null, '/wp-admin/edit.php?post_type=shop_order' );
             $webhookUrl = get_site_url( null, 'index.php/wuunder/webhook?order=' . $orderId . '&token=' . $bookingToken );
 
