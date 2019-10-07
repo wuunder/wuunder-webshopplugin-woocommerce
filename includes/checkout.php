@@ -108,6 +108,17 @@ function prefix_wc_rest_prepare_order_object( $response, $object, $request ) {
     }
     $response->data['wuunder_preferred_service_level'] = $shipping_method_id;
 
+    $bookingTokenData = get_post_meta( $object->get_id(), '_wuunder_label_booking_token' );
+
+    if (count($bookingTokenData)) {
+        $bookingToken = $bookingTokenData[0];
+    } else {
+        $bookingToken = uniqid();
+        update_post_meta( $object->get_id(), '_wuunder_label_booking_token', $bookingToken );
+    }
+
+    $response->data['wuunder_booking_token'] = $bookingToken;
+
     return $response;
 }
 add_filter( 'woocommerce_rest_prepare_shop_order_object', 'prefix_wc_rest_prepare_order_object', 10, 3 );
