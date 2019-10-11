@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.7](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.7) - 2019-10-11
+
+### Added
+-   Support for value and weight via mywuunder import (REST API)
+
+
 ## [2.7.6](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.6) - 2019-10-07
 
 ### Added
