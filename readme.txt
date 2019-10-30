@@ -1,5 +1,5 @@
 === Wuunder Shipping Module ===
-Contributors: @wuunder
+Contributors: wuunder
 Tags: wuunder, shipping, module, woocommerce
 Requires at least: 4.6
 Tested up to: 4.7

@@ -7,7 +7,7 @@ function wcwp_parcelShopLocator()
     $apiKey = ( 'productie' == $status ? get_option( 'wc_wuunder_api' ) : get_option( 'wc_wuunder_test_api' ) );
 
     if( ! empty( $_POST['address'] ) ) {
-        $shipping_address = $_POST['address'];
+        $shipping_address = sanitize_text_field($_POST['address']);
     } else {
         $shipping_address =  '';
         $shipping_address .= ( ! empty(WC()->customer->get_shipping_address() )  ? WC()->customer->get_shipping_address()  . ' ' : '' );
@@ -43,7 +43,7 @@ function wcwp_getAddress() {
     $shipping_address = null;
 
     if(!empty($_POST['address'])) {
-        $shipping_address = $_POST['address'];
+        $shipping_address = sanitize_text_field($_POST['address']);
     } else {
 
         $shipping_address .= (!empty(WC()->customer->get_shipping_address())  ? WC()->customer->get_shipping_address()  . " " : "");
@@ -58,7 +58,6 @@ function wcwp_getAddress() {
 
 function wcwp_getParcelshopAddress() {
     $shipping_address = null;
-
     if(empty($_POST['parcelshop_id'])) {
         echo null;
     } else {
@@ -70,7 +69,7 @@ function wcwp_getParcelshopAddress() {
         $parcelshopRequest = $connector->getParcelshopById();
         $parcelshopConfig = new \Wuunder\Api\Config\ParcelshopConfig();
 
-        $parcelshopConfig->setId($_POST['parcelshop_id']);
+        $parcelshopConfig->setId(sanitize_text_field($_POST['parcelshop_id']));
 
         if ($parcelshopConfig->validate()) {
             $parcelshopRequest->setConfig($parcelshopConfig);

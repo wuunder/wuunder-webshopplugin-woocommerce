@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.8](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.8) - 2019-10-30
+
+### Added
+-   Support sanitize functions
+
+### Fixed
+-   Removed curl functions and use WP functions for getting filesize of images 
+
 ## [2.7.7](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.7) - 2019-10-11
 
 ### Added
