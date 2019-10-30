@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WooCommerce Wuunder
+ * Plugin Name: Wuunder for-woocommerce
  * Plugin URI: https://wearewuunder.com/wuunder-voor-webshops/
  * Description: Wuunder shipping plugin
  * Version: 2.7.7
@@ -95,16 +95,18 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
         }
 
         public function wcwp_webhook() {
-            wcwp_log( 'info', 'Test webhook' );
-            wcwp_log( 'info', $_REQUEST['order'] );
-            wcwp_log( 'info', $_REQUEST['token'] );
-
             if ( !isset($_REQUEST['order'] ) || !isset( $_REQUEST['token'] ) ) {
                 wp_redirect( '', 500 );
                 return;
             }
-            $orderId = $_REQUEST['order'];
-            $bookingToken = $_REQUEST['token'];
+            $orderId = sanitize_text_field($_REQUEST['order']);
+            $bookingToken = sanitize_text_field($_REQUEST['token']);
+
+            wcwp_log( 'info', 'Test webhook' );
+            wcwp_log( 'info', $orderId );
+            wcwp_log( 'info', $bookingToken );
+
+
             $data = json_decode(file_get_contents( 'php://input' ), true );
             $errorRedirect = true;
 

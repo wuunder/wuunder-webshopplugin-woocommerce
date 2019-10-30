@@ -33,8 +33,8 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             if ( 'error' == isset( $_GET['notice'] ) && $_GET['notice'] ) {
 
                 $class = 'notice notice-error';
-                $message = __( '<b>Het aanmaken van het label voor #' . $_GET['id'] . ' is mislukt</b>', 'woocommerce-wuunder' );
-                $errors = $_GET['error_melding'];
+                $message = __( '<b>Het aanmaken van het label voor #' . sanitize_text_field($_GET['id']) . ' is mislukt</b>', 'woocommerce-wuunder' );
+                $errors = sanitize_text_field($_GET['error_melding']);
                 $message .= '<ul style="margin:0 0 0 20px; padding:0; list-style:inherit;">';
                 foreach ( $errors as $error ) {
                     $message .= '<li>' . $error . '</li>';
@@ -46,7 +46,7 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             } elseif ( 'success' == isset( $_GET['notice'] ) && $_GET['notice'] ) {
 
                 $class = 'notice notice-success';
-                $message = __( 'Het verzendlabel voor #' . $_GET['id'] . ' is aangemaakt', 'woocommerce-wuunder' );
+                $message = __( 'Het verzendlabel voor #' . sanitize_text_field($_GET['id']) . ' is aangemaakt', 'woocommerce-wuunder' );
                 printf( '<div class="%1$s"><p>%2$s</p></div>', $class, $message );
 
             }
@@ -153,9 +153,9 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
          * Returns the user to the original order page with the redirect.
          */
         public function wcwp_generateBookingUrl() {
-            if (isset($_REQUEST['order']) && $_REQUEST['action'] === "bookorder") {
+            if (isset($_REQUEST['order']) && sanitize_text_field($_REQUEST['action']) === "bookorder") {
                 wcwp_log( 'info', 'Generating the booking url' );
-                $order_id = $_REQUEST['order'];
+                $order_id = sanitize_text_field($_REQUEST['order']);
 
                 $status = get_option( 'wc_wuunder_api_status' );
                 $apiKey = ( 'productie' == $status ? get_option( 'wc_wuunder_api' ) : get_option( 'wc_wuunder_test_api' ) );
@@ -379,31 +379,11 @@ if ( !class_exists( 'WC_Wuunder_Create' ) ) {
             // Assume failure.
             $result = -1;
 
-            $curl = curl_init( $url );
+            $response = wp_remote_get( $url );
+            $content_length = intval(wp_remote_retrieve_header( $response, 'content-length' ));
+            $status = intval(wp_remote_retrieve_response_code( $response));
 
-            // Issue a HEAD request and follow any redirects.
-            curl_setopt( $curl, CURLOPT_NOBODY, true );
-            curl_setopt( $curl, CURLOPT_HEADER, true );
-            curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
-//            curl_setopt( $curl, CURLOPT_USERAGENT, get_user_agent_string() );
-            curl_setopt( $curl, CURLOPT_TIMEOUT_MS, 1000 );
-
-            $data = curl_exec( $curl );
-            curl_close( $curl );
-
-            if ( $data ) {
-                $content_length = 'unknown';
-                $status = 'unknown';
-
-                if ( preg_match( '/^HTTP\/1\.[01] (\d\d\d)/', $data, $matches ) ) {
-                    $status = (int) $matches[1];
-                }
-
-                if ( preg_match( '/Content-Length: (\d+)/', $data, $matches ) ) {
-                    $content_length = (int) $matches[1];
-                }
-
+            if ( $response ) {
                 // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
                 if ( 200 == $status || ( $status > 300 && $status <= 308 ) ) {
                     $result = $content_length;

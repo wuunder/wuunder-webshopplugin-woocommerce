@@ -189,12 +189,12 @@ function wcwp_update_parcelshop_id($order_id)
 add_action('woocommerce_checkout_process', 'wcwp_check_parcelshop_selection');
 function wcwp_check_parcelshop_selection()
 {
-    if ('wuunder_parcelshop' === $_POST['shipping_method'][0]) {
+    if ('wuunder_parcelshop' === sanitize_text_field($_POST['shipping_method'][0])) {
         if (!$_POST['parcelshop_id']) {
             wc_add_notice(__('Kies eerst een <strong>parcelshop</strong>'), 'error');
         }
 
-        if ($_POST['shipping_country'] != $_POST['parcelshop_country']) {
+        if (!isset($_POST['shipping_country']) || $_POST['shipping_country'] != $_POST['parcelshop_country']) {
             wc_add_notice(__('Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong> '), 'error');
         }
     }
