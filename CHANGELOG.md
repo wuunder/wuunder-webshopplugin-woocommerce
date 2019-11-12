@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.9](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.9) - 2019-11-12
+
+### Added
+-   Marketplace assets and readme
+
 ## [2.7.8](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.8) - 2019-10-30
 
 ### Added
