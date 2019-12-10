@@ -194,7 +194,7 @@ function wcwp_check_parcelshop_selection()
             wc_add_notice(__('Kies eerst een <strong>parcelshop</strong>'), 'error');
         }
 
-        if (!isset($_POST['shipping_country']) || $_POST['shipping_country'] != $_POST['parcelshop_country']) {
+        if ($_POST['parcelshop_id'] && (!isset($_POST['shipping_country']) || $_POST['shipping_country'] != $_POST['parcelshop_country'])) {
             wc_add_notice(__('Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong> '), 'error');
         }
     }
