@@ -98,6 +98,9 @@ You can best contact us via info@wearewuunder.com
 
 == Changelog ==
 
+= 2.7.10 =
+* Shipping methods are taxable
+* 2nd address line will be send to wuunder with booking
 = 2.7.9 =
 * Support sanitize functions
 * changed curl functions to WP functions
