@@ -18,6 +18,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 -   Parcelshop error messages in checkout 
 -   Fixed sending company name in delivery address
 
+### Removed
+-   Legacy setting google api key
+
 
 ## [2.7.9](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.9) - 2019-11-12
 
