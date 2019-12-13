@@ -271,7 +271,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             } else if (isset($order_meta['_billing' . $suffix]) && !empty($order_meta['_billing' . $suffix][0])) {
                 return $order_meta['_billing' . $suffix][0];
             } else {
-                return '';
+                return null;
             }
         }
 
@@ -301,6 +301,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $deliveryAddress->setZipCode(str_replace(' ', '', $this->wcwp_get_customer_address_part($order_meta, '_postcode')));
             $deliveryAddress->setPhoneNumber($order_meta['_billing_phone'][0]);
             $deliveryAddress->setCountry($this->wcwp_get_customer_address_part($order_meta, '_country'));
+            $deliveryAddress->setBusiness($this->wcwp_get_customer_address_part($order_meta, '_company'));
             if ($deliveryAddress->validate()) {
                 return $deliveryAddress;
             } else {

@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fixed
 -   Parcelshop error messages in checkout 
+-   Fixed sending company name in delivery address
 
 
 ## [2.7.9](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.9) - 2019-11-12
