@@ -1,14 +1,14 @@
 <?php
 
-if ( !defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
     die;
 }
 
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins') ) ) ) {
+if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 
     function wc_wuunder_parcelshop_method()
     {
-        if ( !class_exists( 'WC_wuunder_parcelshop' ) ) {
+        if (!class_exists('WC_wuunder_parcelshop')) {
             class WC_wuunder_parcelshop extends WC_Shipping_Method
             {
                 /**
@@ -17,11 +17,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                  * @access public
                  * @return void
                  */
-                public function __construct( $instance_id = 0 ) {
+                public function __construct($instance_id = 0)
+                {
                     $this->id = 'wuunder_parcelshop';
-                    $this->instance_id = absint( $instance_id );
-                    $this->method_title = __( 'Wuunder Parcelshop' );
-                    $this->method_description = __( 'Laat klanten zelf een locatie kiezen om hun pakketje op te halen.' );
+                    $this->instance_id = absint($instance_id);
+                    $this->method_title = __('Wuunder Parcelshop');
+                    $this->method_description = __('Laat klanten zelf een locatie kiezen om hun pakketje op te halen.');
                     // $this->enabled            = ( 'yes' === $this->get_option( 'enabled') ) ? $this->get_option( 'enabled') : 'no';
                     $this->enabled = 'yes';
                     $this->title = 'Wuunder Parcelshop Locator';
@@ -37,9 +38,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         'postnl' => __("PostNL")
                     );
 
-                    // These are the options set by the user
-                    $this->cost = $this->get_option( 'cost' );
-                    $this->carriers = $this->get_option( 'select_carriers');
                     $this->init();
                 }
 
@@ -49,40 +47,58 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                  * @access public
                  * @return void
                  */
-                function init() {
+                function init()
+                {
                     // Load the settings API
                     $this->wcwp_init_form_fields(); // This is part of the settings API. Override the method to add your own settings
                     $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
+
+                    // These are the options set by the user
+                    $this->cost = $this->get_option('cost');
+                    $this->carriers = $this->get_option('select_carriers');
+                    $this->tax_status = $this->get_option('tax_status');
+
                     // Save settings in admin if you have any defined
-                    add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
-                    update_option( 'default_carrier_list', $this->defaultCarriers );
+                    add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
+                    update_option('default_carrier_list', $this->defaultCarriers);
                 }
 
-                function wcwp_init_form_fields() {
+                function wcwp_init_form_fields()
+                {
                     $this->form_fields = array(
-                        'select_carriers'   => array(
-                            'title'             => __('Welke Carriers', 'woocommerce'),
-                            'type'              => 'multiselect',
-                            'description'       => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen). Als geen selectie wordt gemaakt, dan zijn alle carriers geselecteerd.', 'woocommerce'),
-                            'options'           => $this->defaultCarriers
+                        'select_carriers' => array(
+                            'title' => __('Welke Carriers', 'woocommerce'),
+                            'type' => 'multiselect',
+                            'description' => __('Geef aan uit welke carriers de klant kan kiezen (cmd/ctrl + muis om meerdere te kiezen). Als geen selectie wordt gemaakt, dan zijn alle carriers geselecteerd.', 'woocommerce'),
+                            'options' => $this->defaultCarriers
                         )
                     );
 
                     $this->instance_form_fields = array(
-                        'cost'      => array(
-                            'title'         => __( 'Kosten', 'woocommerce' ),
-                            'type'          => 'number',
-                            'description'   => __( 'Kosten voor gebruik Parcelshop pick-up', 'woocommerce' ),
-                            'default'       => 3.5,
-                            'desc_tip'      => true
+                        'cost' => array(
+                            'title' => __('Kosten', 'woocommerce'),
+                            'type' => 'number',
+                            'description' => __('Kosten voor gebruik Parcelshop pick-up', 'woocommerce'),
+                            'default' => 3.5,
+                            'desc_tip' => true
                         ),
                         'free_from' => array(
-                            'title'         => __( 'Gratis verzending vanaf', 'woocommerce' ),
-                            'type'          => 'number',
-                            'description'   => __( 'Vanaf welk bestelbedrag is de verzending gratis. Stel 0 in voor nooit.', 'woocommerce' ),
-                            'default'       => 50.00,
-                            'desc_tip'      => true
-                        )
+                            'title' => __('Gratis verzending vanaf', 'woocommerce'),
+                            'type' => 'number',
+                            'description' => __('Vanaf welk bestelbedrag is de verzending gratis. Stel 0 in voor nooit.', 'woocommerce'),
+                            'default' => 50.00,
+                            'desc_tip' => true
+                        ),
+                        'tax_status' => array(
+                            'title' => __('Tax status', 'woocommerce'),
+                            'type' => 'select',
+                            'class' => 'wc-enhanced-select',
+                            'default' => 'taxable',
+                            'options' => array(
+                                'taxable' => __('Taxable', 'woocommerce'),
+                                'none' => _x('None', 'Tax status', 'woocommerce'),
+                            ),
+                        ),
                     );
                 }
 
@@ -93,32 +109,42 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                  * @param mixed $package
                  * @return void
                  */
-                public function calculate_shipping( $package = array() ) {
-                    $cost = $this->get_option( 'cost' );
-                    if ( $this->get_option( 'free_from' ) > 0 && $package['contents_cost'] >= $this->get_option( 'free_from' ) ) {
+                public function calculate_shipping($package = array())
+                {
+                    $cost = $this->get_option('cost');
+                    if ($this->get_option('free_from') > 0 && $package['contents_cost'] >= $this->get_option('free_from')) {
                         $cost = 0;
                     }
+
+                    if (!isset($this->tax_status) || $this->tax_status == 'none') {
+                        $tax = false;
+                    } else {
+                        $tax = '';
+                    }
+
                     $rate = array(
-                        'id'        => $this->id,
-                        'label'     => $this->title,
-                        'cost'      => $cost,
-                        'calc_tax'  => 'per_item'
+                        'id' => $this->id,
+                        'label' => $this->title,
+                        'cost' => $cost,
+                        'taxes' => $tax,
+                        'calc_tax' => 'per_order'
                     );
 
                     // Register the rate
-                    $this->add_rate( $rate );
+                    $this->add_rate($rate);
                 }
 
             }
         }
     }
 
-    add_action( 'woocommerce_shipping_init', 'wc_wuunder_parcelshop_method' );
+    add_action('woocommerce_shipping_init', 'wc_wuunder_parcelshop_method');
 
-    function wuunder_parcelshop_locator( $methods ) {
+    function wuunder_parcelshop_locator($methods)
+    {
         $methods['wuunder_parcelshop'] = 'WC_wuunder_parcelshop';
         return $methods;
     }
 
-    add_filter( 'woocommerce_shipping_methods', 'wuunder_parcelshop_locator' );
+    add_filter('woocommerce_shipping_methods', 'wuunder_parcelshop_locator');
 }

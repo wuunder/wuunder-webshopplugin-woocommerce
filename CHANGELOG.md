@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.10](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.10) - 2019-12-11
+
+### Added
+-   Wuunder shipping methods are taxable
+-   2nd address line is send to wuunder with booking
+
+### Fixed
+-   Parcelshop error messages in checkout 
+-   Fixed sending company name in delivery address
+
+### Removed
+-   Legacy setting google api key
+
+
 ## [2.7.9](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.9) - 2019-11-12
 
 ### Added

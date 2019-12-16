@@ -138,11 +138,6 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
                         'options'   => $mappedStatuses,
                         'id'        => 'wc_wuunder_post_booking_status'
                     ),
-                    'google_maps_api_key' => array(
-                        'name'      => __( 'Google maps api key, voor parcelshoppicker:', 'woocommerce-wuunder' ),
-                        'type'      => 'text',
-                        'id'        => 'wc_wuunder_google_maps_api_key'
-                    ),
                     'default_image_base64' => array(
                         'name'      => __( 'Standaard order image (base64 string), Leeg voor geen:', 'woocommerce-wuunder' ),
                         'type'      => 'text',
