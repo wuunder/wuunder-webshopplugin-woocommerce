@@ -2,7 +2,7 @@
 Contributors: wuunder
 Tags: wuunder, shipping, module, woocommerce
 Requires at least: 4.6
-Tested up to: 5.2.4
+Tested up to: 5.3.2
 Stable tag: 4.3
 Requires PHP: 5.0
 License: GPLv2 or later
