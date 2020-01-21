@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.11](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.11) - 2020-01-21
+
+### Added
+- New tag for Wordpress marketplace
+### Removed
+- Asset screenshots/icons
+
 ## [2.7.10](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.10) - 2019-12-11
 
 ### Added
