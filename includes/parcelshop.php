@@ -9,11 +9,21 @@ function wcwp_parcelShopLocator()
     if( ! empty( $_POST['address'] ) ) {
         $shipping_address = sanitize_text_field($_POST['address']);
     } else {
-        $shipping_address =  '';
-        $shipping_address .= ( ! empty(WC()->customer->get_shipping_address() )  ? WC()->customer->get_shipping_address()  . ' ' : '' );
-        $shipping_address .= ( ! empty(WC()->customer->get_shipping_city() )     ? WC()->customer->get_shipping_city()     . ' ' : '' );
-        $shipping_address .= ( ! empty(WC()->customer->get_shipping_postcode() ) ? WC()->customer->get_shipping_postcode() . ' ' : '' );
-        $shipping_address .= ( ! empty(WC()->customer->get_shipping_country() )  ? WC()->customer->get_shipping_country()  . ' ' : '' );
+
+        $dest_address = get_option( 'woocommerce_ship_to_destination' );
+        if ($dest_address === 'shipping') {
+            $shipping_address =  '';
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_address() )  ? WC()->customer->get_shipping_address()  . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_city() )     ? WC()->customer->get_shipping_city()     . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_postcode() ) ? WC()->customer->get_shipping_postcode() . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_country() )  ? WC()->customer->get_shipping_country()  . ' ' : '' );
+        } else if ($dest_address === 'billing') {
+            $shipping_address =  '';
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_address() )  ? WC()->customer->get_billing_address()  . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_city() )     ? WC()->customer->get_billing_city()     . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_postcode() ) ? WC()->customer->get_billing_postcode() . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_country() )  ? WC()->customer->get_billing_country()  . ' ' : '' );
+        }
     }
 
     $connector = new Wuunder\Connector( $apiKey, $status == 'productie' ? false : true);
@@ -45,11 +55,20 @@ function wcwp_getAddress() {
     if(!empty($_POST['address'])) {
         $shipping_address = sanitize_text_field($_POST['address']);
     } else {
-
-        $shipping_address .= (!empty(WC()->customer->get_shipping_address())  ? WC()->customer->get_shipping_address()  . " " : "");
-        $shipping_address .= (!empty(WC()->customer->get_shipping_city())     ? WC()->customer->get_shipping_city()     . " " : "");
-        $shipping_address .= (!empty(WC()->customer->get_shipping_postcode()) ? WC()->customer->get_shipping_postcode() . " " : "");
-        $shipping_address .= (!empty(WC()->customer->get_shipping_country())  ? WC()->customer->get_shipping_country()  . " " : "");
+        $dest_address = get_option( 'woocommerce_ship_to_destination' );
+        if ($dest_address === 'shipping') {
+            $shipping_address =  '';
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_address() )  ? WC()->customer->get_shipping_address()  . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_city() )     ? WC()->customer->get_shipping_city()     . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_postcode() ) ? WC()->customer->get_shipping_postcode() . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_shipping_country() )  ? WC()->customer->get_shipping_country()  . ' ' : '' );
+        } else if ($dest_address === 'billing') {
+            $shipping_address =  '';
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_address() )  ? WC()->customer->get_billing_address()  . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_city() )     ? WC()->customer->get_billing_city()     . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_postcode() ) ? WC()->customer->get_billing_postcode() . ' ' : '' );
+            $shipping_address .= ( ! empty(WC()->customer->get_billing_country() )  ? WC()->customer->get_billing_country()  . ' ' : '' );
+        }
     }
 
     echo json_encode($shipping_address);
