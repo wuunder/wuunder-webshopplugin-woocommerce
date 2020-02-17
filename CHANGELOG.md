@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+
+## [2.7.12](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.12) - 2020-02-17
+
+### Added
+- Support for WC switch destination address billing/shippinh
+
 ## [2.7.11](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.11) - 2020-01-21
 
 ### Added
