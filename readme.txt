@@ -97,7 +97,8 @@ You can best contact us via info@wearewuunder.com
 7. Eenvoudig labels printen
 
 == Changelog ==
-
+= 2.7.13 =
+* Support order without Shipping method
 = 2.7.10 =
 * Shipping methods are taxable
 * 2nd address line will be send to wuunder with booking

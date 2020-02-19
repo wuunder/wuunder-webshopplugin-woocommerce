@@ -106,7 +106,9 @@ function prefix_wc_rest_prepare_order_object($response, $object, $request)
     try {
         $order = new WC_Order($object->get_id());
         $shipping_object = $order->get_items('shipping');
-        $shipping_method_id = wcwp_get_filter_from_shippingmethod(reset($shipping_object)->get_method_id());
+        if (count($shipping_method) > 0) {
+            $shipping_method_id = wcwp_get_filter_from_shippingmethod(reset($shipping_object)->get_method_id());
+        }
     } catch (Exception $e) {
 
     }
