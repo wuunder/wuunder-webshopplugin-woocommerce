@@ -97,6 +97,8 @@ You can best contact us via info@wearewuunder.com
 7. Eenvoudig labels printen
 
 == Changelog ==
+= 2.7.14 =
+* Support checkout updating from WC 3.9.x and >
 = 2.7.13 =
 * Support order without Shipping method
 = 2.7.10 =
