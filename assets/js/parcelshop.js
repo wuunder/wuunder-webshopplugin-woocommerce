@@ -23,7 +23,7 @@ function initParcelshopLocator(url, apiUrl, carrierList, chooseParcelshopTxt, ch
         parcelshopShippingMethodElem.onchange = _onShippingMethodChange;
         _onShippingMethodChange();
     }
-    console.log(window.parent.document.getElementById('parcelshop_id').value);
+
     jQuery( 'body' ).on( 'updated_checkout', function() {
         _onShippingMethodChange();
     });
