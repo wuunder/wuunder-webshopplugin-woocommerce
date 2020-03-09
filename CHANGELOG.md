@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.14](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.14) - 2020-03-06
+
+### Added
+- Support checkout updating from WC 3.9.x and >
+
 ## [2.7.13](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.13) - 2020-02-19
 
 ### Added

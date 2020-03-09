@@ -2,7 +2,7 @@
 Contributors: wuunder
 Tags: wuunder, shipping, module, woocommerce
 Requires at least: 4.6
-Tested up to: 5.3.2
+Tested up to: 5.4
 Stable tag: 4.3
 Requires PHP: 5.0
 License: GPLv2 or later
@@ -97,6 +97,8 @@ You can best contact us via info@wearewuunder.com
 7. Eenvoudig labels printen
 
 == Changelog ==
+= 2.7.14 =
+* Support checkout updating from WC 3.9.x and >
 = 2.7.13 =
 * Support order without Shipping method
 = 2.7.10 =

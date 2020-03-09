@@ -18,22 +18,28 @@ function initParcelshopLocator(url, apiUrl, carrierList, chooseParcelshopTxt, ch
     availableCarrierList = carrierList;
     chooseParcelshopText = chooseParcelshopTxt;
     chosenParcelshopText = chosenParcelshopTxt;
-
+    
     if (parcelshopShippingMethodElem) {
         parcelshopShippingMethodElem.onchange = _onShippingMethodChange;
         _onShippingMethodChange();
     }
+
+    jQuery( 'body' ).on( 'updated_checkout', function() {
+        _onShippingMethodChange();
+    });
 }
 
 function _onShippingMethodChange() {
-    if (parcelshopShippingMethodElem.checked) {
-        var container = document.createElement('tr');
-        container.className += "chooseParcelshop";
-        container.innerHTML = '<td></td><td><div id="parcelshopsSelectedContainer" onclick="_showParcelshopLocator()"><a href="#/" id="selectParcelshop">' + chooseParcelshopText + '</a></div></td>';
-        // window.parent.document.getElementsByClassName('shipping')[0].appendChild(container);
-        window.parent.document.getElementsByClassName('woocommerce-shipping-totals')[0].parentNode.insertBefore(container, window.parent.document.getElementsByClassName('woocommerce-shipping-totals shipping')[0].nextSibling);
+    if (document.getElementById('shipping_method_0_wuunder_parcelshop').checked) {
+        if (window.parent.document.getElementsByClassName('chooseParcelshop').length < 1) {
+            var container = document.createElement('tr');
+            container.className += "chooseParcelshop";
+            container.innerHTML = '<td></td><td><div id="parcelshopsSelectedContainer" onclick="_showParcelshopLocator()"><a href="#/" id="selectParcelshop">' + chooseParcelshopText + '</a></div></td>';
+            // window.parent.document.getElementsByClassName('shipping')[0].appendChild(container);
+            window.parent.document.getElementsByClassName('woocommerce-shipping-totals')[0].parentNode.insertBefore(container, window.parent.document.getElementsByClassName('woocommerce-shipping-totals shipping')[0].nextSibling);
 
-        _printParcelshopAddress();
+            _printParcelshopAddress();
+        }
     } else {
         var containerElems = window.parent.document.getElementsByClassName('chooseParcelshop');
         if (containerElems.length) {
