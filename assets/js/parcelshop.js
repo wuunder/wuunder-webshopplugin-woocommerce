@@ -27,6 +27,8 @@ function initParcelshopLocator(url, apiUrl, carrierList, chooseParcelshopTxt, ch
     jQuery( 'body' ).on( 'updated_checkout', function() {
         _onShippingMethodChange();
     });
+
+    _getSelectedParcelshopId();
 }
 
 function _onShippingMethodChange() {
@@ -92,6 +94,7 @@ function _openIframe() {
     }
 
     function onServicePointSelected(messageData) {
+        _setSelectedParcelshopId(messageData.parcelshopId);
         window.parent.document.getElementById('parcelshop_id').value = messageData.parcelshopId;
         _loadSelectedParcelshopAddress(messageData.parcelshopId);
         removeServicePointPicker();
@@ -117,6 +120,27 @@ function _openIframe() {
     }
 
     window.addEventListener('message', onWindowMessage, false);
+}
+
+function _setSelectedParcelshopId(id) {
+    jQuery.post(baseUrl + "admin-ajax.php", {
+        action: 'wuunder_parcelshoplocator_set_selected_parcelshop',
+        parcelshop_id: id
+    }, function (data) {
+        
+    });
+}
+
+function _getSelectedParcelshopId() {
+    jQuery.post(baseUrl + "admin-ajax.php", {
+        action: 'wuunder_parcelshoplocator_get_selected_parcelshop',
+    }, function (data) {
+        data = JSON.parse(data);
+        if (data['parcelshop_id'] !== undefined && data['parcelshop_id'] !== null) {
+            window.parent.document.getElementById('parcelshop_id').value = data['parcelshop_id'];
+            _loadSelectedParcelshopAddress(data['parcelshop_id']);
+        }
+    });
 }
 
 function _loadSelectedParcelshopAddress(id) {

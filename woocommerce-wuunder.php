@@ -3,7 +3,7 @@
  * Plugin Name: Wuunder for-woocommerce
  * Plugin URI: https://wearewuunder.com/wuunder-voor-webshops/
  * Description: Wuunder shipping plugin
- * Version: 2.7.14
+ * Version: 2.7.15
  * Author: Wuunder
  * Author URI: http://wearewuunder.com
  */
@@ -57,7 +57,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
         public static $plugin_path;
         public static $plugin_basename;
 
-        const VERSION = '2.7.14';
+        const VERSION = '2.7.15';
 
         public function __construct() {
 
@@ -76,6 +76,10 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_parcelshop_address', 'wcwp_getParcelshopAddress');
             add_action('wp_ajax_wuunder_parcelshoplocator_get_address', 'wcwp_getAddress');
             add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_address', 'wcwp_getAddress');
+            add_action('wp_ajax_wuunder_parcelshoplocator_set_selected_parcelshop', 'wcwp_setSelectedParcelshop');
+            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_set_selected_parcelshop', 'wcwp_setSelectedParcelshop');
+            add_action('wp_ajax_wuunder_parcelshoplocator_get_selected_parcelshop', 'wcwp_getSelectedParcelshop');
+            add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_selected_parcelshop', 'wcwp_getSelectedParcelshop');
 
             add_action( 'wp_loaded', function () {
                 if ( false !== strpos( $_SERVER['REQUEST_URI'], '/wuunder/webhook' ) && 'POST' === $_SERVER['REQUEST_METHOD'] ) {

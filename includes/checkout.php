@@ -184,6 +184,7 @@ function wcwp_update_parcelshop_id($order_id)
 {
     if (!empty($_POST['parcelshop_id'])) {
         update_post_meta($order_id, 'parcelshop_id', sanitize_text_field($_POST['parcelshop_id']));
+        WC()->session->__unset( 'WCWP_SELECTED_PARCELSHOP_ID' );
     }
 }
 

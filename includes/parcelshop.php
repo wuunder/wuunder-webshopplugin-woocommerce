@@ -76,6 +76,7 @@ function wcwp_getAddress() {
 }
 
 function wcwp_getParcelshopAddress() {
+    
     $shipping_address = null;
     if(empty($_POST['parcelshop_id'])) {
         echo null;
@@ -104,4 +105,21 @@ function wcwp_getParcelshopAddress() {
     }
 
     exit;
+}
+
+function wcwp_setSelectedParcelshop()
+{
+    if (!empty($_POST['parcelshop_id'])) {
+        WC()->session->set('WCWP_SELECTED_PARCELSHOP_ID', $_POST['parcelshop_id']);
+    }
+}
+
+function wcwp_getSelectedParcelshop()
+{
+    if (!empty(WC()->session->get( 'WCWP_SELECTED_PARCELSHOP_ID' ))) {
+        echo json_encode(array('parcelshop_id' => WC()->session->get( 'WCWP_SELECTED_PARCELSHOP_ID' )));
+    } else {
+        echo json_encode(array('parcelshop_id' => null));
+    }
+    wp_die();
 }
