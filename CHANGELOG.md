@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.15](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.15) - 2020-03-17
+
+### Added
+- Save selected parcelshop over page refresh
+
 ## [2.7.14](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.14) - 2020-03-06
 
 ### Added
