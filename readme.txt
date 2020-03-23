@@ -97,6 +97,8 @@ You can best contact us via info@wearewuunder.com
 7. Eenvoudig labels printen
 
 == Changelog ==
+= 2.7.16 =
+* Fix notify php warnings
 = 2.7.15 =
 * Load selected parcelshop on refresh
 = 2.7.14 =
