@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.16](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.16) - 2020-03-23
+
+### Fixed
+- Fixed some PHP warnings in hook method code
+
 ## [2.7.15](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.15) - 2020-03-17
 
 ### Added
