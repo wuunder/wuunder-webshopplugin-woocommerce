@@ -74,14 +74,14 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
 
             echo '<div style="background-color:#fff; border:1px solid #CCCCCC; margin-bottom:10px; padding:10px;">
 	    		<img src="' . Woocommerce_Wuunder::$plugin_url . 'assets/images/wuunder_logo.png" style="float:left; display:inline-block; padding:20px 30px 20px 20px; width:80px;">
-				<h4>Hallo, wij zijn Wuunder</h4>
-				<p>En we maken het versturen en ontvangen van documenten, pakketten en pallets makkelijk en voordelig. Met ons platform boek je een zending of retour via mobiel, Mac, PC en webshop plug-in. Wij vergelijken de bekende vervoerders, kiezen de beste prijs en halen de zending bij jou of iemand anders op. En daarna volg je de zending in het overzichtsscherm en klik je op de track & trace link voor meer details. Een foto sturen, vraag stellen of iets toelichten? Dat doe je via de Wuunder-chat. Wel zo persoonlijk.</p>
-				<p>Meer weten? Bezoek onze website <a href="http://www.wearewuunder.com/" target="_blank">www.wearewuunder.com</a> of stuur een e-mail naar <a href="mailto:info@WeAreWuunder.com" target="_blank">Info@WeAreWuunder.com</a>.</p>
+				<h4>' . __('Hello, we are Wuunder', 'woocommerce-wuunder') . '</h4>
+				<p>' . __('and we make sending and receiving parcels easy and cheap. With our platform you can book via mobile, Mac, PC and webshop plug-ins.', 'woocommerce-wuunder') . '</p>
+				<p>' . __('Want to know more? Visit our website', 'woocommerce-wuunder') . ' <a href="http://www.wearewuunder.com/" target="_blank">www.wearewuunder.com</a> ' . __('or send an e-mail to', 'woocommerce-wuunder') . ' <a href="mailto:info@WeAreWuunder.com" target="_blank">Info@WeAreWuunder.com</a>.</p>
             </div>';
 
             woocommerce_admin_fields( self::wcwp_get_settings() );
-            echo '<h1>Afhaaladressen</h1>';
-            echo '<p>Op onderstaande adressen worden je zendingen opgehaald of retouren weer afgeleverd. Gebruik de Bedrijfsnaam, contactpersoon en telefoonnummer waar de chauffeur van de vervoerder terecht kan met vragen. Naar het e-mail adres dat je hier gebruikt sturen we ook de verzendlabels mocht je deze niet willen downloaden via WooCommerce. Gebruik voor retouren de knop in het scherm met de “bestellingen”.</p>';
+            echo '<h1>' . __('Pickupaddresses', 'woocommerce-wuunder') . '</h1>';
+            echo '<p>' . __('On this address your shipment will be picked-up or send back to.', 'woocommerce-wuunder') . '</p>';
             echo '<div class="row" style="overflow:hidden;">';
             echo '<div class="address">';
             woocommerce_admin_fields(self::wcwp_get_address() );
@@ -107,13 +107,13 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
 	        $settings =
                 array(
                     'section_title'     => array(
-                        'name'      => __( 'Wuunder instellingen', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Wuunder settings', 'woocommerce-wuunder' ),
                         'type'      => 'title',
-                        'desc'      => 'Algemene instellingen voor wuunder',
+                        'desc'      => __('General settings', 'woocommerce-wuunder' ),
                         'id'        => 'wc_wuunder_section_title'
                     ),
                     'api'               => array(
-                        'name'      => __( 'Live / productie API Key', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Live / production API Key', 'woocommerce-wuunder' ),
                         'type'      => 'text',
                         'id'        => 'wc_wuunder_api'
                     ),
@@ -125,10 +125,10 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
                     'api_status'        => array(
                         'name'      => __( 'Testmode', 'woocommerce-wuunder' ),
                         'type'      => 'select',
-                        'desc'      => __( 'Ja = Test / staging, Nee = Live / productie', 'woocommerce-retailer' ),
+                        'desc'      => __( 'Yes = Test / staging, No = Live / production', 'woocommerce-wuunder' ),
                         'options'   => array(
-                            'staging'   => __( 'Ja', 'woocommerce-wuunder' ),
-                            'productie' => __( 'Nee', 'woocommerce-wuunder' )
+                            'staging'   => __( 'Yes', 'woocommerce-wuunder' ),
+                            'productie' => __( 'No', 'woocommerce-wuunder' )
                         ),
                         'id'        => 'wc_wuunder_api_status'
                     ),
@@ -139,7 +139,7 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
                         'id'        => 'wc_wuunder_post_booking_status'
                     ),
                     'default_image_base64' => array(
-                        'name'      => __( 'Standaard order image (base64 string), Leeg voor geen:', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Default order image (base64 string), Empty for none:', 'woocommerce-wuunder' ),
                         'type'      => 'text',
                         'id'        => 'wc_wuunder_default_image_base64'
                     ),
@@ -171,46 +171,46 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
                         'id'        => 'wc_wuunder_section_title'
                     ),
                     'mapping_method_1'  => array(
-                        'name'      => __( 'Mapping verzendmethode #1', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping shippingmethod #1', 'woocommerce-wuunder' ),
                         'type'      => 'select',
                         'options'   => $options,
                         'id'        => 'wc_wuunder_mapping_method_1'
                     ),
                     'mapping_filter_1'  => array(
-                        'name'      => __( 'Mapping filternaam #1', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping filtername #1', 'woocommerce-wuunder' ),
                         'type'      => 'text',
                         'id'        => 'wc_wuunder_mapping_filter_1'
                     ),
                     'mapping_method_2'  => array(
-                        'name'      => __( 'Mapping verzendmethode #2', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping shippingmethod #2', 'woocommerce-wuunder' ),
                         'type'      => 'select',
                         'options'   => $options,
                         'id'        => 'wc_wuunder_mapping_method_2'
                     ),
                     'mapping_filter_2'  => array(
-                        'name'      => __( 'Mapping filternaam #2', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping filtername #2', 'woocommerce-wuunder' ),
                         'type'      => 'text',
                         'id'        => 'wc_wuunder_mapping_filter_2'
                     ),
                     'mapping_method_3'  => array(
-                        'name'      => __( 'Mapping verzendmethode #3', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping shippingmethod #3', 'woocommerce-wuunder' ),
                         'type'      => 'select',
                         'options'   => $options,
                         'id'        => 'wc_wuunder_mapping_method_3'
                     ),
                     'mapping_filter_3'  => array(
-                        'name'      => __( 'Mapping filternaam #3', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping filtername #3', 'woocommerce-wuunder' ),
                         'type'      => 'text',
                         'id'        => 'wc_wuunder_mapping_filter_3'
                     ),
                     'mapping_method_4'  => array(
-                        'name'      => __( 'Mapping verzendmethode #4', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping shippingmethod #4', 'woocommerce-wuunder' ),
                         'type'      => 'select',
                         'options'   => $options,
                         'id'        => 'wc_wuunder_mapping_method_4'
                     ),
                     'mapping_filter_4'  => array(
-                        'name'      => __( 'Mapping filternaam #4', 'woocommerce-wuunder' ),
+                        'name'      => __( 'Mapping filtername #4', 'woocommerce-wuunder' ),
                         'type'      => 'text',
                         'id'        => 'wc_wuunder_mapping_filter_4'
                     ),
@@ -227,61 +227,60 @@ if (!class_exists('WC_Wuunder_Settings' ) ) {
             $settings =
                 array(
                     'section_title_1' => array(
-                        'name'  => __( 'Standaard afhaaladres', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Default pickupaddress', 'woocommerce-wuunder' ),
                         'type'  => 'title',
                         'desc'  => 'Adres hoofdkantoor',
                         'id'    => 'wc_wuunder_section_title'
                     ),
                     'company'       => array(
-                        'name'  => __( 'Bedrijfsnaam', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Company name', 'woocommerce-wuunder' ),
                         'type'  => 'text',
                         'id'    => 'wc_wuunder_company_name'
                     ),
                     'firstname'     => array(
-                        'name'  => __( 'Voornaam', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Firstname', 'woocommerce-wuunder' ),
                         'type'  => 'text',
                         'id'    => 'wc_wuunder_company_firstname'
                     ),
                     'lastname'      => array(
-                        'name'  => __( 'Achternaam', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Lastname', 'woocommerce-wuunder' ),
                         'type'  => 'text',
                         'id'    => 'wc_wuunder_company_lastname'
                     ),
                     'email'         => array(
-                        'name'  => __( 'Email', 'woocommerce-wuunder' ),
+                        'name'  => __( 'E-mail', 'woocommerce-wuunder' ),
                         'type'  => 'email',
                         'id'    => 'wc_wuunder_company_email'
                     ),
                     'phone'         => array(
-                        'name'  => __( 'Telefoonnummer', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Phonenumber', 'woocommerce-wuunder' ),
                         'type'  => 'text',
-                        'desc'  => __( 'Telefoonnummer inclusief landnummer, bv NL +31612345678', 'woocommerce-wuunder' ),
+                        'desc'  => __( 'Phonenumber including land prefix: NL +31612345678', 'woocommerce-wuunder' ),
                         'id'    => 'wc_wuunder_company_phone'
                     ),
                     'street'        => array(
-                        'name'  => __( 'Straat', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Streetname', 'woocommerce-wuunder' ),
                         'type'  => 'text',
                         'id'    => 'wc_wuunder_company_street'
                     ),
                     'housenumber'   => array(
-                        'name'  => __( 'Huisnummer', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Housenumber', 'woocommerce-wuunder' ),
                         'type'  => 'number',
                         'id'    => 'wc_wuunder_company_housenumber'
                     ),
                     'postcode'      => array(
-                        'name'  => __( 'Postcode', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Zipcode', 'woocommerce-wuunder' ),
                         'type'  => 'text',
-                        'desc'  => __( '1234AB', 'woocommerce-wuunder' ),
                         'id'    => 'wc_wuunder_company_postode'
                     ),
                     'city'          => array(
-                        'name'  => __( 'Plaats', 'woocommerce-wuunder' ),
+                        'name'  => __( 'Locality', 'woocommerce-wuunder' ),
                         'type'  => 'text',
                         'id'    => 'wc_wuunder_company_city'
                     ),
                     'country'       => array(
-                        'name'  => __( 'Landcode', 'woocommerce-wuunder' ),
-                        'desc'  => 'Landcode in ISO 3166-1 alpha-2 formaat, bv NL',
+                        'name'  => __( 'Landcode ISO-2', 'woocommerce-wuunder' ),
+                        'desc'  => __( 'Landcode in ISO 3166-1 alpha-2 format: NL', 'woocommerce-wuunder' ),
                         'type'  => 'text',
                         'id'    => 'wc_wuunder_company_country'
                     ),
