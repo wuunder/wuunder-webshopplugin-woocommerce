@@ -23,7 +23,7 @@ msgid "Pickup in parcelshop"
 msgstr "Ophalen in parcelshop"
 
 #: includes/checkout.php:197
-msgid "197 First choose a <strong>parcelshop</strong>"
+msgid "First choose a <strong>parcelshop</strong>"
 msgstr "Kies eerst een <strong>pakketpunt</strong>"
 
 #: includes/checkout.php:201
