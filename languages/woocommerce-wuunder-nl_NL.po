@@ -2,22 +2,178 @@
 # This file is distributed under the same license as the Development (4.4.x) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-09-18 13:03+0200\n"
+"PO-Revision-Date: 2020-04-09 11:34+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.3\n"
 "Project-Id-Version: Development (4.4.x)\n"
 "POT-Creation-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
 
-#: includes/checkout.php:45
+#: includes/checkout.php:46
 msgid "Click here to select a parcelshop"
 msgstr "Klik hier om een parcelshop te kiezen"
 
-#: includes/checkout.php:46
+#: includes/checkout.php:47
 msgid "Pickup in parcelshop"
 msgstr "Ophalen in parcelshop"
+
+#: includes/checkout.php:197
+msgid "197 First choose a <strong>parcelshop</strong>"
+msgstr "Kies eerst een <strong>pakketpunt</strong>"
+
+#: includes/checkout.php:201
+msgid "The <strong>shipping country</strong> must match with <strong>the parcelshop country</strong>"
+msgstr "Het <strong>pakketpunt en het verzendadres</strong> moeten zich in hetzelfde land bevinden"
+
+#: includes/wcwuunder-settings.php:77
+msgid "Hello, we are Wuunder"
+msgstr "Hallo, wij zijn Wuunder"
+
+#: includes/wcwuunder-settings.php:78
+msgid "and we make sending and receiving parcels easy and cheap. With our platform you can book via mobile, Mac, PC and webshop plug-ins."
+msgstr "en we maken het verzenden en ontvangen van pakketten gemakkelijk en goedkoop. Met ons platform kan je boeken via je mobiel, Mac, PC en webshop plug-ins."
+
+#: includes/wcwuunder-settings.php:79
+msgid "Want to know more? Visit our website"
+msgstr "Meer weten? Bezoek onze website"
+
+#: includes/wcwuunder-settings.php:79
+msgid "or send an e-mail to"
+msgstr "of verstuur een e-mail naar"
+
+#: includes/wcwuunder-settings.php:83
+msgid "Pickupaddresses"
+msgstr "Afhaaladressen"
+
+#: includes/wcwuunder-settings.php:84
+msgid "On this address your shipment will be picked-up or send back to."
+msgstr "Op dit adress worden je zendingen opgehaald of teruggestuurd."
+
+#: includes/wcwuunder-settings.php:110
+msgid "Wuunder settings"
+msgstr "Wuunder instellingen"
+
+#: includes/wcwuunder-settings.php:116
+msgid "Live / production API Key"
+msgstr "Live / productie API sleutel"
+
+#: includes/wcwuunder-settings.php:112
+msgid "General settings"
+msgstr "Algemene instellingen"
+
+#: includes/wcwuunder-settings.php:121
+msgid "Test / staging API Key"
+msgstr "Test / staging API Sleutel"
+
+#: includes/wcwuunder-settings.php:126
+msgid "Testmode"
+msgstr "Testmodus"
+
+#: includes/wcwuunder-settings.php:128
+msgid "Yes = Test / staging, No = Live / production"
+msgstr "Ja = Test / staging, Nee = Live / productie"
+
+#: includes/wcwuunder-settings.php:130
+msgid "Yes"
+msgstr "Ja"
+
+#: includes/wcwuunder-settings.php:131
+msgid "No"
+msgstr "Nee"
+
+#: includes/wcwuunder-settings.php:136
+msgid "Set order status after booking to:"
+msgstr "Zet de status van de bestelling na boeken op:"
+
+#: includes/wcwuunder-settings.php:142
+msgid "Default order image (base64 string), Empty for none:"
+msgstr "Standaard afbeelding voor de bestelling (base64 string), laat leeg voor geen:"
+
+#: includes/wcwuunder-settings.php:174
+msgid "Mapping shippingmethod #1"
+msgstr "Mapping verzendmethode #1"
+
+#: includes/wcwuunder-settings.php:180
+msgid "Mapping filtername #1"
+msgstr "Mapping filternaam #1"
+
+#: includes/wcwuunder-settings.php:185
+msgid "Mapping shippingmethod #2"
+msgstr "Mapping verzendmethode #2"
+
+#: includes/wcwuunder-settings.php:191
+msgid "Mapping filtername #2"
+msgstr "Mapping filternaam #2"
+
+#: includes/wcwuunder-settings.php:196
+msgid "Mapping shippingmethod #3"
+msgstr "Mapping verzendmethode #3"
+
+#: includes/wcwuunder-settings.php:202
+msgid "Mapping filtername #3"
+msgstr "Mapping filternaam #3"
+
+#: includes/wcwuunder-settings.php:207
+msgid "Mapping shippingmethod #4"
+msgstr "Mapping verzendmethode #4"
+
+#: includes/wcwuunder-settings.php:213
+msgid "Mapping filtername #4"
+msgstr "Mapping filternaam #4"
+
+#: includes/wcwuunder-settings.php:230
+msgid "Default pickupaddress"
+msgstr "Standaard ophaaladres"
+
+#: includes/wcwuunder-settings.php:236
+msgid "Company name"
+msgstr "Bedrijfsnaam"
+
+#: includes/wcwuunder-settings.php:241
+msgid "Firstname"
+msgstr "Voornaam"
+
+#: includes/wcwuunder-settings.php:246
+msgid "Lastname"
+msgstr "Achternaam"
+
+#: includes/wcwuunder-settings.php:251
+msgid "E-mail"
+msgstr "E-mail"
+
+#: includes/wcwuunder-settings.php:256
+msgid "Phonenumber"
+msgstr "Telefoonnummer"
+
+#: includes/wcwuunder-settings.php:258
+msgid "Phonenumber including land prefix: NL +31612345678"
+msgstr "Telefoonnummer met landcode: NL +3161345678"
+
+#: includes/wcwuunder-settings.php:262
+msgid "Streetname"
+msgstr "Straatnaam"
+
+#: includes/wcwuunder-settings.php:267
+msgid "Housenumber"
+msgstr "Huisnummer"
+
+#: includes/wcwuunder-settings.php:272
+msgid "Zipcode"
+msgstr "Postcode"
+
+#: includes/wcwuunder-settings.php:277
+msgid "Locality"
+msgstr "Plaats"
+
+#: includes/wcwuunder-settings.php:277
+msgid "Landcode ISO-2"
+msgstr "Landcode ISO-2"
+
+#: includes/wcwuunder-settings.php:277
+msgid "Landcode in ISO 3166-1 alpha-2 format: NL"
+msgstr "Landcode in ISO 3166-1 alpha-2 formaat: NL"
