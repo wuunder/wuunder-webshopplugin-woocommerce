@@ -2,178 +2,22 @@
 # This file is distributed under the same license as the Development (4.4.x) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-10 14:59+0200\n"
+"PO-Revision-Date: 2019-09-18 13:03+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.2.3\n"
 "Project-Id-Version: Development (4.4.x)\n"
 "POT-Creation-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 
-#: includes/checkout.php:46
+#: includes/checkout.php:45
 msgid "Click here to select a parcelshop"
-msgstr "Cliquez ici pour sélectionner un magasin de colis"
+msgstr "Cliquez ici pour sélectionner un colis"
 
-#: includes/checkout.php:47
+#: includes/checkout.php:46
 msgid "Pickup in parcelshop"
-msgstr "Retrait en boutique colis"
-
-#: includes/checkout.php:197
-msgid "First choose a <strong>parcelshop</strong>"
-msgstr "Choisissez d'abord une <strong> boutique de colis </strong>"
-
-#: includes/checkout.php:201
-msgid "The <strong>shipping country</strong> must match with <strong>the parcelshop country</strong>"
-msgstr "Le <strong> pays d'expédition </strong> doit correspondre au <strong> pays du magasin de colis </strong>"
-
-#: includes/wcwuunder-settings.php:77
-msgid "Hello, we are Wuunder"
-msgstr "Bonjour, nous sommes Wuunder"
-
-#: includes/wcwuunder-settings.php:78
-msgid "and we make sending and receiving parcels easy and cheap. With our platform you can book via mobile, Mac, PC and webshop plug-ins."
-msgstr "et nous rendons l'envoi et la réception de colis faciles et bon marché. Avec notre plateforme, vous pouvez réserver via des plug-ins mobiles, Mac, PC et boutique en ligne."
-
-#: includes/wcwuunder-settings.php:79
-msgid "Want to know more? Visit our website"
-msgstr "Vouloir en savoir davantage? Visitez notre site Internet"
-
-#: includes/wcwuunder-settings.php:79
-msgid "or send an e-mail to"
-msgstr "ou envoyez un e-mail à"
-
-#: includes/wcwuunder-settings.php:83
-msgid "Pickupaddresses"
-msgstr "Adresses de ramassage"
-
-#: includes/wcwuunder-settings.php:84
-msgid "On this address your shipment will be picked-up or send back to."
-msgstr "À cette adresse, votre envoi sera ramassé ou renvoyé à."
-
-#: includes/wcwuunder-settings.php:110
-msgid "Wuunder settings"
-msgstr "Paramètres de Wuunder"
-
-#: includes/wcwuunder-settings.php:116
-msgid "Live / production API Key"
-msgstr "Clé API en direct / de production"
-
-#: includes/wcwuunder-settings.php:112
-msgid "General settings"
-msgstr "Réglages généraux"
-
-#: includes/wcwuunder-settings.php:121
-msgid "Test / staging API Key"
-msgstr "Clé API de test / transfert"
-
-#: includes/wcwuunder-settings.php:126
-msgid "Testmode"
-msgstr "Mode d'essai"
-
-#: includes/wcwuunder-settings.php:128
-msgid "Yes = Test / staging, No = Live / production"
-msgstr "Oui = Test / mise en scène, Non = Live / production"
-
-#: includes/wcwuunder-settings.php:130
-msgid "Yes"
-msgstr "Oui"
-
-#: includes/wcwuunder-settings.php:131
-msgid "No"
-msgstr "Non"
-
-#: includes/wcwuunder-settings.php:136
-msgid "Set order status after booking to:"
-msgstr "Définissez l'état de la commande après la réservation sur:"
-
-#: includes/wcwuunder-settings.php:142
-msgid "Default order image (base64 string), Empty for none:"
-msgstr "Image de commande par défaut (chaîne base64), vide pour aucune:"
-
-#: includes/wcwuunder-settings.php:174
-msgid "Mapping shippingmethod #1"
-msgstr "Mappage des méthodes d'expédition #1"
-
-#: includes/wcwuunder-settings.php:180
-msgid "Mapping filtername #1"
-msgstr "Mappage des noms de filtre #1"
-
-#: includes/wcwuunder-settings.php:185
-msgid "Mapping shippingmethod #2"
-msgstr "Mappage des méthodes d'expédition #2"
-
-#: includes/wcwuunder-settings.php:191
-msgid "Mapping filtername #2"
-msgstr "Mappage des noms de filtre #2"
-
-#: includes/wcwuunder-settings.php:196
-msgid "Mapping shippingmethod #3"
-msgstr "Mappage des méthodes d'expédition #3"
-
-#: includes/wcwuunder-settings.php:202
-msgid "Mapping filtername #3"
-msgstr "Mappage des noms de filtre #3"
-
-#: includes/wcwuunder-settings.php:207
-msgid "Mapping shippingmethod #4"
-msgstr "Mappage des méthodes d'expédition #4"
-
-#: includes/wcwuunder-settings.php:213
-msgid "Mapping filtername #4"
-msgstr "Mappage des noms de filtre #4"
-
-#: includes/wcwuunder-settings.php:230
-msgid "Default pickupaddress"
-msgstr "Adresse de ramassage par défaut"
-
-#: includes/wcwuunder-settings.php:236
-msgid "Company name"
-msgstr "Nom de la compagnie"
-
-#: includes/wcwuunder-settings.php:241
-msgid "Firstname"
-msgstr "Prénom"
-
-#: includes/wcwuunder-settings.php:246
-msgid "Lastname"
-msgstr "Nom de famille"
-
-#: includes/wcwuunder-settings.php:251
-msgid "E-mail"
-msgstr "Email"
-
-#: includes/wcwuunder-settings.php:256
-msgid "Phonenumber"
-msgstr "Numéro de téléphone"
-
-#: includes/wcwuunder-settings.php:258
-msgid "Phonenumber including land prefix: NL +31612345678"
-msgstr "Numéro de téléphone avec préfixe foncier: FR +33612345678"
-
-#: includes/wcwuunder-settings.php:262
-msgid "Streetname"
-msgstr "Nom de rue"
-
-#: includes/wcwuunder-settings.php:267
-msgid "Housenumber"
-msgstr "Numéro de maison"
-
-#: includes/wcwuunder-settings.php:272
-msgid "Zipcode"
-msgstr "Code postal"
-
-#: includes/wcwuunder-settings.php:277
-msgid "Locality"
-msgstr "Localité"
-
-#: includes/wcwuunder-settings.php:277
-msgid "Landcode ISO-2"
-msgstr "Code foncier ISO-2"
-
-#: includes/wcwuunder-settings.php:277
-msgid "Landcode in ISO 3166-1 alpha-2 format: NL"
-msgstr "Code foncier au format ISO 3166-1 alpha-2: FR"
+msgstr "Ramassage en colis"
