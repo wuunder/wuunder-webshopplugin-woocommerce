@@ -106,7 +106,7 @@ function prefix_wc_rest_prepare_order_object($response, $object, $request)
     try {
         $order = new WC_Order($object->get_id());
         $shipping_object = $order->get_items('shipping');
-        if (count($shipping_method) > 0) {
+        if (count($shipping_object) > 0) {
             $shipping_method_id = wcwp_get_filter_from_shippingmethod(reset($shipping_object)->get_method_id());
         }
     } catch (Exception $e) {
@@ -194,11 +194,11 @@ function wcwp_check_parcelshop_selection()
 {
     if ('wuunder_parcelshop' === sanitize_text_field($_POST['shipping_method'][0])) {
         if (!$_POST['parcelshop_id']) {
-            wc_add_notice(__('Kies eerst een <strong>parcelshop</strong>'), 'error');
+            wc_add_notice(__('First choose a <strong>parcelshop</strong>'), 'error');
         }
 
         if ($_POST['parcelshop_id'] && (!isset($_POST['shipping_country']) || $_POST['shipping_country'] != $_POST['parcelshop_country'])) {
-            wc_add_notice(__('Het <strong>land van de verzendgegevens</strong> moet overeenkomen met het <strong>land van de parcelshop</strong> '), 'error');
+            wc_add_notice(__('The <strong>shipping country</strong> must match with <strong>the parcelshop country</strong>'), 'error');
         }
     }
 }

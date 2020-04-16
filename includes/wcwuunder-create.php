@@ -264,8 +264,15 @@ if (!class_exists('WC_Wuunder_Create')) {
          * @param $order_meta , $suffix
          * @return $order_meta
          */
-        private function wcwp_get_customer_address_part($order_meta, $suffix)
+        private function wcwp_get_customer_address_part($order_meta, $suffix, $prefix = null)
         {
+            if (!is_null($prefix)){
+                if (isset($order_meta[$prefix . $suffix]) && !empty($order_meta[$prefix . $suffix][0])) {
+                    return $order_meta[$prefix . $suffix][0];
+                }
+                return null;
+            }
+
             if (isset($order_meta['_shipping' . $suffix]) && !empty($order_meta['_shipping' . $suffix][0])) {
                 return $order_meta['_shipping' . $suffix][0];
             } else if (isset($order_meta['_billing' . $suffix]) && !empty($order_meta['_billing' . $suffix][0])) {
@@ -288,20 +295,26 @@ if (!class_exists('WC_Wuunder_Create')) {
             $order_meta = get_post_meta($orderid);
             $deliveryAddress = new \Wuunder\Api\Config\AddressConfig();
 
-            $address_line_1 = $this->wcwp_get_customer_address_part($order_meta, '_address_1');
-            $address_line_2 = $this->wcwp_get_customer_address_part($order_meta, '_address_2');
+            $prefix = "_shipping";
+            if (!isset($order_meta['_shipping_address_1']) || empty($order_meta['_shipping_address_1'])) {
+                $prefix = "_billing";
+            }
 
-            $deliveryAddress->setEmailAddress($this->wcwp_get_customer_address_part($order_meta, '_email'));
-            $deliveryAddress->setFamilyName($this->wcwp_get_customer_address_part($order_meta, '_last_name'));
-            $deliveryAddress->setGivenName($this->wcwp_get_customer_address_part($order_meta, '_first_name'));
-            $deliveryAddress->setLocality($this->wcwp_get_customer_address_part($order_meta, '_city'));
+            $address_line_1 = $this->wcwp_get_customer_address_part($order_meta, '_address_1', $prefix);
+            $address_line_2 = $this->wcwp_get_customer_address_part($order_meta, '_address_2', $prefix);
+
+            $deliveryAddress->setEmailAddress($this->wcwp_get_customer_address_part($order_meta, '_email', $prefix));
+            $deliveryAddress->setFamilyName($this->wcwp_get_customer_address_part($order_meta, '_last_name', $prefix));
+            $deliveryAddress->setGivenName($this->wcwp_get_customer_address_part($order_meta, '_first_name', $prefix));
+            $deliveryAddress->setLocality($this->wcwp_get_customer_address_part($order_meta, '_city', $prefix));
             $deliveryAddress->setStreetName($address_line_1);
             $deliveryAddress->setAddress2($address_line_2);
             $deliveryAddress->setHouseNumber('-');
-            $deliveryAddress->setZipCode(str_replace(' ', '', $this->wcwp_get_customer_address_part($order_meta, '_postcode')));
+            $deliveryAddress->setZipCode(str_replace(' ', '', $this->wcwp_get_customer_address_part($order_meta, '_postcode', $prefix)));
             $deliveryAddress->setPhoneNumber($order_meta['_billing_phone'][0]);
-            $deliveryAddress->setCountry($this->wcwp_get_customer_address_part($order_meta, '_country'));
-            $deliveryAddress->setBusiness($this->wcwp_get_customer_address_part($order_meta, '_company'));
+            $deliveryAddress->setCountry($this->wcwp_get_customer_address_part($order_meta, '_country', $prefix));
+            $deliveryAddress->setBusiness($this->wcwp_get_customer_address_part($order_meta, '_company', $prefix));
+
             if ($deliveryAddress->validate()) {
                 return $deliveryAddress;
             } else {
