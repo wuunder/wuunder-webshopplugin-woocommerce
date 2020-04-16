@@ -264,14 +264,15 @@ if (!class_exists('WC_Wuunder_Create')) {
          * @param $order_meta , $suffix
          * @return $order_meta
          */
-        private function wcwp_get_customer_address_part($order_meta, $suffix, $prefix)
+        private function wcwp_get_customer_address_part($order_meta, $suffix, $prefix = null)
         {
-            if (isset($prefix)){
+            if (!is_null($prefix)){
                 if (isset($order_meta[$prefix . $suffix]) && !empty($order_meta[$prefix . $suffix][0])) {
                     return $order_meta[$prefix . $suffix][0];
                 }
+                return null;
             }
-            
+
             if (isset($order_meta['_shipping' . $suffix]) && !empty($order_meta['_shipping' . $suffix][0])) {
                 return $order_meta['_shipping' . $suffix][0];
             } else if (isset($order_meta['_billing' . $suffix]) && !empty($order_meta['_billing' . $suffix][0])) {
@@ -313,6 +314,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $deliveryAddress->setPhoneNumber($order_meta['_billing_phone'][0]);
             $deliveryAddress->setCountry($this->wcwp_get_customer_address_part($order_meta, '_country', $prefix));
             $deliveryAddress->setBusiness($this->wcwp_get_customer_address_part($order_meta, '_company', $prefix));
+
             if ($deliveryAddress->validate()) {
                 return $deliveryAddress;
             } else {
