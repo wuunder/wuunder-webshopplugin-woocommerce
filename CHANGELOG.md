@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.17](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.17) - 2020-05-01
+
+### Fixed
+- Fixed customer booking email
+
 ## [2.7.16](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.16) - 2020-03-23
 
 ### Fixed
