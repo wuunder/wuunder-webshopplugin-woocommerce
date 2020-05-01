@@ -3,7 +3,7 @@
  * Plugin Name: Wuunder for-woocommerce
  * Plugin URI: https://wearewuunder.com/wuunder-voor-webshops/
  * Description: Wuunder shipping plugin
- * Version: 2.7.16
+ * Version: 2.7.17
  * Author: Wuunder
  * Author URI: http://wearewuunder.com
  */
