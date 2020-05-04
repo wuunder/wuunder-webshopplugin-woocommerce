@@ -309,7 +309,6 @@ if (!class_exists('WC_Wuunder_Create')) {
             $deliveryAddress->setLocality($this->wcwp_get_customer_address_part($order_meta, '_city', $prefix));
             $deliveryAddress->setStreetName($address_line_1);
             $deliveryAddress->setAddress2($address_line_2);
-            $deliveryAddress->setHouseNumber('-');
             $deliveryAddress->setZipCode(str_replace(' ', '', $this->wcwp_get_customer_address_part($order_meta, '_postcode', $prefix)));
             $deliveryAddress->setPhoneNumber($order_meta['_billing_phone'][0]);
             $deliveryAddress->setCountry($this->wcwp_get_customer_address_part($order_meta, '_country', $prefix));
