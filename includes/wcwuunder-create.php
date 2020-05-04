@@ -303,13 +303,12 @@ if (!class_exists('WC_Wuunder_Create')) {
             $address_line_1 = $this->wcwp_get_customer_address_part($order_meta, '_address_1', $prefix);
             $address_line_2 = $this->wcwp_get_customer_address_part($order_meta, '_address_2', $prefix);
 
-            $deliveryAddress->setEmailAddress($this->wcwp_get_customer_address_part($order_meta, '_email', $prefix));
+            $deliveryAddress->setEmailAddress($this->wcwp_get_customer_address_part($order_meta, '_email'));
             $deliveryAddress->setFamilyName($this->wcwp_get_customer_address_part($order_meta, '_last_name', $prefix));
             $deliveryAddress->setGivenName($this->wcwp_get_customer_address_part($order_meta, '_first_name', $prefix));
             $deliveryAddress->setLocality($this->wcwp_get_customer_address_part($order_meta, '_city', $prefix));
             $deliveryAddress->setStreetName($address_line_1);
             $deliveryAddress->setAddress2($address_line_2);
-            $deliveryAddress->setHouseNumber('-');
             $deliveryAddress->setZipCode(str_replace(' ', '', $this->wcwp_get_customer_address_part($order_meta, '_postcode', $prefix)));
             $deliveryAddress->setPhoneNumber($order_meta['_billing_phone'][0]);
             $deliveryAddress->setCountry($this->wcwp_get_customer_address_part($order_meta, '_country', $prefix));
