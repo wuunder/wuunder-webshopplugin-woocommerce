@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fixed
 - Fixed customer booking email
+- Removed housenumber field placeholder '-'
 
 ## [2.7.16](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.16) - 2020-03-23
 
