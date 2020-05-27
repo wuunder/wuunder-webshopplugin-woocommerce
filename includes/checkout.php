@@ -87,6 +87,7 @@ function wcwp_add_parcelshop_id_field($checkout)
         'class' => array(
             'wuunder-hidden-checkout-field form-row-wide'
         ),
+        'autocomplete' => "new-password"
     ), $checkout->get_value('parcelshop_id'));
 
     woocommerce_form_field('parcelshop_country', array(
@@ -94,6 +95,7 @@ function wcwp_add_parcelshop_id_field($checkout)
         'class' => array(
             'wuunder-hidden-checkout-field form-row-wide'
         ),
+        'autocomplete' => "new-password"
     ), $checkout->get_value('parcelshop_country'));
 }
 
@@ -182,7 +184,7 @@ function wcwp_get_order_weight($order_id)
 add_action('woocommerce_checkout_update_order_meta', 'wcwp_update_parcelshop_id');
 function wcwp_update_parcelshop_id($order_id)
 {
-    if (!empty($_POST['parcelshop_id'])) {
+    if (!empty($_POST['parcelshop_id']) && 'wuunder_parcelshop' === sanitize_text_field($_POST['shipping_method'][0])) {
         update_post_meta($order_id, 'parcelshop_id', sanitize_text_field($_POST['parcelshop_id']));
         WC()->session->__unset( 'WCWP_SELECTED_PARCELSHOP_ID' );
     }
