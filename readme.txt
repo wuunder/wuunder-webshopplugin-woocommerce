@@ -97,6 +97,8 @@ You can best contact us via info@wearewuunder.com
 7. Eenvoudig labels printen
 
 == Changelog ==
+= 2.7.18 =
+* Fix remembering parcelshop id
 = 2.7.17 =
 * Fix customer booking email
 = 2.7.16 =
