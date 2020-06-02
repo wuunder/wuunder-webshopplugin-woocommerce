@@ -8,7 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
-## [2.7.17](https://github.com/kabisa/wuunder-webshopplugin-woocommerce/tag/2.7.17) - 2020-05-01
+## [2.7.18](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.18) - 2020-06-02
+
+### Fixed
+- Fixed remembering parcelshop id 
+
+## [2.7.17](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.17) - 2020-05-01
 
 ### Fixed
 - Fixed customer booking email
