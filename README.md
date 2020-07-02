@@ -8,12 +8,12 @@ We make shipping any parcel, pallet and document easy, personal and efficient. A
 More info regarding the installation: https://wearewuunder.com/woocommerce-info-documents/
 
 ## Before you start ##
-* You need to create a free Wuunder account: https://app.wearewuunder.com and request an API-key to use the module: https://wearewuunder.com/en/contact/ 
+* You need to create a free Wuunder account: https://my.wearewuunder.com/account/login and request an API-key to use the module: https://wearewuunder.com/en/contact/ 
 * You can download and install the latest release before you sign-up: https://github.com/wuunder/wuunder-webshopplugin-woocommerce/releases/latest
 * With this module you connect your WooCommerce store to your Wuunder account.
 
 ## Install ##
-* Download the .zip from this repository and unpack.
+* Download the latest __composer-installed__ [release](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/releases/latest) from this repository and unpack.
 * Use FTP to transfer the folder with the plugin to the `/wp-content/plugins/` folder.
 * When the transfer is finished go to your admin area __Plugins__ page.
 * Locate the __WooCommerce Wuunder__ plugin and activate it.
