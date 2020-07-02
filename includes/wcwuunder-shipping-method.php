@@ -4,8 +4,8 @@ if (!defined('WPINC')) {
     die;
 }
 
-if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-
+if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) || (is_multisite() && is_plugin_active_for_network('woocommerce/woocommerce.php'))) {
+    
     function wc_wuunder_parcelshop_method()
     {
         if (!class_exists('WC_wuunder_parcelshop')) {
