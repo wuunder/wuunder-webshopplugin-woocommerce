@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.19](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.19) - 2020-07-02
+
+### Added
+- Support multi-site wordpress
+
+### Fixed
+
+- Parcelshop shipping method error when disabled
+
+
 ## [2.7.18](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.18) - 2020-06-02
 
 ### Fixed

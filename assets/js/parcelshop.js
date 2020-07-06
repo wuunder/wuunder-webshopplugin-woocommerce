@@ -32,7 +32,7 @@ function initParcelshopLocator(url, apiUrl, carrierList, chooseParcelshopTxt, ch
 }
 
 function _onShippingMethodChange() {
-    if (document.getElementById('shipping_method_0_wuunder_parcelshop').checked) {
+    if (document.getElementById('shipping_method_0_wuunder_parcelshop') && document.getElementById('shipping_method_0_wuunder_parcelshop').checked) {
         if (window.parent.document.getElementsByClassName('chooseParcelshop').length < 1) {
             var container = document.createElement('tr');
             container.className += "chooseParcelshop";
