@@ -410,7 +410,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     <a
                         <?php
                         echo $target; ?>href=" <?php echo $data['url']; ?>"
-                        class="<?php echo $data['action']; ?> button tips <?php echo $action; ?>"
+                        class="<?php echo $action; ?> button tips <?php echo $action; ?>"
                         style="background:#8dcc00; height:2em; width:2em; padding:3px;"
                         alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
                         <img src="<?php echo $data['img']; ?>" style="width:18px; margin: 4px 3px;"
