@@ -137,7 +137,9 @@ if (!class_exists('WC_Wuunder_Create')) {
             $bookingConfig->setHeight($this->wcwp_roundButNull($dimensions[2]));
             $bookingConfig->setWeight($totalWeight ? $totalWeight : null);
             $bookingConfig->setCustomerReference($orderId);
-            $bookingConfig->setPreferredServiceLevel((count($order->get_items('shipping')) > 0) ? $this->wcwp_get_filter_from_shippingmethod(reset($order->get_items('shipping'))->get_method_id()) : '');
+
+            $order_items = $order->get_items('shipping');
+            $bookingConfig->setPreferredServiceLevel((count($order->get_items('shipping')) > 0) ? $this->wcwp_get_filter_from_shippingmethod(reset($order_items)->get_method_id()) : '');
             $bookingConfig->setSource($this->version_obj);
 
             $orderMeta = get_post_meta($orderId);
