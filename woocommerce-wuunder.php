@@ -3,7 +3,7 @@
  * Plugin Name: Wuunder for-woocommerce
  * Plugin URI: https://wearewuunder.com/wuunder-voor-webshops/
  * Description: Wuunder shipping plugin
- * Version: 2.7.19
+ * Version: 2.7.20
  * Author: Wuunder
  * Author URI: http://wearewuunder.com
  */
@@ -57,7 +57,7 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
         public static $plugin_path;
         public static $plugin_basename;
 
-        const VERSION = '2.7.19';
+        const VERSION = '2.7.20';
 
         public function __construct() {
 
@@ -81,12 +81,12 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             add_action('wp_ajax_wuunder_parcelshoplocator_get_selected_parcelshop', 'wcwp_getSelectedParcelshop');
             add_action('wp_ajax_nopriv_wuunder_parcelshoplocator_get_selected_parcelshop', 'wcwp_getSelectedParcelshop');
 
-            add_action( 'wp_loaded', function () {
+            add_action( 'init', function () {
                 if ( false !== strpos( $_SERVER['REQUEST_URI'], '/wuunder/webhook' ) && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
                     $this->wcwp_webhook();
                     exit;
                 }
-            } );
+            }, 20 );
             if ( version_compare( WOOCOMMERCE_VERSION, '3.7', '>=' )) {
                 add_action( 'wp_loaded', array(WC_Wuunder_Settings::class, 'wcwp_save_action_for_update_settings' ) );
             }
@@ -130,10 +130,14 @@ if ( !class_exists( 'Woocommerce_Wuunder' ) ) {
             } elseif ( 'track_and_trace_updated' === $data['action'] ) {
                 // This is the 2nd webhook
                 $order = wc_get_order( $orderId );
-                $note = __( 'Het pakket is aangemeld bij: ' . $data['carrier_name'] . '\n De track and trace code is: ' . $data['track_and_trace_code'] );
-                $order->add_order_note( $note );
-                $order->save();
-                $errorRedirect = false;
+                if ($order) {
+                    $note = __( 'Het pakket is aangemeld bij: ' . $data['carrier_name'] . '\n De track and trace code is: ' . $data['track_and_trace_code'] );
+                    $order->add_order_note( $note );
+                    $order->save();
+                    $errorRedirect = false;
+                } else {
+                    wcwp_log( 'error', 'T&T webhook for unknown order with id: ' . $orderId );
+                }
             }
 
             if ( $errorRedirect ) {

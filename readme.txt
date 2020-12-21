@@ -97,6 +97,8 @@ You can best contact us via info@wearewuunder.com
 7. Eenvoudig labels printen
 
 == Changelog ==
+= 2.7.20 =
+* Fix hook used for webhook processing
 = 2.7.19 =
 * Fix rparcelshop error
 * Added support for multi-site Wordpress
