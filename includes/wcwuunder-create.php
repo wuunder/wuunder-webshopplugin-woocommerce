@@ -533,7 +533,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                             break;
                     }
 
-                    $data['total_weight'] = $data['quantity'] * $data['weight'];
+                    $data['total_weight'] = intval($data['quantity']) * floatval($data['weight']);
 
                     // Set item dimensions
                     $data['dimensions'] = wc_format_dimensions($product->get_dimensions(false));
