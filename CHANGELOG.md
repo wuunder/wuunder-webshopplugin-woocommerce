@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.23](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.23) - 2022-04-14
+
+### Fixed
+- Weight string type warning when calculating total weight
+
 ## [2.7.22](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.22) - 2022-02-04
 
 ### Fixed
