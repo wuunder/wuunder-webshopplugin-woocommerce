@@ -13,7 +13,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $this->version_obj = array(
                 'product' => 'Woocommerce extension',
                 'version' => array(
-                    'build' => '2.7.21',
+                    'build' => '2.7.22',
                     'plugin' => '2.0'),
                 'platform' => array(
                     'name' => 'Woocommerce',
@@ -513,7 +513,7 @@ if (!class_exists('WC_Wuunder_Create')) {
 
 
                     // Set item weight
-                    $weight = $product->get_weight();
+                    $weight = floatval($product->get_weight());
                     $weight_unit = get_option('woocommerce_weight_unit');
                     switch ($weight_unit) {
                         case 'kg':
@@ -533,7 +533,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                             break;
                     }
 
-                    $data['total_weight'] = $data['quantity'] * $data['weight'];
+                    $data['total_weight'] = intval(intval($data['quantity']) * $data['weight']);
 
                     // Set item dimensions
                     $data['dimensions'] = wc_format_dimensions($product->get_dimensions(false));
