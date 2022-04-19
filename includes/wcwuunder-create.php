@@ -207,7 +207,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                 return null;
             }
 
-            return round($val);
+            return round(floatval($val));
         }
 
         /**
