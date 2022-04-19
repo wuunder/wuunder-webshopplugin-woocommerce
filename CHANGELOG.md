@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Released 
 
+## [2.7.24](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.24) - 2022-04-19
+
+### Fixed
+- Replaced deprecated WC functions
+
 ## [2.7.23](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.23) - 2022-04-14
 
 ### Fixed

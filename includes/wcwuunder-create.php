@@ -13,7 +13,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $this->version_obj = array(
                 'product' => 'Woocommerce extension',
                 'version' => array(
-                    'build' => '2.7.23',
+                    'build' => '2.7.24',
                     'plugin' => '2.0'),
                 'platform' => array(
                     'name' => 'Woocommerce',
@@ -493,7 +493,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     $images[] = $image[0];
 
                     // Create the product
-                    $product = $order->get_product_from_item($item);
+                    $product = $item->get_product();
 
                     // Set the variation
                     if (isset($item['variation_id']) && $item['variation_id'] > 0) {
