@@ -148,7 +148,7 @@ function wcwp_get_order_weight($order_id)
     if (sizeof($items) > 0) {
         foreach ($items as $item) {
             // Create the product
-            $product = $order->get_product_from_item($item);
+            $product = $item->get_product();
             // Set item weight
             $weight = $product->get_weight();
             $weight_unit = get_option('woocommerce_weight_unit');

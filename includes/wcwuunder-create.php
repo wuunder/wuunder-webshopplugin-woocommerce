@@ -493,7 +493,7 @@ if (!class_exists('WC_Wuunder_Create')) {
                     $images[] = $image[0];
 
                     // Create the product
-                    $product = $order->get_product_from_item($item);
+                    $product = $item->get_product();
 
                     // Set the variation
                     if (isset($item['variation_id']) && $item['variation_id'] > 0) {
