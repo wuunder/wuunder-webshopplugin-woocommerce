@@ -149,10 +149,10 @@ function wcwp_get_order_weight($order_id)
             // Create the product
             $product = $item->get_product();
             // Set item weight
-            $weight = $product->get_weight();
+            $weight = floatval($product->get_weight());
             $weight = empty($weight) ? 0 : $weight;
             $weight_unit = get_option('woocommerce_weight_unit');
-            $quantity = $item['qty'];
+            $quantity = (int)$item->get_quantity();
             try {
                 switch ($weight_unit) {
                     case 'kg':
@@ -176,7 +176,7 @@ function wcwp_get_order_weight($order_id)
                 wcwp_log('error', 'Invalid weight value: ' . $weight);
             }
 
-            $total_product_weight = $quantity * $data['weight'];
+            $total_product_weight = intval($quantity * $data['weight']);
             $total_weight += $total_product_weight;
         }
     }

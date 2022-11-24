@@ -13,12 +13,14 @@ if (!class_exists('WC_Wuunder_Create')) {
             $this->version_obj = array(
                 'product' => 'Woocommerce extension',
                 'version' => array(
-                    'build' => '2.7.24',
-                    'plugin' => '2.0'),
+                    'build' => '2.7.25',
+                    'plugin' => '2.0'
+                ),
                 'platform' => array(
                     'name' => 'Woocommerce',
                     'build' => WC()->version
-                ));
+                )
+            );
             add_action('load-edit.php', array(&$this, 'wcwp_generateBookingUrl'));
             add_action('woocommerce_admin_order_actions_end', array(&$this, 'wcwp_add_listing_actions'));
             add_action('add_meta_boxes_shop_order', array(&$this, 'wcwp_add_meta_boxes'));
@@ -44,15 +46,12 @@ if (!class_exists('WC_Wuunder_Create')) {
                 $message .= '</ul>';
 
                 printf('<div class="%1$s"><p>%2$s</p></div>', $class, $message);
-
             } elseif ('success' == isset($_GET['notice']) && $_GET['notice']) {
 
                 $class = 'notice notice-success';
                 $message = __('Het verzendlabel voor #' . sanitize_text_field($_GET['id']) . ' is aangemaakt', 'woocommerce-wuunder');
                 printf('<div class="%1$s"><p>%2$s</p></div>', $class, $message);
-
             }
-
         }
 
         /**
@@ -268,7 +267,7 @@ if (!class_exists('WC_Wuunder_Create')) {
          */
         private function wcwp_get_customer_address_part($order_meta, $suffix, $prefix = null)
         {
-            if (!is_null($prefix)){
+            if (!is_null($prefix)) {
                 if (isset($order_meta[$prefix . $suffix]) && !empty($order_meta[$prefix . $suffix][0])) {
                     return $order_meta[$prefix . $suffix][0];
                 }
@@ -408,17 +407,12 @@ if (!class_exists('WC_Wuunder_Create')) {
                 echo '<div style="clear:both;">';
                 foreach ($listing_actions as $action => $data) {
                     $target = ' target="_blank" ';
-                    ?>
-                    <a
-                        <?php
-                        echo $target; ?>href=" <?php echo $data['url']; ?>"
-                        class="<?php echo $action; ?> button tips <?php echo $action; ?>"
-                        style="background:#8dcc00; height:2em; width:2em; padding:3px;"
-                        alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
-                        <img src="<?php echo $data['img']; ?>" style="width:18px; margin: 4px 3px;"
-                             alt="<?php echo $data['title']; ?>">
+?>
+                    <a <?php
+                        echo $target; ?>href=" <?php echo $data['url']; ?>" class="<?php echo $action; ?> button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['title']; ?>" data-tip="<?php echo $data['title']; ?>">
+                        <img src="<?php echo $data['img']; ?>" style="width:18px; margin: 4px 3px;" alt="<?php echo $data['title']; ?>">
                     </a>
-                    <?php
+                <?php
                 }
                 echo '</div>';
             } else {
@@ -431,17 +425,13 @@ if (!class_exists('WC_Wuunder_Create')) {
                 );
 
                 foreach ($listing_actions as $action => $data) {
-                    ?>
-                    <a href="<?php echo $data['url']; ?>" class="button tips <?php echo $action; ?>"
-                       style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['alt']; ?>"
-                       data-tip="<?php echo $data['alt']; ?>">
-                        <img src="<?php echo $data['img']; ?>" style="width:18px; margin: 4px 3px;"
-                             alt="<?php echo $data['alt']; ?>">
+                ?>
+                    <a href="<?php echo $data['url']; ?>" class="button tips <?php echo $action; ?>" style="background:#8dcc00; height:2em; width:2em; padding:3px;" alt="<?php echo $data['alt']; ?>" data-tip="<?php echo $data['alt']; ?>">
+                        <img src="<?php echo $data['img']; ?>" style="width:18px; margin: 4px 3px;" alt="<?php echo $data['alt']; ?>">
                     </a>
-                    <?php
+<?php
                 }
             }
-
         }
 
         /**
@@ -545,9 +535,7 @@ if (!class_exists('WC_Wuunder_Create')) {
             $data_list['images'] = $images;
             return $data_list;
         }
-
     }
-
 }
 
 new WC_Wuunder_Create();
