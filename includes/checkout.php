@@ -34,7 +34,7 @@ function wcwp_parcelshop_html()
     $tmpEnvironment = new \Wuunder\Api\Environment(get_option('wc_wuunder_api_status') === 'staging' ? 'staging' : 'production');
 
     $baseApiUrl = substr($tmpEnvironment->getStageBaseUrl(), 0, -3);
-    $carrierConfigList = get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers'] ? get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers'] : [];
+    $carrierConfigList = get_option('woocommerce_wuunder_parcelshop_settings')['select_carriers'] ?? [];
     $carrierList = implode(',', $carrierConfigList);
     if (0 !== strlen($carrierList)) {
         $availableCarriers = $carrierList;
@@ -171,7 +171,7 @@ function wcwp_get_order_weight($order_id)
                         $data['weight'] = $weight;
                         break;
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $data['weight'] = 0;
                 wcwp_log('error', 'Invalid weight value: ' . $weight);
             }
