@@ -112,7 +112,6 @@ function prefix_wc_rest_prepare_order_object($response, $object, $request)
             $shipping_method_id = wcwp_get_filter_from_shippingmethod(reset($shipping_object)->get_method_id());
         }
     } catch (Exception $e) {
-
     }
     $response->data['wuunder_preferred_service_level'] = $shipping_method_id;
 
@@ -151,24 +150,30 @@ function wcwp_get_order_weight($order_id)
             $product = $item->get_product();
             // Set item weight
             $weight = $product->get_weight();
+            $weight = empty($weight) ? 0 : $weight;
             $weight_unit = get_option('woocommerce_weight_unit');
             $quantity = $item['qty'];
-            switch ($weight_unit) {
-                case 'kg':
-                    $data['weight'] = $weight * 1000;
-                    break;
-                case 'g':
-                    $data['weight'] = $weight;
-                    break;
-                case 'lbs':
-                    $data['weight'] = $weight * 0.45359237;
-                    break;
-                case 'oz':
-                    $data['weight'] = $weight * 0.0283495231;
-                    break;
-                default:
-                    $data['weight'] = $weight;
-                    break;
+            try {
+                switch ($weight_unit) {
+                    case 'kg':
+                        $data['weight'] = $weight * 1000;
+                        break;
+                    case 'g':
+                        $data['weight'] = $weight;
+                        break;
+                    case 'lbs':
+                        $data['weight'] = $weight * 0.45359237;
+                        break;
+                    case 'oz':
+                        $data['weight'] = $weight * 0.0283495231;
+                        break;
+                    default:
+                        $data['weight'] = $weight;
+                        break;
+                }
+            } catch (\Exception $e) {
+                $data['weight'] = 0;
+                wcwp_log('error', 'Invalid weight value: ' . $weight);
             }
 
             $total_product_weight = $quantity * $data['weight'];
@@ -186,7 +191,7 @@ function wcwp_update_parcelshop_id($order_id)
 {
     if (!empty($_POST['parcelshop_id']) && isset($_POST['shipping_method']) && isset($_POST['shipping_method'][0]) && 'wuunder_parcelshop' === sanitize_text_field($_POST['shipping_method'][0])) {
         update_post_meta($order_id, 'parcelshop_id', sanitize_text_field($_POST['parcelshop_id']));
-        WC()->session->__unset( 'WCWP_SELECTED_PARCELSHOP_ID' );
+        WC()->session->__unset('WCWP_SELECTED_PARCELSHOP_ID');
     }
 }
 
@@ -204,5 +209,3 @@ function wcwp_check_parcelshop_selection()
         }
     }
 }
-
-?>
