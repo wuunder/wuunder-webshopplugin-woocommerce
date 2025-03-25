@@ -148,9 +148,9 @@ function wcwp_get_order_weight($order_id)
         foreach ($items as $item) {
             // Create the product
             $product = $item->get_product();
-			if (!($product instanceof WC_Product)) {
-				continue;
-			}
+            if (!($product instanceof WC_Product)) {
+                continue;
+            }
             // Set item weight
             $weight = floatval($product->get_weight());
             $weight = empty($weight) ? 0 : $weight;
