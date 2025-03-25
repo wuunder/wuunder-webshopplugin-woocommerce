@@ -96,6 +96,9 @@ if (!class_exists('WC_Wuunder_Create')) {
 
             foreach ($order->get_items() as $item_id => $item_product) {
                 $product = $item_product->get_product();
+	            if (!($product instanceof WC_Product)) {
+		            continue;
+	            }
                 if ($dimensions === null) {
                     $dimensions = array($product->get_length(), $product->get_width(), $product->get_height());
                 }
@@ -484,6 +487,9 @@ if (!class_exists('WC_Wuunder_Create')) {
 
                     // Create the product
                     $product = $item->get_product();
+	                if (!($product instanceof WC_Product)) {
+		                continue;
+	                }
 
                     // Set the variation
                     if (isset($item['variation_id']) && $item['variation_id'] > 0) {
