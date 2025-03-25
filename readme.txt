@@ -97,6 +97,8 @@ You can best contact us via info@wearewuunder.com
 7. Eenvoudig labels printen
 
 == Changelog ==
+= 2.7.26 =
+* Fix non WC_Product items in cart throwing errors
 = 2.7.25 =
 * Fix weight typing
 = 2.7.20 =

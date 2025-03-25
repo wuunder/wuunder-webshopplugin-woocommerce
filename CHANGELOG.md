@@ -6,7 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Un-released
 
-## Released 
+## Released
+
+## [2.7.26](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.26) - 2025-03-25
+
+### Fixed 
+- Fix an error case when cart items were not WC_Product
 
 ## [2.7.25](https://github.com/wuunder/wuunder-webshopplugin-woocommerce/tag/2.7.25) - 2022-11-24
 
